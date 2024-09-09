@@ -1,10 +1,5 @@
-import { someFunction } from "ags";
+import Validator from "@/components/validator";
 
 export default function Page() {
-  someFunction();
-  return (
-    <div>
-      <h1>Page</h1>
-    </div>
-  );
+  return <Validator />;
 }
