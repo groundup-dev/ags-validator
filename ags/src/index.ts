@@ -1,3 +1,4 @@
-export const someFunction = () => {
-  console.log("Hello from ags!");
-};
+import { validateAgsData } from "./validate";
+import { AgsError } from "./models";
+
+export { validateAgsData, AgsError };
