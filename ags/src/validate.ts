@@ -47,6 +47,9 @@ export function validateAgsData(rawAgs: string): AgsError[] {
     allErrors = [...allErrors, ...errors];
   });
 
+  if (allErrors.length > 0) {
+    return allErrors;
+  }
   //   now the AGS data should be safe to parse into the AgsRaw object
   const parsedAgs = parseAgs(rawAgs);
 
