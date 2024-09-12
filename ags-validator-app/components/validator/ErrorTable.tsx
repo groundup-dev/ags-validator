@@ -1,5 +1,5 @@
 // ErrorDisplay.tsx
-import { AgsError } from "ags";
+import { AgsError } from "ags/src/models";
 import React from "react";
 import {
     Table,

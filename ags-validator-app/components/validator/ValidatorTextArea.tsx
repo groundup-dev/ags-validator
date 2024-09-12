@@ -14,7 +14,7 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({ agsData, setAgsDa
       <h1 className="text-xl mb-4">AGS Data Validator</h1>
 
       {/* Container for Line Numbers and Textarea */}
-      <div className="flex-1 bg-white rounded border overflow-auto max-h-[87vh]">
+      <div className="flex-1 bg-white rounded border overflow-auto max-h-[82vh]">
         <div className="relative flex bg-gray-50 rounded-lg">
           {/* Line Numbers */}
           <div className="bg-gray-200 text-right pr-4 pt-2 select-none w-[40px] text-gray-600 leading-[1.5rem] font-mono text-sm">
@@ -30,7 +30,7 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({ agsData, setAgsDa
             placeholder="Type your AGS data here..."
             value={agsData}
             onChange={(e) => setAgsData(e.target.value)}
-            className="flex-1 rounded-sm resize-none border-none pl-2 whitespace-pre font-mono leading-[1.5rem] h-auto min-h-[86.823vh] overflow-x-auto overflow-y-hidden"
+            className="flex-1 rounded-sm resize-none border-none pl-2 whitespace-pre font-mono leading-[1.5rem] h-auto min-h-[81.823vh] overflow-x-auto overflow-y-hidden"
             rows={agsData.split("\n").length || 1} // Set rows based on content
           />
         </div>
