@@ -48,8 +48,7 @@ export default function Validator() {
               placeholder="Type your AGS data here..."
               value={agsData}
               onChange={(e) => setAgsData(e.target.value)}
-              className="flex-1 rounded-sm resize-none border-none pl-2 overflow-hidden whitespace-pre font-mono leading-[1.5rem] h-auto min-h-[86.823vh]"              // style={{ lineHeight: "1.5rem", height: "auto", minHeight: "86.823vh" }}
-              rows={agsData.split("\n").length || 1} // Set rows based on content
+              className="flex-1 rounded-sm resize-none border-none pl-2 whitespace-pre font-mono leading-[1.5rem] h-auto min-h-[86.823vh] overflow-x-auto overflow-y-hidden"              rows={agsData.split("\n").length || 1} // Set rows based on content
             />
           </div>
         </div>
