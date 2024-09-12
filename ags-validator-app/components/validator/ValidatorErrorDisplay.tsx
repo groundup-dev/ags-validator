@@ -1,6 +1,7 @@
 // ErrorDisplay.tsx
 import { AgsError } from "ags";
 import React from "react";
+import ErrorTable from "./ErrorTable";
 
 interface ValidatorErrorDisplayProps {
   errors: AgsError[];
@@ -12,7 +13,7 @@ const ValidatorErrorDisplay: React.FC<ValidatorErrorDisplayProps> = ({ errors })
       <h2 className="text-xl mb-4">Errors</h2>
       <div className="flex-1 bg-white p-2 rounded border overflow-auto max-h-[87vh]">
         <pre className="whitespace-pre-wrap">
-          {errors.length > 0 ? JSON.stringify(errors, null, 2) : "No errors found"}
+          <ErrorTable errors={errors} />
         </pre>
       </div>
     </div>
