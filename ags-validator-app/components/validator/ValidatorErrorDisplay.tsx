@@ -7,7 +7,9 @@ interface ValidatorErrorDisplayProps {
   errors: AgsError[];
 }
 
-const ValidatorErrorDisplay: React.FC<ValidatorErrorDisplayProps> = ({ errors }) => {
+const ValidatorErrorDisplay: React.FC<ValidatorErrorDisplayProps> = ({
+  errors,
+}) => {
   return (
     <div className="w-1/2 p-4 bg-gray-100 flex flex-col">
       <h2 className="text-xl mb-4">Errors</h2>
@@ -18,6 +20,6 @@ const ValidatorErrorDisplay: React.FC<ValidatorErrorDisplayProps> = ({ errors })
       </div>
     </div>
   );
-}
+};
 
 export default ValidatorErrorDisplay;

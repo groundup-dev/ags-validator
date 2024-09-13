@@ -1,6 +1,8 @@
 // import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 // import {  LogOut } from "lucide-react";
 
+import React from "react";
+
 // import { Button } from "@/components/ui/button";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import {
@@ -21,11 +23,11 @@
 // import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 export function UserNavbar() {
-//   const { user, isLoading } = useKindeBrowserClient();
+  //   const { user, isLoading } = useKindeBrowserClient();
 
-//   if (isLoading) {
-//     return null;
-//   }
+  //   if (isLoading) {
+  //     return null;
+  //   }
 
   return (
     <h1 className="p-3 h-10">GroundUp Ags Validator</h1>

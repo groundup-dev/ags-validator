@@ -8,7 +8,11 @@ interface ValidatorTextAreaProps {
   lineNumbers: string[];
 }
 
-const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({ agsData, setAgsData, lineNumbers }) => {
+const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
+  agsData,
+  setAgsData,
+  lineNumbers,
+}) => {
   return (
     <div className="w-1/2 p-4 flex flex-col">
       <h1 className="text-xl mb-4">AGS Data Validator</h1>
@@ -19,9 +23,7 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({ agsData, setAgsDa
           {/* Line Numbers */}
           <div className="bg-gray-200 text-right pr-4 pt-2 select-none w-[40px] text-gray-600 leading-[1.5rem] font-mono text-sm">
             {lineNumbers.map((line) => (
-              <div key={line}>
-                {line}
-              </div>
+              <div key={line}>{line}</div>
             ))}
           </div>
 
@@ -37,6 +39,6 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({ agsData, setAgsDa
       </div>
     </div>
   );
-}
+};
 
 export default ValidatorTextArea;
