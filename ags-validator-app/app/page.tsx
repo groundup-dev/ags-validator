@@ -1,5 +1,12 @@
-import Validator from "@/components/validator";
+import { UserNavbar } from "@/components/NavBar";
+import Validator from "@/components/validator/validator";
+import React from "react";
 
 export default function Page() {
-  return <Validator />;
+  return (
+    <div>
+      <UserNavbar />
+      <Validator />
+    </div>
+  );
 }
