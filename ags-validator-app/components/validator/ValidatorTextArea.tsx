@@ -1,4 +1,3 @@
-// TextAreaWithLineNumbers.tsx
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -21,7 +20,9 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
       <div className="flex-1 bg-white rounded border overflow-auto max-h-[82vh]">
         <div className="relative flex bg-gray-50 rounded-lg">
           {/* Line Numbers */}
-          <div className="bg-gray-200 text-right pr-4 pt-2 select-none w-[40px] text-gray-600 leading-[1.5rem] font-mono text-sm">
+          <div
+            className="bg-gray-200 text-right pr-4 pt-2 select-none text-gray-600 leading-[1.5rem] font-mono text-sm w-[calc(6ch+16px)]"
+          >
             {lineNumbers.map((line) => (
               <div key={line}>{line}</div>
             ))}
