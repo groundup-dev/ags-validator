@@ -5,14 +5,12 @@ import { AgsError } from "ags/src/models";
 interface ValidatorTextAreaProps {
   agsData: string;
   setAgsData: React.Dispatch<React.SetStateAction<string>>;
-  lineNumbers: string[];
   errors: AgsError[];
 }
 
 const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
   agsData,
   setAgsData,
-  lineNumbers,
   errors
 }) => {
   const [highlightLine, setHighlightLine] = useState<number | undefined>();
