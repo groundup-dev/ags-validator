@@ -1,6 +1,6 @@
 "use client";
 
-import { useValidator } from "./hooks/useValidator";
+import { useValidator } from "../hooks/useValidator";
 import ValidatorTextArea from "./ValidatorTextArea";
 import ValidatorErrorDisplay from "./ValidatorErrorDisplay";
 import React from "react";
@@ -14,6 +14,7 @@ export default function Validator() {
         agsData={agsData}
         setAgsData={setAgsData}
         lineNumbers={lineNumbers}
+        errors={errors}
       />
       <ValidatorErrorDisplay errors={errors} />
     </div>
