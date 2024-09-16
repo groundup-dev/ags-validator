@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CodeMirrorTextArea from './CodeMirrorTextArea';
 import { AgsError } from "ags/src/models";
 
@@ -11,23 +11,28 @@ interface ValidatorTextAreaProps {
 const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
   agsData,
   setAgsData,
-  errors
+  errors,
 }) => {
-  const [highlightLine, setHighlightLine] = useState<number | undefined>();
+  const [highlightLineNumbers, setHighlightLineNumbers] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Extract unique line numbers from errors
+    const lineNumbersSet = new Set<number>(errors.map(error => error.lineNumber));
+    setHighlightLineNumbers(Array.from(lineNumbersSet)); // Convert Set to Array
+  }, [errors]);
 
   return (
-    <div className="w-1/2 p-4 flex flex-col h-full">
+    <div className="w-1/2 p-4 flex flex-col">
       <h1 className="text-xl mb-4">AGS Data Validator</h1>
-
-      <div className="flex-1 bg-white rounded border overflow-auto max-h-[82vh] flex">
-        <div className="relative flex flex-col flex-1 bg-gray-50 rounded-lg">
+      {/* Container for Line Numbers and Textarea */}
+      <div className="flex-1 bg-white rounded border overflow-auto max-h-[82vh]">
         <div className="relative flex bg-gray-50 rounded-lg">
           <CodeMirrorTextArea
             agsData={agsData}
             setAgsData={setAgsData}
-            highlightLineNumber={highlightLine} // Pass the line number to highlight
+            highlightLineNumbers={highlightLineNumbers} // Pass the line numbers to highlight
           />
-        </div></div>
+        </div>
       </div>
     </div>
   );

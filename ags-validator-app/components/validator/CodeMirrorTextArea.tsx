@@ -8,35 +8,34 @@ import { oneDark } from '@codemirror/theme-one-dark'; // Optional dark theme
 interface CodeMirrorTextAreaProps {
   agsData: string;
   setAgsData: React.Dispatch<React.SetStateAction<string>>;
-  highlightLineNumber?: number | undefined; // Line number to highlight (1-based)
+  highlightLineNumbers?: number[]; // Array of line numbers to highlight (1-based)
 }
 
 const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   agsData,
   setAgsData,
-  highlightLineNumber,
+  highlightLineNumbers = [],
 }) => {
   // Function to handle line highlighting using CodeMirror decorations
-  const highlightLine = (state: EditorState) => {
-    if (highlightLineNumber === undefined) {
-      return Decoration.none; // No highlighting if highlightLineNumber is undefined
-    }
-
+  const highlightLines = (state: EditorState) => {
     const builder = new RangeSetBuilder<Decoration>();
-    const line = state.doc.line(highlightLineNumber); // Get the line object by line number (1-based index)
 
-    // Create a decoration to highlight the line
-    const highlightDeco = Decoration.line({
-      attributes: { style: 'background-color: rgba(255, 0, 0, 0.2);' }, // Red highlight with opacity
+    highlightLineNumbers.forEach(lineNumber => {
+      const line = state.doc.line(lineNumber); // Get the line object by line number (1-based index)
+
+      // Create a decoration to highlight the line
+      const highlightDeco = Decoration.line({
+        attributes: { style: 'background-color: rgba(255, 0, 0, 0.2);' }, // Red highlight with opacity
+      });
+
+      builder.add(line.from, line.from, highlightDeco); // Apply the decoration to the start of the line
     });
-
-    builder.add(line.from, line.from, highlightDeco); // Apply the decoration to the start of the line
 
     return builder.finish();
   };
 
-  // Create an extension that adds decorations based on the line to highlight
-  const lineHighlighter = EditorView.decorations.compute([], (state) => highlightLine(state));
+  // Create an extension that adds decorations based on the lines to highlight
+  const lineHighlighter = EditorView.decorations.compute([], (state) => highlightLines(state));
 
   const handleEditorChange = (value: string) => {
     // Update the state with the new value
