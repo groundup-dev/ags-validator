@@ -1,12 +1,14 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "CommonJS",
-      "outDir": "dist",
-      "declaration": true,          // Generates .d.ts files for type definitions
-      "esModuleInterop": true,
-      "strict": true,
-      "skipLibCheck": true
-    },
-    "include": ["src"]
-  }
+  "compilerOptions": {
+    "module": "commonjs", // Jest uses CommonJS, so this should be set
+    "target": "es6",
+    "esModuleInterop": true,
+    "moduleResolution": "node", // Important for resolving node modules
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*", "tests/**/*"]
+}

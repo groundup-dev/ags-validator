@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HeadingRaw, AgsRaw } from "./models";
+import { HeadingRaw, AgsRaw } from "../models";
 
 function createDpHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
   const decimalPlaces = parseInt(heading.type[0]);
@@ -70,7 +70,7 @@ function createNSCIHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
 }
 
 export function createZodSchemasForHeadings(
-  ags: AgsRaw
+  ags: AgsRaw,
 ): Record<string, Record<string, z.ZodType<string>>> {
   const groupSchemas: Record<string, Record<string, z.ZodType<string>>> = {};
 
@@ -83,7 +83,7 @@ export function createZodSchemasForHeadings(
 
     // decimal place headings
     const xDPHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("DP")
+      heading.type.endsWith("DP"),
     );
     for (const heading of xDPHeadings) {
       groupSchemas[groupName][heading.name] = createDpHeadingSchema(heading);
@@ -91,7 +91,7 @@ export function createZodSchemasForHeadings(
 
     // datetime headings
     const DTHeadings = group.headings.filter(
-      (heading) => heading.type === "DT"
+      (heading) => heading.type === "DT",
     );
     for (const heading of DTHeadings) {
       groupSchemas[groupName][heading.name] = createDtHeadingSchema(heading);
@@ -99,7 +99,7 @@ export function createZodSchemasForHeadings(
 
     // scientific notation headings
     const NSCIHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("SCI")
+      heading.type.endsWith("SCI"),
     );
 
     for (const heading of NSCIHeadings) {
@@ -108,7 +108,7 @@ export function createZodSchemasForHeadings(
 
     // significant figures headings
     const SFHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("SF")
+      heading.type.endsWith("SF"),
     );
     for (const heading of SFHeadings) {
       groupSchemas[groupName][heading.name] =
@@ -116,7 +116,7 @@ export function createZodSchemasForHeadings(
     }
 
     const YNHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("YN")
+      heading.type.endsWith("YN"),
     );
 
     // yes no headings
@@ -134,7 +134,7 @@ export function createZodSchemasForHeadings(
     // all others are treated as strings
     // note we are not checking picklist values here, they are just treated as text
     const textHeadings = group.headings.filter((heading) =>
-      ["ID", "PA", "PT", "PU", "X", "XN", "U"].includes(heading.type)
+      ["ID", "PA", "PT", "PU", "X", "XN", "U"].includes(heading.type),
     );
     for (const heading of textHeadings) {
       groupSchemas[groupName][heading.name] = z.string();
