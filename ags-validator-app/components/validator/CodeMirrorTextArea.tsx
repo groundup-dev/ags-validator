@@ -45,10 +45,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   });
 
   const handleEditorChange = (value: string) => {
-    console.log("value",value.replace(/\\n/g, '\n'))
-    const t = value.replace(/\\n/g, '\n')
-    console.log(t.toString())
-    setAgsData(t); // Sync the editor value back to agsData state
+    setAgsData(value); // Sync the editor value back to agsData state
   };
 
   useEffect(() => {
@@ -56,16 +53,13 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
       const view = editorRef.current;
       const doc = view.state.doc;
 
-      console.log("Document Content:", doc.toString()); // Output document content
-      console.log("Total Lines:", doc.lines); // Check the total lines
-
       if (activeLineNumber >= 1 && activeLineNumber <= doc.lines) {
         const line = doc.line(activeLineNumber);
 
-        // view.dispatch({
-        //   selection: { head: line.from, anchor: line.to },
-        //   scrollIntoView: true,
-        // });
+        view.dispatch({
+          selection: { head: line.from, anchor: line.to },
+          scrollIntoView: true,
+        });
       } else {
         console.warn(`Invalid line number: ${activeLineNumber}`);
       }

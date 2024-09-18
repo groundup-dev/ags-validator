@@ -8,7 +8,7 @@ import React, { useState } from "react";
 export default function Validator() {
   const { agsData, setAgsData, errors } = useValidator();
   const [lineNumber, setActiveLineNumber] = useState<number | undefined>(undefined);
-  console.log(lineNumber) 
+ 
   return (
     <div className="flex h-[calc(100vh-2.5rem)]">
       <ValidatorTextArea
