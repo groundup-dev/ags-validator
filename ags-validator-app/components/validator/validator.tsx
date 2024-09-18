@@ -1,8 +1,8 @@
 "use client";
 
 import { useValidator } from "../hooks/useValidator";
-import ValidatorTextArea from "./ValidatorTextArea";
-import ValidatorErrorDisplay from "./ValidatorErrorDisplay";
+import ValidatorTextArea from "./TextArea/ValidatorTextArea";
+import ValidatorErrorDisplay from "./ErrorTable/ValidatorErrorDisplay";
 import React, { useState } from "react";
 
 export default function Validator() {
