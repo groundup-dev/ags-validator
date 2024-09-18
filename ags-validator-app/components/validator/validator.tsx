@@ -8,6 +8,8 @@ import React, { useState } from "react";
 export default function Validator() {
   const { agsData, setAgsData, errors } = useValidator();
   const [lineNumber, setActiveLineNumber] = useState<number | undefined>(undefined);
+  const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
+
  
   return (
     <div className="flex h-[calc(100vh-2.5rem)]">
@@ -16,8 +18,9 @@ export default function Validator() {
         setAgsData={setAgsData}
         errors={errors}
         activeLineNumber={lineNumber}
+        hoverLineNumber={hoverLineNumber}
       />
-      <ValidatorErrorDisplay errors={errors} setActiveLineNumber={setActiveLineNumber}/>
+      <ValidatorErrorDisplay errors={errors} setActiveLineNumber={setActiveLineNumber} setHoverLineNumber={setHoverLineNumber}/>
     </div>
   );
 }

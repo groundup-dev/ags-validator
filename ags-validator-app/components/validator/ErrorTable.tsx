@@ -13,11 +13,11 @@ import { Button } from "@/components/ui/button"; // Assuming Button component is
 interface ErrorTableProps {
   errors: AgsError[];
   setActiveLineNumber: (lineNumber: number) => void;
+  setHoverLineNumber: (hoverLineNumber: number | null) => void;
 }
 
-export default function ErrorTable({ errors, setActiveLineNumber }: ErrorTableProps) {
+export default function ErrorTable({ errors, setActiveLineNumber, setHoverLineNumber }: ErrorTableProps) {
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
-
   return (
     <>
       {errors.length > 0 ? (
@@ -34,8 +34,14 @@ export default function ErrorTable({ errors, setActiveLineNumber }: ErrorTablePr
             {errors.map((error, index) => (
               <TableRow
                 key={index}
-                onMouseEnter={() => setHoveredRowIndex(index)}
-                onMouseLeave={() => setHoveredRowIndex(null)}
+                onMouseEnter={() => {
+                  setHoveredRowIndex(index);
+                  setHoverLineNumber(error.lineNumber); // Update hover line number on mouse enter
+                }}
+                onMouseLeave={() => {
+                  setHoveredRowIndex(null);
+                  setHoverLineNumber(null); // Reset hover line number on mouse leave
+                }}
               >
                 <TableCell className="font-medium">
                   {error.lineNumber}

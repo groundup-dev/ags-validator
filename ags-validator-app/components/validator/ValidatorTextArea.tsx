@@ -7,6 +7,7 @@ interface ValidatorTextAreaProps {
   setAgsData: React.Dispatch<React.SetStateAction<string>>;
   errors: AgsError[];
   activeLineNumber: number | undefined;
+  hoverLineNumber: number | null;
 }
 
 const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
@@ -14,6 +15,7 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
   setAgsData,
   errors,
   activeLineNumber,
+  hoverLineNumber,
 }) => {
   // Extract line numbers from errors array
   const errorLines = errors.map(error => error.lineNumber);
@@ -28,6 +30,7 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
         setAgsData={setAgsData}
         errorLines={errorLines} // Pass error line numbers
         activeLineNumber={activeLineNumber}
+        hoverLineNumber={hoverLineNumber}
       />
     </div>
   );
