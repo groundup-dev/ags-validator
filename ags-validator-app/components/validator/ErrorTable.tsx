@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button"; // Assuming Button component is
 
 interface ErrorTableProps {
   errors: AgsError[];
+  setActiveLineNumber: (lineNumber: number) => void;
 }
 
-export default function ErrorTable({ errors }: ErrorTableProps) {
+export default function ErrorTable({ errors, setActiveLineNumber }: ErrorTableProps) {
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
 
   return (
@@ -47,6 +48,7 @@ export default function ErrorTable({ errors }: ErrorTableProps) {
                     className={`transition-opacity duration-200 ${
                       hoveredRowIndex === index ? "opacity-100" : "opacity-0"
                     }`}
+                    onClick={() => setActiveLineNumber(error.lineNumber)}
                   >
                     Go to
                   </Button>
