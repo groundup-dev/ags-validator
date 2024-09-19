@@ -1,13 +1,13 @@
 {
   "name": "ags",
-  "type" : "module",
+  "type": "module",
   "version": "1.0.0",
   "main": "src/index.ts",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "jest"
+    "test": "npx jest"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "@types/node": "^22.5.4",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }
 }

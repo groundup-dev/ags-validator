@@ -4,8 +4,7 @@ import { AgsValidationStep } from "./types";
 type AgsValidationStepRaw = AgsValidationStep<string>;
 // Helper function to check if a line contains extended ASCII characters
 function isAgsAscii(line: string): boolean {
-  // Checks for extended ASCII characters (128 to 255 range)
-  return [...line].every((char) => char.charCodeAt(0) < 256);
+  return [...line].every((char) => char.charCodeAt(0) < 128);
 }
 
 // Validation Step: Rule 1 - Check for ASCII characters
@@ -209,42 +208,36 @@ const rule5: AgsValidationStepRaw = {
       // Skip empty or whitespace-only lines
       if (!line.trim()) return;
 
-      // Split the line by `","` to get individual fields
-      const fields = line
-        .trim()
-        .split('","')
-        .map((item) => item.replace(/"/g, ""));
+      const fields = line.trim().split(",");
 
-      // Check if the first field is a relevant descriptor
-      const validDescriptors = ["GROUP", "HEADING", "UNIT", "TYPE", "DATA"];
       const descriptor = fields[0];
 
-      // Validate that all fields are enclosed in double quotes
-      if (validDescriptors.includes(descriptor)) {
-        if (!line.startsWith('"') || !line.endsWith('"')) {
+      // Check for proper quote handling within each field
+      fields.forEach((field, fieldIndex) => {
+        // first check if field surrounded by quotes
+        if (!field.startsWith('"') || !field.endsWith('"')) {
           errors.push({
             rule: this.rule,
             lineNumber,
-            message: "Fields are not properly enclosed in double quotes.",
+            message: `Field is not enclosed in double quotes.`,
           });
         }
 
-        // Check for proper quote handling within each field
-        fields.forEach((field, fieldIndex) => {
-          // Skip the check for the first field (descriptor) as it should be a valid descriptor
-          if (fieldIndex === 0) return;
+        // Check for quotes within data fields
+        // we now know that the field is enclosed in quotes
+        const fieldNoQuotes = field.slice(1, -1);
 
-          // Check for quotes within data fields
-          const quoteMatches = field.match(/"/g);
-          if (quoteMatches && quoteMatches.length % 2 !== 0) {
-            errors.push({
-              rule: this.rule,
-              lineNumber,
-              message: `Field "${field}" contains improperly enclosed quotes. Quotes within fields must be doubled.`,
-            });
-          }
-        });
-      }
+        // if there are quotes within the field, they should be doubled like '""hello""'
+        // use regex to find all instances of a single quote
+        const quoteMatches = fieldNoQuotes.match(/(^|[^"])"([^"]|$)/g);
+        if (quoteMatches) {
+          errors.push({
+            rule: this.rule,
+            lineNumber,
+            message: `Field contains quotes that are not properly escaped.`,
+          });
+        }
+      });
     });
 
     return errors;
