@@ -1,5 +1,5 @@
 import { UserNavbar } from "@/components/NavBar";
-import Validator from "@/components/validator/validator";
+import Validator from "@/components/Validator/Validator";
 import React from "react";
 
 export default function Page() {
