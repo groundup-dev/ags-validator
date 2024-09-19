@@ -16,7 +16,11 @@ interface ErrorTableProps {
   setHoverLineNumber: (hoverLineNumber: number | null) => void;
 }
 
-export default function ErrorTable({ errors, setActiveLineNumber, setHoverLineNumber }: ErrorTableProps) {
+export default function ErrorTable({
+  errors,
+  setActiveLineNumber,
+  setHoverLineNumber,
+}: ErrorTableProps) {
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
   return (
     <>

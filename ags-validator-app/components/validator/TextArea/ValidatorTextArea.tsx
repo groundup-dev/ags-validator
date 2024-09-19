@@ -1,5 +1,5 @@
-import React from 'react';
-import CodeMirrorTextArea from './CodeMirrorTextArea';
+import React from "react";
+import CodeMirrorTextArea from "./CodeMirrorTextArea";
 import { AgsError } from "ags/src/models";
 
 interface ValidatorTextAreaProps {
@@ -18,12 +18,12 @@ const ValidatorTextArea: React.FC<ValidatorTextAreaProps> = ({
   hoverLineNumber,
 }) => {
   // Extract line numbers from errors array
-  const errorLines = errors.map(error => error.lineNumber);
+  const errorLines = errors.map((error) => error.lineNumber);
 
   return (
     <div className="w-1/2 p-4 flex flex-col">
       <h1 className="text-xl mb-4 ">AGS Data Validator</h1>
-      
+
       {/* CodeMirror TextArea with error line highlighting */}
       <CodeMirrorTextArea
         agsData={agsData}

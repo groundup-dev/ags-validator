@@ -26,8 +26,9 @@ const themeDemo = EditorView.baseTheme({
     backgroundColor: "rgba(255, 0, 0, 0.4)",
     color: "black",
   },
-  "& .hover-line": { // Add a style for hovered line
-    backgroundColor: "yellow !important", 
+  "& .hover-line": {
+    // Add a style for hovered line
+    backgroundColor: "yellow !important",
   },
 });
 
@@ -50,7 +51,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
         }
         return undefined;
       },
-    })
+    }),
   );
 
   // Update the classname extension when hoverLineNumber or errorLines change
@@ -66,7 +67,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
           }
           return undefined;
         },
-      })
+      }),
     );
   }, [hoverLineNumber, errorLines]); // Track both hoverLineNumber and errorLines
 

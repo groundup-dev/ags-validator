@@ -13,7 +13,6 @@ export function useValidator() {
       return;
     }
 
-
     // Validate AGS data
     const agsErrors = validateAgsData(agsData);
     setErrors(agsErrors);

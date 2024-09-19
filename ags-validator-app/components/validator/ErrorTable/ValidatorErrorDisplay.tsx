@@ -19,7 +19,11 @@ const ValidatorErrorDisplay: React.FC<ValidatorErrorDisplayProps> = ({
       <h2 className="text-xl mb-4">Errors</h2>
       <div className="flex-1 bg-white p-2 rounded border overflow-auto max-h-[82vh]">
         <pre className="whitespace-pre-wrap">
-          <ErrorTable errors={errors} setActiveLineNumber={setActiveLineNumber} setHoverLineNumber={setHoverLineNumber}/>
+          <ErrorTable
+            errors={errors}
+            setActiveLineNumber={setActiveLineNumber}
+            setHoverLineNumber={setHoverLineNumber}
+          />
         </pre>
       </div>
     </div>
