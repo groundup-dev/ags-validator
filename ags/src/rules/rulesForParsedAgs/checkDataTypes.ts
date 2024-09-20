@@ -77,11 +77,16 @@ function createTHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
 }
 
 function createSigFigHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
-  const nInt = parseInt(heading.type.replace(/SF/g, ""));
+  const nSigFig = parseInt(heading.type.replace(/SF/g, ""));
 
-  const pattern = `^0*\\d\\.?\\d{0,${nInt - 1}}0*$`;
-
-  return z.string().regex(new RegExp(pattern));
+  const regex = new RegExp(
+    `^(?=.*[1-9])(?:[1-9]\\d{0,${nSigFig - 1}}|0\\.\\d{${
+      nSigFig - 1
+    }}[1-9]\\d{0,${nSigFig - 1}}|0?\\.\\d{${nSigFig}})$`,
+  );
+  return z
+    .string()
+    .regex(regex, `Must have exactly ${nSigFig} significant figures`);
 }
 
 function createNSCIHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
