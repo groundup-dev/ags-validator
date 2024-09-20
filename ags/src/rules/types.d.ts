@@ -1,4 +1,4 @@
-import { AgsRaw, AgsError } from "src/models";
+import { AgsRaw, AgsError } from "../types";
 
 // abstract version of the validation step
 export type AgsValidationStep<TInputType extends string | AgsRaw> = {

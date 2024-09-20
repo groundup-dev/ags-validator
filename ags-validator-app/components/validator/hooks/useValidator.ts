@@ -1,7 +1,6 @@
 // useValidator.ts
 import { useEffect, useState } from "react";
-import { validateAgsData } from "ags";
-import type { AgsError } from "ags/src/models";
+import { validateAgsData, AgsError } from "ags";
 
 export function useValidator() {
   const [agsData, setAgsData] = useState<string>("");
@@ -20,8 +19,8 @@ export function useValidator() {
     setLineNumbers(lines);
 
     // Validate AGS data
-    const agsErrors = validateAgsData(agsData);
-    setErrors(agsErrors);
+    const { errors } = validateAgsData(agsData);
+    setErrors(errors);
   }, [agsData]);
 
   return {

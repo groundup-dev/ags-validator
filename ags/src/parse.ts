@@ -1,4 +1,4 @@
-import { GroupRaw, AgsRaw } from "./models";
+import { GroupRaw, AgsRaw } from "./types";
 
 // Function to parse a single line into an array of strings
 export function parseLine(input: string): string[] {

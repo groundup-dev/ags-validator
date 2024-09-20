@@ -1,4 +1,4 @@
-import { AgsError } from "../models";
+import { AgsError } from "../types";
 import { AgsValidationStep } from "./types";
 
 type AgsValidationStepRaw = AgsValidationStep<string>;
@@ -25,6 +25,7 @@ const rule1: AgsValidationStepRaw = {
           rule: 1,
           lineNumber,
           message,
+          severity: "error",
         });
       }
     });
@@ -55,6 +56,7 @@ const rule2a: AgsValidationStepRaw = {
             rule: this.rule,
             lineNumber,
             message: "Line is not terminated by <CR> and <LF> characters.",
+            severity: "warning",
           });
         }
         break;
@@ -95,6 +97,7 @@ const rule3: AgsValidationStepRaw = {
           rule: this.rule,
           lineNumber,
           message: "Does not start with a valid data descriptor.",
+          severity: "error",
         });
       }
     });
@@ -126,6 +129,7 @@ const rule4_1: AgsValidationStepRaw = {
             lineNumber,
             field: lineItems[1],
             message: "GROUP row has more than one field.",
+            severity: "error",
           });
         } else if (lineItems.length < 2) {
           agsErrors.push({
@@ -133,6 +137,7 @@ const rule4_1: AgsValidationStepRaw = {
             lineNumber,
             field: "",
             message: "GROUP row is malformed.",
+            severity: "error",
           });
         }
       }
@@ -177,6 +182,7 @@ const rule4_2: AgsValidationStepRaw = {
             lineNumber: -1, // Use -1 to indicate a missing row rather than a specific line
             group: currentGroup,
             message: "Headings row missing.",
+            severity: "error",
           });
         } else if (fields.length - 1 !== headings.length) {
           // Add error if the number of fields does not match the HEADING row
@@ -185,6 +191,7 @@ const rule4_2: AgsValidationStepRaw = {
             lineNumber,
             field: currentGroup,
             message: "Number of fields does not match the HEADING row.",
+            severity: "error",
           });
         }
       }
@@ -210,16 +217,15 @@ const rule5: AgsValidationStepRaw = {
 
       const fields = line.trim().split(",");
 
-      const descriptor = fields[0];
-
       // Check for proper quote handling within each field
-      fields.forEach((field, fieldIndex) => {
+      for (const field of fields) {
         // first check if field surrounded by quotes
         if (!field.startsWith('"') || !field.endsWith('"')) {
           errors.push({
             rule: this.rule,
             lineNumber,
             message: `Field is not enclosed in double quotes.`,
+            severity: "error",
           });
         }
 
@@ -235,9 +241,10 @@ const rule5: AgsValidationStepRaw = {
             rule: this.rule,
             lineNumber,
             message: `Field contains quotes that are not properly escaped.`,
+            severity: "error",
           });
         }
-      });
+      }
     });
 
     return errors;

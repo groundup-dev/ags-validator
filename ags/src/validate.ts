@@ -1,9 +1,8 @@
-import { AgsError } from "./models";
+import { AgsError, AgsRaw } from "./types";
 import { parseAgs } from "./parse";
 import { rulesForRawString, rulesForParsedAgs } from "./rules";
 
-// Function to validate raw AGS data using all validation steps
-export function validateAgsData(rawAgs: string): AgsError[] {
+function validateAgsDataRaw(rawAgs: string): AgsError[] {
   let allErrors: AgsError[] = [];
 
   // this only applies to the rulesForRawString object
@@ -13,18 +12,40 @@ export function validateAgsData(rawAgs: string): AgsError[] {
     const errors = step.validate(rawAgs);
     allErrors = [...allErrors, ...errors];
   });
+  return allErrors;
+}
 
-  if (allErrors.length > 0) {
-    return allErrors;
-  }
-  //   now the AGS data should be safe to parse into the AgsRaw object
-  const parsedAgs = parseAgs(rawAgs);
+function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
+  let allErrors: AgsError[] = [];
 
   const parsedRulesAsArray = Object.values(rulesForParsedAgs);
   parsedRulesAsArray.forEach((step) => {
-    const errors = step.validate(parsedAgs);
+    const errors = step.validate(rawAgs);
     allErrors = [...allErrors, ...errors];
   });
 
   return allErrors;
+}
+
+// Function to validate raw AGS data using all validation steps
+export function validateAgsData(rawAgs: string): {
+  errors: AgsError[];
+  parsedAgs?: AgsRaw | undefined;
+} {
+  const agsErrorsForRaw = validateAgsDataRaw(rawAgs);
+  if (agsErrorsForRaw.length > 0) {
+    return {
+      errors: agsErrorsForRaw,
+      parsedAgs: undefined,
+    };
+  }
+
+  //   now the AGS data should be safe to parse into the AgsRaw object
+  const parsedAgs = parseAgs(rawAgs);
+
+  const agsErrorsForParsed = validateAgsDataParsed(parsedAgs);
+  return {
+    errors: agsErrorsForParsed,
+    parsedAgs: parsedAgs,
+  };
 }
