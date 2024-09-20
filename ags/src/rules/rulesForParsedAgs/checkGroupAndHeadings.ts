@@ -2,6 +2,7 @@ import { AgsRaw, AgsError } from "../../types";
 
 import { AgsValidationStepParsed } from "./types";
 
+// TODO: add the actual data dictionary, for all versions of AGS
 export const rule7: AgsValidationStepParsed = {
   rule: 7,
   description:
@@ -65,7 +66,7 @@ export const rule19a: AgsValidationStepParsed = {
             group: groupName,
             field: heading.name,
             message: "Invalid HEADING name format.",
-            severity: "error",
+            severity: "warning",
           });
         }
       }
@@ -87,18 +88,24 @@ export const rule19b: AgsValidationStepParsed = {
   validate: function (ags: AgsRaw): AgsError[] {
     const errors: AgsError[] = [];
 
-    const allHeadings = new Set(
-      Object.values(ags)
-        .flatMap((group) => group.headings)
-        .map((heading) => heading.name),
-    );
-
     for (const [groupName, group] of Object.entries(ags)) {
       const groupPrefix = groupName + "_";
+
+      // remove group headings of current group, to provide lookup if heading is in another group
+      const allHeadingsApartFromCurrentGroup = new Set(
+        Object.values(ags)
+          .filter((g) => g.name !== group.name)
+          .flatMap((g) => g.headings)
+          .map((heading) => heading.name)
+          .filter((name) => !name.startsWith(groupPrefix)),
+      );
+
       for (const heading of group.headings) {
         if (
-          !heading.name.startsWith(groupPrefix) &&
-          !allHeadings.has(heading.name)
+          !(
+            heading.name.startsWith(groupPrefix) ||
+            allHeadingsApartFromCurrentGroup.has(heading.name)
+          )
         ) {
           errors.push({
             rule: this.rule,
