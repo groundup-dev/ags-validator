@@ -1,12 +1,20 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "CommonJS",
-      "outDir": "dist",
-      "declaration": true,          // Generates .d.ts files for type definitions
-      "esModuleInterop": true,
-      "strict": true,
-      "skipLibCheck": true
-    },
-    "include": ["src"]
-  }
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "./dist",
+    "declaration": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*",
+    "global.d.ts" // Make sure this is included if you have it
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

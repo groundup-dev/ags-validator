@@ -1,5 +1,29 @@
 import { z } from "zod";
-import { HeadingRaw, AgsRaw } from "./models";
+import { HeadingRaw, AgsRaw, AgsError } from "../../types";
+
+import { AgsValidationStepParsed } from "./types";
+
+// Define the structure for validation steps
+
+// AGS4 data type according to
+// https://www.ags.org.uk/content/uploads/2022/02/AGS4-v-4.1.1-2022.pdf
+// const dataTypeSchema = z.union([
+//   z.literal("ID"),
+//   z.literal("PA"),
+//   z.literal("PT"),
+//   z.literal("PU"),
+//   z.literal("X"),
+//   z.literal("XN"),
+//   z.literal("T"),
+//   z.literal("DT"),
+//   z.string().regex(/\dDP/),
+//   z.string().regex(/\dSF/),
+//   z.string().regex(/\dSCI/),
+//   z.literal("U"),
+//   z.literal("DMS"),
+//   z.literal("YN"),
+//   z.literal("RL"),
+// ]);
 
 function createDpHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
   const decimalPlaces = parseInt(heading.type[0]);
@@ -53,11 +77,16 @@ function createTHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
 }
 
 function createSigFigHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
-  const nInt = parseInt(heading.type.replace(/SF/g, ""));
+  const nSigFig = parseInt(heading.type.replace(/SF/g, ""));
 
-  const pattern = `^0*\\d\\.?\\d{0,${nInt - 1}}0*$`;
-
-  return z.string().regex(new RegExp(pattern));
+  const regex = new RegExp(
+    `^(?=.*[1-9])(?:[1-9]\\d{0,${nSigFig - 1}}|0\\.\\d{${
+      nSigFig - 1
+    }}[1-9]\\d{0,${nSigFig - 1}}|0?\\.\\d{${nSigFig}})$`,
+  );
+  return z
+    .string()
+    .regex(regex, `Must have exactly ${nSigFig} significant figures`);
 }
 
 function createNSCIHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
@@ -69,8 +98,8 @@ function createNSCIHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
   return z.string().regex(new RegExp(pattern));
 }
 
-export function createZodSchemasForHeadings(
-  ags: AgsRaw
+function createZodSchemasForHeadings(
+  ags: AgsRaw,
 ): Record<string, Record<string, z.ZodType<string>>> {
   const groupSchemas: Record<string, Record<string, z.ZodType<string>>> = {};
 
@@ -83,7 +112,7 @@ export function createZodSchemasForHeadings(
 
     // decimal place headings
     const xDPHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("DP")
+      heading.type.endsWith("DP"),
     );
     for (const heading of xDPHeadings) {
       groupSchemas[groupName][heading.name] = createDpHeadingSchema(heading);
@@ -91,7 +120,7 @@ export function createZodSchemasForHeadings(
 
     // datetime headings
     const DTHeadings = group.headings.filter(
-      (heading) => heading.type === "DT"
+      (heading) => heading.type === "DT",
     );
     for (const heading of DTHeadings) {
       groupSchemas[groupName][heading.name] = createDtHeadingSchema(heading);
@@ -99,7 +128,7 @@ export function createZodSchemasForHeadings(
 
     // scientific notation headings
     const NSCIHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("SCI")
+      heading.type.endsWith("SCI"),
     );
 
     for (const heading of NSCIHeadings) {
@@ -108,7 +137,7 @@ export function createZodSchemasForHeadings(
 
     // significant figures headings
     const SFHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("SF")
+      heading.type.endsWith("SF"),
     );
     for (const heading of SFHeadings) {
       groupSchemas[groupName][heading.name] =
@@ -116,7 +145,7 @@ export function createZodSchemasForHeadings(
     }
 
     const YNHeadings = group.headings.filter((heading) =>
-      heading.type.endsWith("YN")
+      heading.type.endsWith("YN"),
     );
 
     // yes no headings
@@ -134,7 +163,7 @@ export function createZodSchemasForHeadings(
     // all others are treated as strings
     // note we are not checking picklist values here, they are just treated as text
     const textHeadings = group.headings.filter((heading) =>
-      ["ID", "PA", "PT", "PU", "X", "XN", "U"].includes(heading.type)
+      ["ID", "PA", "PT", "PU", "X", "XN", "U"].includes(heading.type),
     );
     for (const heading of textHeadings) {
       groupSchemas[groupName][heading.name] = z.string();
@@ -153,3 +182,40 @@ export function createZodSchemasForHeadings(
 
   return groupSchemas;
 }
+
+export const rule8: AgsValidationStepParsed = {
+  rule: 8,
+  description:
+    "Data variables shall be presented in units of measurements\
+            and type that are described by the appropriate data field UNIT and data\
+            field TYPE defined at the start of the GROUP.",
+
+  validate: function (ags: AgsRaw): AgsError[] {
+    const errors: AgsError[] = [];
+
+    const schemas = createZodSchemasForHeadings(ags);
+
+    for (const [groupName, group] of Object.entries(ags)) {
+      for (const row of group.rows) {
+        for (const heading of group.headings) {
+          const fieldName = heading.name;
+          const fieldValue = row.data[fieldName];
+
+          try {
+            schemas[groupName][fieldName].parse(fieldValue);
+          } catch (error) {
+            errors.push({
+              rule: this.rule,
+              lineNumber: row.lineNumber,
+              group: groupName,
+              field: fieldName,
+              severity: "error",
+              message: `Data variable '${fieldValue}' does not match the UNIT '${heading.unit}' and TYPE '${heading.type}' defined in the HEADING.`,
+            });
+          }
+        }
+      }
+    }
+    return errors;
+  },
+};

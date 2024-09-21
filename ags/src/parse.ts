@@ -1,4 +1,4 @@
-import { GroupRaw, AgsRaw } from "./models";
+import { GroupRaw, AgsRaw } from "./types";
 
 // Function to parse a single line into an array of strings
 export function parseLine(input: string): string[] {
@@ -8,7 +8,7 @@ export function parseLine(input: string): string[] {
 
   const parsedInput = input.split(",");
   const parsedInputNoQuotes = parsedInput.map((entry) =>
-    entry.replace(/"/g, "")
+    entry.replace(/"/g, ""),
   );
   return parsedInputNoQuotes;
 }
@@ -31,13 +31,13 @@ export function parseGroup(input: string, startLineNumber: number): GroupRaw {
 
   // remove datalines that are empty, or do not start WITH DATA
   const dataLinesEmptyRemoved = dataLines.filter(
-    (line) => line.length > 0 && line[0] === "DATA"
+    (line) => line.length > 0 && line[0] === "DATA",
   );
 
   // assign data,
   const data = dataLinesEmptyRemoved.map((line, index) => ({
     data: Object.fromEntries(
-      line.slice(1).map((value, i) => [headings[i], value])
+      line.slice(1).map((value, i) => [headings[i], value]),
     ),
     lineNumber: startLineNumber + index + 4, // Data lines start after the first three lines (group name, headings, units, types)
   }));
@@ -59,6 +59,7 @@ export function parseGroup(input: string, startLineNumber: number): GroupRaw {
 // Function to parse the entire AGS input into a structured AgsRaw object
 export const parseAgs = (input: string): AgsRaw => {
   const splitter = /\n"GROUP",/;
+  console.log("input", input);
   const parsedInput = input
     .split(splitter)
     .map((group, index) => (index === 0 ? group : `"GROUP",${group}`));
