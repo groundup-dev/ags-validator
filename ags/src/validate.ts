@@ -1,4 +1,4 @@
-import { AgsError, AgsRaw } from "./types";
+import { AgsDictionaryVersion, AgsError, AgsRaw } from "./types";
 import { parseAgs } from "./parse";
 import { rulesForRawString, rulesForParsedAgs } from "./rules";
 
@@ -28,7 +28,10 @@ function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
 }
 
 // Function to validate raw AGS data using all validation steps
-export function validateAgsData(rawAgs: string): {
+export function validateAgsData(
+  rawAgs: string,
+  dictionary: AgsDictionaryVersion = "v4_0_4",
+): {
   errors: AgsError[];
   parsedAgs?: AgsRaw | undefined;
 } {

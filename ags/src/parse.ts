@@ -59,6 +59,7 @@ export function parseGroup(input: string, startLineNumber: number): GroupRaw {
 // Function to parse the entire AGS input into a structured AgsRaw object
 export const parseAgs = (input: string): AgsRaw => {
   const splitter = /\n"GROUP",/;
+  console.log("input", input);
   const parsedInput = input
     .split(splitter)
     .map((group, index) => (index === 0 ? group : `"GROUP",${group}`));

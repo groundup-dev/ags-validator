@@ -1,4 +1,8 @@
-import { AgsRaw } from "../../types";
+import { AgsDictionaryVersion, AgsError, AgsRaw } from "../../types";
 import { AgsValidationStep } from "../types";
 
-type AgsValidationStepParsed = AgsValidationStep<AgsRaw>;
+export type AgsValidationStepParsed = AgsValidationStep<AgsRaw>;
+
+export type AgsValidationStepParsedWithDict = AgsValidationStep<AgsRaw> & {
+  validate: (rawAgs: AgsRaw, dictVersion: AgsDictionaryVersion) => AgsError[];
+};

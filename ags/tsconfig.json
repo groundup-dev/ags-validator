@@ -1,14 +1,20 @@
 {
   "compilerOptions": {
-    "module": "commonjs", // Jest uses CommonJS, so this should be set
+    "module": "commonjs",
     "target": "es6",
+    "outDir": "./dist",
+    "declaration": true,
     "esModuleInterop": true,
-    "moduleResolution": "node", // Important for resolving node modules
+    "resolveJsonModule": true,
     "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "src/*": ["src/*"]
-    }
+    "skipLibCheck": true
   },
-  "include": ["src/**/*", "tests/**/*"]
+  "include": [
+    "src/**/*",
+    "global.d.ts" // Make sure this is included if you have it
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

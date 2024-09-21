@@ -1,4 +1,4 @@
 import { validateAgsData } from "./validate";
-import { AgsError, AgsRaw } from "./types";
+import { AgsError, AgsRaw, AgsDictionaryVersion } from "./types";
 
-export { validateAgsData, AgsError, AgsRaw };
+export { validateAgsData, AgsError, AgsRaw, AgsDictionaryVersion };

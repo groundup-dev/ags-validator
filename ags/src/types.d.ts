@@ -29,3 +29,5 @@ export type AgsError = {
   field?: string;
   message?: string;
 };
+
+export type AgsDictionaryVersion = "v4_0_3" | "v4_1_1" | "v4_1" | "v4_0_4";
