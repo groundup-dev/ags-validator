@@ -14,13 +14,14 @@ export function useValidator() {
       return;
     }
 
+    // Validate AGS data
+    const result = validateAgsData(agsData);
+
+    setErrors(result.errors);
+
     // Update line numbers based on new lines in textarea
     const lines = agsData.split("\n").map((_, index) => String(index + 1));
     setLineNumbers(lines);
-
-    // Validate AGS data
-    const { errors } = validateAgsData(agsData);
-    setErrors(errors);
   }, [agsData]);
 
   return {

@@ -3,7 +3,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { classname } from "@uiw/codemirror-extensions-classname";
 import { basicSetup } from "codemirror";
 import { EditorView } from "@codemirror/view";
-import { AgsError } from "ags/src/models";
+import { AgsError } from "ags";
 
 type CodeMirrorTextAreaProps = {
   agsData: string;
@@ -40,10 +40,8 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   activeLineNumber,
   hoverLineNumber,
 }) => {
-  const errorLines = useMemo(
-    () => errors.map((error) => error.lineNumber),
-    [errors]
-  );
+  const errorLines = errors?.map((error) => error.lineNumber);
+
   const editorRef = useRef<EditorView | null>(null);
 
   const handleEditorChange = (value: string) => {
