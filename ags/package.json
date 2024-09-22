@@ -1,7 +1,6 @@
 {
-  "name": "ags",
+  "name": "@groundup/ags",
   "version": "1.0.0",
-  "description": "",
   "main": "dist/index.js",
   "scripts": {
     "build:browser": "webpack --mode production",
@@ -23,9 +22,12 @@
     "jest-raw-loader": "^1.0.1",
     "raw-loader": "^4.0.2",
     "ts-jest": "^29.2.5",
-    "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

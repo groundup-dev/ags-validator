@@ -1,6 +1,6 @@
 "use client";
 
-import { useValidator } from "../hooks/useValidator";
+import { useValidator } from "./hooks/useValidator";
 import ErrorTable from "./ErrorTable";
 
 import React, { useState } from "react";
@@ -8,6 +8,8 @@ import TextArea from "./TextArea";
 
 export default function Validator() {
   const { agsData, setAgsData, errors } = useValidator();
+  console.log("agsData", agsData, "errors", errors);
+
   const [lineNumber, setActiveLineNumber] = useState<number | undefined>(
     undefined
   );

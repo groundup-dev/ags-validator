@@ -20,6 +20,17 @@ export interface AgsRaw {
   [key: string]: GroupRaw;
 }
 
+type AgsDictionaryGroups = "TYPE" | "UNIT" | "ABBR" | "DICT" | "PROJ" | "TRAN";
+
+export interface AgsDictionary extends AgsRaw {
+  TYPE: GroupRaw;
+  UNIT: GroupRaw;
+  ABBR: GroupRaw;
+  DICT: GroupRaw;
+  PROJ: GroupRaw;
+  TRAN: GroupRaw;
+}
+
 // Define the structure for error messages
 export type AgsError = {
   rule: number | string;

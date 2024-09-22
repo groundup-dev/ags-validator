@@ -1,0 +1,36 @@
+name: Run Jest Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Test on multiple versions of Node.js
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    # Use a working directory for the rest of the steps
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./ags  # Set the working directory
+
+    - name: Run Jest Tests
+      run: npm run test
+      working-directory: ./ags  # Set the working directory
