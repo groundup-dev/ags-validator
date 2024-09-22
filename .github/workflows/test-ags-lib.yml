@@ -26,11 +26,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Navigate to ags dir
-      run: cd ags
-
+    # Use a working directory for the rest of the steps
     - name: Install dependencies
       run: npm install
+      working-directory: ./ags  # Set the working directory
 
     - name: Run Jest Tests
-      run: npm run test 
+      run: npm run test
+      working-directory: ./ags  # Set the working directory
