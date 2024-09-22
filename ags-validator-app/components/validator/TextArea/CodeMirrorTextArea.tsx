@@ -3,7 +3,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { classname } from "@uiw/codemirror-extensions-classname";
 import { basicSetup } from "codemirror";
 import { EditorView } from "@codemirror/view";
-import { AgsError } from "ags";
+import { AgsError } from "@groundup/ags";
 
 type CodeMirrorTextAreaProps = {
   agsData: string;

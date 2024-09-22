@@ -1,6 +1,6 @@
 // useValidator.ts
 import { useEffect, useState } from "react";
-import { validateAgsData, AgsError } from "ags";
+import { validateAgsData, AgsError } from "@groundup/ags";
 
 export function useValidator() {
   const [agsData, setAgsData] = useState<string>("");
