@@ -45,7 +45,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+
+      "@groundup/ags": ["../ags/src"]
     },
     "allowJs": true,
     "skipLibCheck": true,
