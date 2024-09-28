@@ -83,7 +83,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   );
 
   return (
-    <div className="h-full w-full flex flex-col overflow-auto">
+    <div className="h-[calc(100vh-200px)] w-full flex flex-col overflow-auto">
       <CodeMirror
         value={agsData} // Use agsData and fallback to default content if empty
         extensions={[basicSetup, themeDemo, classNameExt]} // Use dynamic classnameExt

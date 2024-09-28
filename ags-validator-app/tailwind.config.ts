@@ -10,54 +10,55 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "var(--background)", // Light cream and dark mode
+        foreground: "var(--foreground)", // Darker text color and light mode text
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "var(--card)", // White for cards
+          foreground: "var(--card-foreground)", // Darker text color for cards
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "var(--popover)", // White for popovers
+          foreground: "var(--popover-foreground)", // Darker text color for popovers
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--primary)", // Dark green
+          foreground: "var(--primary-foreground)", // White
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "var(--secondary)", // Light brown
+          foreground: "var(--secondary-foreground)", // Darker text color for secondary
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--muted)", // Muted light brown
+          foreground: "var(--muted-foreground)", // Darker muted text
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "var(--accent)", // Light green
+          foreground: "var(--accent-foreground)", // Darker text color
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "var(--destructive)", // Dark red
+          foreground: "var(--destructive-foreground)", // White
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: "var(--border)", // Muted brown
+        input: "var(--input)", // Same as border
+        ring: "var(--ring)", // Dark brown
         chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
+          "1": "var(--chart-1)", // Dark green
+          "2": "var(--chart-2)", // Light brown
+          "3": "var(--chart-3)", // Dark brown
+          "4": "var(--chart-4)", // Light green
+          "5": "var(--chart-5)", // Dark red
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--radius)", // Consistent with CSS variable
+        md: "calc(var(--radius) - 2px)", // Adjusted for consistency
+        sm: "calc(var(--radius) - 4px)", // Adjusted for consistency
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 };
+
 export default config;

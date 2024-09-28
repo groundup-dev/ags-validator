@@ -1,81 +1,12 @@
-// import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-// import {  LogOut } from "lucide-react";
-
 import React from "react";
 
-// import { Button } from "@/components/ui/button";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipTrigger,
-//   TooltipProvider,
-// } from "@/components/ui/tooltip";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-// //   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-
-// import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-
-export function UserNavbar() {
-  //   const { user, isLoading } = useKindeBrowserClient();
-
-  //   if (isLoading) {
-  //     return null;
-  //   }
-
+export default function Navbar() {
   return (
-    <h1 className="p-3 h-10">GroundUp Ags Validator</h1>
-    // <DropdownMenu>
-    //   <TooltipProvider disableHoverableContent>
-    //     <Tooltip delayDuration={100}>
-    //       <TooltipTrigger asChild>
-    //          <DropdownMenuTrigger asChild>
-    //           <Button
-    //             variant="outline"
-    //             className="relative h-8 w-8 rounded-full"
-    //           >
-    //             <Avatar className="h-8 w-8">
-    //               {user?.picture ? (
-    //                 <AvatarImage src={user?.picture} alt="Avatar" />
-    //               ) : (
-    //                 <AvatarFallback className="bg-transparent">
-    //                   {user?.given_name?.charAt(0)}
-    //                 </AvatarFallback>
-    //               )}
-    //             </Avatar>
-    //           </Button>
-    //         </DropdownMenuTrigger>
-    //       </TooltipTrigger>
-    //       <TooltipContent side="bottom">Profile</TooltipContent>
-    //     </Tooltip>
-    //   </TooltipProvider>
-
-    //    <DropdownMenuContent className="w-56" align="end" forceMount>
-    //  <DropdownMenuLabel className="font-normal">
-    //        <div className="flex flex-col space-y-1">
-    //          <p className="text-sm font-medium leading-none">
-    //            {user?.given_name} {user?.family_name}
-    //          </p>
-    //          <p className="text-xs leading-none text-muted-foreground">
-    //            {user?.email}
-    //          </p>
-    //        </div>
-    //      </DropdownMenuLabel>
-    //      <DropdownMenuSeparator />
-
-    // {  <LogoutLink>
-    //        <DropdownMenuItem className="hover:cursor-pointer" onClick={() => {}}>
-    //          <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
-    //          Sign out
-    //        </DropdownMenuItem>
-    //      </LogoutLink> */}
-    //    </DropdownMenuContent>
-    //  </DropdownMenu>
+    <header className="sticky top-0 flex h-16 items-center gap-1 border-b px-4 md:px-6 bg-foreground">
+      <h1 className="text-3xl bold text-primary-foreground mr-2">
+        AGS4 Validator
+      </h1>
+      <h2 className="text-xl text-secondary">by GroundUp</h2>
+    </header>
   );
 }
