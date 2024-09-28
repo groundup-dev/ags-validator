@@ -1,12 +1,21 @@
-// Validator.tsx
 "use client";
 
 import { useValidator } from "./hooks/useValidator";
 import ErrorTable from "./ErrorTable";
 import React, { useState } from "react";
-import TextArea from "./TextArea";
-import OptionsArea from "./OptionsArea"; // Import the new OptionsArea component
+import TextArea from "./TextArea"; // Import TextArea to render in this component
+import AGSUpload from "./AGSUpload"; // Import the AGSUpload component
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // Import Tabs components
+import { Label } from "../ui/label";
+
+// Dummy component for Tables view
+const TablesView = () => (
+  <div>
+    <h2 className="text-lg font-semibold">Tables View</h2>
+    <p>This is a placeholder for the Tables view.</p>
+  </div>
+);
 
 export default function Validator() {
   const { agsData, setAgsData, errors } = useValidator();
@@ -17,25 +26,44 @@ export default function Validator() {
   const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
 
   return (
-    <div className="flex  flex-col p-2 ">
-      <div className="w-2/3">
-        <OptionsArea setAgsData={setAgsData} />
-      </div>
+    <div className="flex flex-col p-2 ">
       <div className="flex space-x-4 ">
         <div className="w-2/3">
-          <Card>
-            <CardContent className="p-4">
-              {/* OptionsArea component to upload file */}
+          <Tabs defaultValue="text">
+            <Card className="">
+              <CardContent className="p-4 flex flex-row items-center gap-4">
+                <AGSUpload setAgsData={setAgsData} />
 
-              <TextArea
-                agsData={agsData}
-                setAgsData={setAgsData}
-                errors={errors}
-                activeLineNumber={lineNumber}
-                hoverLineNumber={hoverLineNumber}
-              />
-            </CardContent>
-          </Card>
+                <div className="grid  items-center gap-1.5 mb-4">
+                  <Label htmlFor="tabsList">View as</Label>
+                  <TabsList id="tabsList">
+                    <TabsTrigger value="text">Text </TabsTrigger>
+                    <TabsTrigger disabled={true} value="tables">
+                      Tables{" "}
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+              </CardContent>
+            </Card>
+
+            <TabsContent value="text">
+              <Card>
+                <CardContent className="p-4">
+                  <TextArea
+                    agsData={agsData}
+                    setAgsData={setAgsData}
+                    errors={errors}
+                    activeLineNumber={lineNumber}
+                    hoverLineNumber={hoverLineNumber}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="tables">
+              <TablesView />
+            </TabsContent>
+          </Tabs>
         </div>
         <Card className="w-1/3">
           <CardContent className="p-4">
