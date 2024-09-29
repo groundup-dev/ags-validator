@@ -28,7 +28,7 @@ export default function Validator() {
   return (
     <div className="flex flex-col p-2 ">
       <div className="flex space-x-4 ">
-        <div className="w-2/3">
+        <div className="w-3/5">
           <Tabs defaultValue="text">
             <Card className="">
               <CardContent className="p-4 flex flex-row items-center gap-4">
@@ -65,7 +65,7 @@ export default function Validator() {
             </TabsContent>
           </Tabs>
         </div>
-        <Card className="w-1/3">
+        <Card className="w-2/5">
           <CardContent className="p-4">
             <ErrorTable
               errors={errors}
