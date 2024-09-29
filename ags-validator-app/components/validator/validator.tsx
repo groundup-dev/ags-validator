@@ -8,17 +8,12 @@ import AGSUpload from "./AGSUpload"; // Import the AGSUpload component
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // Import Tabs components
 import { Label } from "../ui/label";
-
-// Dummy component for Tables view
-const TablesView = () => (
-  <div>
-    <h2 className="text-lg font-semibold">Tables View</h2>
-    <p>This is a placeholder for the Tables view.</p>
-  </div>
-);
+import GridView from "./GridView"; //
 
 export default function Validator() {
-  const { agsData, setAgsData, errors } = useValidator();
+  const { agsData, setAgsData, errors, parsedAgs } = useValidator();
+
+  console.log("parsed", parsedAgs);
 
   const [lineNumber, setActiveLineNumber] = useState<number | undefined>(
     undefined
@@ -38,7 +33,10 @@ export default function Validator() {
                   <Label htmlFor="tabsList">View as</Label>
                   <TabsList id="tabsList">
                     <TabsTrigger value="text">Text </TabsTrigger>
-                    <TabsTrigger disabled={true} value="tables">
+                    <TabsTrigger
+                      disabled={parsedAgs === undefined}
+                      value="tables"
+                    >
                       Tables{" "}
                     </TabsTrigger>
                   </TabsList>
@@ -61,7 +59,13 @@ export default function Validator() {
             </TabsContent>
 
             <TabsContent value="tables">
-              <TablesView />
+              <Card>
+                <CardContent className="p-4">
+                  <GridView //@ts-ignore
+                    group={parsedAgs?.["SAMP"]} //@ts-ignore
+                  />
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>

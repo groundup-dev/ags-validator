@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@codemirror/view": "^6.33.0",
+    "@glideapps/glide-data-grid": "^6.0.3",
     "@groundup/ags": "file:../ags",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.8",
     "@radix-ui/react-avatar": "^1.1.0",
