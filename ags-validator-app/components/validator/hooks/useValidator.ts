@@ -1,6 +1,12 @@
 // useValidator.ts
-import { useEffect, useState } from "react";
-import { validateAgsData, AgsError, AgsRaw } from "@groundup/ags";
+import { useCallback, useEffect, useState } from "react";
+import {
+  validateAgsData,
+  AgsError,
+  AgsRaw,
+  GroupRaw,
+  parsedAgsToString,
+} from "@groundup/ags";
 
 export function useValidator() {
   const [agsData, setAgsData] = useState<string>("");
@@ -15,16 +21,23 @@ export function useValidator() {
       return;
     }
 
-    // Validate AGS data
     const result = validateAgsData(agsData);
 
     setErrors(result.errors);
     setParsedAgs(result.parsedAgs);
 
-    // Update line numbers based on new lines in textarea
     const lines = agsData.split("\n").map((_, index) => String(index + 1));
     setLineNumbers(lines);
   }, [agsData]);
+
+  const setGroup = useCallback(
+    (label: string, group: GroupRaw) => {
+      const newParsedAgs = { ...parsedAgs, [label]: group };
+      const newAgsData = parsedAgsToString(newParsedAgs);
+      setAgsData(newAgsData);
+    },
+    [parsedAgs]
+  );
 
   return {
     agsData,
@@ -32,5 +45,6 @@ export function useValidator() {
     errors,
     lineNumbers,
     parsedAgs,
+    setGroup,
   };
 }

@@ -9,7 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { HelpCircle } from "lucide-react"; // Import the HelpCircle icon from shadcn
-import Validator from "@/components/Validator/Validator";
+import Validator from "@/components/Validator";
 import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
