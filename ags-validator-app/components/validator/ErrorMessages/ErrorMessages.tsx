@@ -1,6 +1,7 @@
-import React from "react";
-import { AgsError } from "@groundup/ags";
+import React, { useMemo, useState } from "react";
 import ErrorMessage from "./ErrorMessage";
+import SortErrors, { sortOptions, SortOptionKey } from "./SortErrors";
+import { AgsError } from "@groundup/ags";
 import { Separator } from "@/components/ui/separator";
 
 interface ErrorTableProps {
@@ -14,12 +15,29 @@ export default function ErrorMessages({
   setActiveLineNumber,
   setHoverLineNumber,
 }: ErrorTableProps) {
+  const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
+    null
+  );
+  const sortedErrors = useMemo(
+    () =>
+      sortOptionKey
+        ? errors.sort(sortOptions[sortOptionKey].compareFn)
+        : errors,
+    [errors, sortOptionKey]
+  );
+
   return (
     <div className="flex flex-col h-full">
-      <h2 className="text-xl font-semibold mb-4">Errors</h2>
+      <div className="flex gap-2 justify-between">
+        <h2 className="text-xl font-semibold mb-4">Errors</h2>
+        <SortErrors
+          activeSortOptionKey={sortOptionKey}
+          onChange={setSortOptionKey}
+        />
+      </div>
       <div className="overflow-auto h-full">
         {errors.length > 0 ? (
-          errors.map((error, index) => (
+          sortedErrors.map((error, index) => (
             <React.Fragment key={`error-message-${index}`}>
               {index > 0 && <Separator className="my-2" />}
               <ErrorMessage
