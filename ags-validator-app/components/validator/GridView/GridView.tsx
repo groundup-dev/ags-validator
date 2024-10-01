@@ -81,6 +81,11 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
     [group]
   );
 
+  const getCellsForSelection = useCallback(
+    (selection: Rectangle, abortSignal: AbortSignal): GridCell[][] => {},
+    [group]
+  );
+
   return (
     <div className="w-full h-full">
       <DataGrid
@@ -90,6 +95,7 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
         onCellEdited={onCellEdited}
         rows={group.rows.length}
         onPaste={true}
+        rowMarkers={"number"}
       />
     </div>
   );
