@@ -34,7 +34,7 @@ export default function AGSUpload({ setAgsData }: AGSUploadProps) {
         type="file"
         accept=".ags" // Adjust accepted file types as needed
         onChange={handleFileChange}
-        className="rounded w-full max-w-sm"
+        className="rounded w-full max-w-sm cursor-pointer"
       />
     </div>
   );

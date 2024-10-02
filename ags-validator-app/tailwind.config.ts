@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        400: "100rem",
+      },
       colors: {
         background: "var(--background)", // Light cream and dark mode
         foreground: "var(--foreground)", // Darker text color and light mode text
