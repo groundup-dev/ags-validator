@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect } from "react";
 import DataGrid, {
+  DataEditorProps,
   EditableGridCell,
   EditListItem,
   GridCell,
@@ -9,19 +10,18 @@ import DataGrid, {
   GridColumn,
   Item,
 } from "@glideapps/glide-data-grid";
-import { GroupRaw } from "@groundup/ags";
+import { AgsError, GroupRaw } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
 
 // Props for the table component
 interface Props {
   group: GroupRaw; // GroupRaw object
   setGroup: (label: string, group: GroupRaw) => void;
+  errors: AgsError[];
 }
 
-const GridView: React.FC<Props> = ({ group, setGroup }) => {
+const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
   useEffect(() => {
-    console.log("group.headings", group.headings);
-    console.log("setting columns");
     setColumns(
       group.headings.map((heading) => ({
         title: heading.name,
@@ -31,6 +31,27 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
   }, [group.name]);
 
   const [columns, setColumns] = React.useState<GridColumn[]>([]);
+
+  const highlights = React.useMemo<DataEditorProps["highlightRegions"]>(() => {
+    return errors
+      .filter((error) => error.group === group.name)
+      .map((error) => {
+        console.log(error);
+
+        // minus 4 as there are 4 lines before the table starts
+        const rowIndex = error.lineNumber - group.lineNumber - 4;
+        return {
+          color: error.severity === "error" ? "#DC262622" : "#F59E0B22",
+          range: {
+            x: 0,
+            y: rowIndex,
+            width: group.headings.length,
+            height: 1,
+          },
+          style: "solid",
+        };
+      });
+  }, [errors, group.name, group.lineNumber, group.headings.length]);
 
   const onCellsEdited = React.useCallback(
     (newValues: readonly EditListItem[]) => {
@@ -133,6 +154,7 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
     <div className="w-full h-full">
       <DataGrid
         onCellsEdited={onCellsEdited}
+        highlightRegions={highlights}
         rowMarkers={"checkbox"}
         columns={columns}
         getCellContent={getData}
