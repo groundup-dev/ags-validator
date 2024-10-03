@@ -11,6 +11,7 @@
     --popover: #ffffff; /* White */
     --popover-foreground: #302003; /* Darker text color */
     --primary: #376409; /* Dark green */
+    --primary-hover: #4b7813;
     --primary-foreground: #ffffff; /* White */
     --secondary: #b08a57; /* Light brown */
     --secondary-foreground: #302003; /* Darker text color */
@@ -36,6 +37,7 @@
     --popover: #302003; /* Dark brown */
     --popover-foreground: #f5f3e7; /* Lighter text color for dark mode */
     --primary: #85a86f; /* Slightly lighter primary color for dark mode */
+    --primary-hover: #688a4d;
     --primary-foreground: #302003; /* Dark brown */
     --secondary: #5a7a37; /* Slightly lighter secondary color for dark mode */
     --secondary-foreground: #f5f3e7; /* Lighter text color for dark mode */

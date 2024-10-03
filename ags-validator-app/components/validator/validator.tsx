@@ -73,7 +73,7 @@ export default function Validator() {
                       </TabsTrigger>
                     </TabsList>
                   </div>
-                  <Button disabled={agsData === ""} onClick={handleExport}>Export</Button>
+                  <Button variant={"default"}  disabled={agsData === ""} onClick={handleExport}>Export</Button>
 
                   {tabsViewValue === "tables" && parsedAgs !== undefined && (
                     <SelectTable
