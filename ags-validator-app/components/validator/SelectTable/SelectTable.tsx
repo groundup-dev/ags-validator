@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { AgsRaw } from "@groundup/ags";
-import { Label } from "@radix-ui/react-label";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   parsedAgs: AgsRaw | undefined;
@@ -42,7 +42,7 @@ export default function SelectTable({
     : [];
 
   return (
-    <div className="grid items-center gap-1.5 ">
+    <div className="grid items-center gap-1.5 mb-4">
       <Label htmlFor="selectTable">Select Group</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

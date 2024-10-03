@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect } from "react";
 import DataGrid, {
   EditableGridCell,
   EditListItem,
@@ -19,14 +19,18 @@ interface Props {
 }
 
 const GridView: React.FC<Props> = ({ group, setGroup }) => {
-  const columns: GridColumn[] = useMemo(
-    () =>
+  useEffect(() => {
+    console.log("group.headings", group.headings);
+    console.log("setting columns");
+    setColumns(
       group.headings.map((heading) => ({
         title: heading.name,
         width: 100,
-      })),
-    [group.headings]
-  );
+      }))
+    );
+  }, [group.name]);
+
+  const [columns, setColumns] = React.useState<GridColumn[]>([]);
 
   const onCellsEdited = React.useCallback(
     (newValues: readonly EditListItem[]) => {
@@ -109,17 +113,39 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
     [group]
   );
 
+  const onColumnResize = useCallback(
+    (column: GridColumn, newSize: number) => {
+      setColumns((prevColsMap) => {
+        const index = prevColsMap.findIndex((ci) => ci.title === column.title);
+        const newArray = [...prevColsMap];
+        newArray.splice(index, 1, {
+          ...prevColsMap[index],
+          width: newSize,
+          title: column.title,
+        });
+        return newArray;
+      });
+    },
+    [setColumns]
+  );
+
   return (
     <div className="w-full h-full">
       <DataGrid
         onCellsEdited={onCellsEdited}
-        rowMarkers={"checkbox-visible"}
+        rowMarkers={"checkbox"}
         columns={columns}
         getCellContent={getData}
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
         rows={group.rows.length}
         onPaste={true}
+        overscrollX={0}
+        overscrollY={0}
+        // scaleToRem={true}
+        maxColumnAutoWidth={200}
+        maxColumnWidth={500}
+        onColumnResize={onColumnResize}
       />
     </div>
   );
