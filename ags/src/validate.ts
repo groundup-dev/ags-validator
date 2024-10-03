@@ -36,7 +36,9 @@ export function validateAgsData(
   parsedAgs?: AgsRaw | undefined;
 } {
   const agsErrorsForRaw = validateAgsDataRaw(rawAgs);
-  if (agsErrorsForRaw.length > 0) {
+  if (
+    agsErrorsForRaw.filter((error) => error.severity === "error").length > 0
+  ) {
     return {
       errors: agsErrorsForRaw,
       parsedAgs: undefined,

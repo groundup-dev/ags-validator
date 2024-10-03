@@ -59,7 +59,7 @@ export function parseGroup(input: string, startLineNumber: number): GroupRaw {
 // Function to parse the entire AGS input into a structured AgsRaw object
 export const parseAgs = (input: string): AgsRaw => {
   const splitter = /\n"GROUP",/;
-  console.log("input", input);
+
   const parsedInput = input
     .split(splitter)
     .map((group, index) => (index === 0 ? group : `"GROUP",${group}`));
@@ -79,4 +79,29 @@ export const parseAgs = (input: string): AgsRaw => {
   });
 
   return ags;
+};
+
+export const parsedAgsToString = (parsedAgs: AgsRaw): string => {
+  const groups = Object.values(parsedAgs);
+  const groupStrings = groups.map((group) => {
+    const headings = group.headings.map((heading) => `"${heading.name}"`);
+    const units = group.headings.map((heading) => `"${heading.unit}"`);
+    const types = group.headings.map((heading) => `"${heading.type}"`);
+    const data = group.rows.map((row) => {
+      const values = group.headings.map(
+        (heading) => `"${row.data[heading.name]}"`,
+      );
+      return `"DATA",${values.join(",")}`;
+    });
+
+    return [
+      `"GROUP","${group.name}"`,
+      `"HEADING",${headings.join(",")}`,
+      `"UNIT",${units.join(",")}`,
+      `"TYPE",${types.join(",")}`,
+      ...data,
+    ].join("\n");
+  });
+
+  return groupStrings.join("\n\n");
 };
