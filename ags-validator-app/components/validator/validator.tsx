@@ -36,7 +36,7 @@ export default function Validator() {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="flex flex-col p-4 max-w-400 w-full">
+      <div className="flex flex-col p-4 max-w-500 w-full">
         <div className="flex gap-4 md:flex-row flex-col">
           <div className="w-full md:w-3/5 h-[calc(100vh-6rem)]">
             <Tabs

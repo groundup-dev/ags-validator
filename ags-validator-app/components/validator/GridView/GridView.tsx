@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo } from "react";
 import DataGrid, {
   EditableGridCell,
+  EditListItem,
   GridCell,
   GridCellKind,
   GridColumn,
@@ -11,8 +12,6 @@ import DataGrid, {
 import { GroupRaw } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
 
-// Define the interfaces (as provided in your description)
-
 // Props for the table component
 interface Props {
   group: GroupRaw; // GroupRaw object
@@ -20,34 +19,61 @@ interface Props {
 }
 
 const GridView: React.FC<Props> = ({ group, setGroup }) => {
-  // Prepare the columns for the Data Grid
   const columns: GridColumn[] = useMemo(
     () =>
       group.headings.map((heading) => ({
         title: heading.name,
-        width: 200,
+        width: 100,
       })),
     [group.headings]
   );
 
+  const onCellsEdited = React.useCallback(
+    (newValues: readonly EditListItem[]) => {
+      const cells: Item[] = newValues.map((cell) => cell.location);
+      const values = newValues.map((cell) => cell.value) as EditableGridCell[];
+
+      const newGroup = {
+        ...group,
+        rows: group.rows.map((row, rowIndex) => {
+          const updatedRow = { ...row };
+          cells.forEach((cell, index) => {
+            if (cell[1] === rowIndex) {
+              const colNum = cell[0];
+              const heading = group.headings[colNum];
+              if (heading) {
+                const newData =
+                  values[index]?.kind === GridCellKind.Text
+                    ? values[index].data
+                    : "";
+
+                updatedRow.data[heading.name] = newData;
+              }
+            }
+          });
+          return updatedRow;
+        }),
+      };
+      setGroup(group.name, newGroup);
+    },
+    [group, setGroup]
+  );
+
+  // Handle single cell edit
   const onCellEdited = React.useCallback(
     (cell: Item, newValue: EditableGridCell) => {
       if (newValue.kind !== GridCellKind.Text) {
-        // we only have text cells, might as well just die here.
-        return;
+        return; // Only handle text cells
       }
+
       const [colNum, rowNum] = cell;
       const row = group.rows[rowNum];
       const col = group.headings[colNum];
 
-      if (row === undefined || col === undefined) {
-        throw new Error("Invalid cell");
-      }
+      if (!row || !col) return;
 
       const heading = group.headings[colNum];
-      if (!heading) {
-        return;
-      }
+      if (!heading) return;
       const newGroup = {
         ...group,
         rows: group.rows.map((r, i) =>
@@ -56,17 +82,19 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
             : r
         ),
       };
+
       setGroup(group.name, newGroup);
     },
     [group, setGroup]
   );
 
+  // Get cell data for rendering
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
       const row = group.rows[rowNum];
       const col = group.headings[colNum];
 
-      if (row === undefined || col === undefined) {
+      if (!row || !col) {
         throw new Error("Invalid cell");
       }
 
@@ -81,21 +109,17 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
     [group]
   );
 
-  const getCellsForSelection = useCallback(
-    (selection: Rectangle, abortSignal: AbortSignal): GridCell[][] => {},
-    [group]
-  );
-
   return (
     <div className="w-full h-full">
       <DataGrid
+        onCellsEdited={onCellsEdited}
+        rowMarkers={"checkbox-visible"}
         columns={columns}
         getCellContent={getData}
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
         rows={group.rows.length}
         onPaste={true}
-        rowMarkers={"number"}
       />
     </div>
   );
