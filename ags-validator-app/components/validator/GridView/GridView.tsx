@@ -11,12 +11,48 @@ import DataGrid, {
 } from "@glideapps/glide-data-grid";
 import { GroupRaw } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
+import { useValidator } from "../hooks/useValidator";
 
 // Props for the table component
 interface Props {
   group: GroupRaw; // GroupRaw object
   setGroup: (label: string, group: GroupRaw) => void;
 }
+
+const updateGroup = (
+  group: GroupRaw,
+  updates: { cell: Item; value: EditableGridCell }[]
+): GroupRaw => {
+  const updatedRows = [...group.rows];
+  const updatedHeadings = [...group.headings];
+
+  updates.forEach(({ cell, value }) => {
+    const [colNum, rowIndex] = cell;
+    const heading = group.headings[colNum];
+    const data = value.data as string;
+
+    // Update heading (first two rows represent special cases for unit/type)
+    if (rowIndex === 0 && heading) {
+      updatedHeadings[colNum] = { ...heading, unit: data };
+    } else if (rowIndex === 1 && heading) {
+      updatedHeadings[colNum] = { ...heading, type: data };
+    } else {
+      // Update data rows (rowIndex - 2 for actual data rows)
+      const rowNumForData = rowIndex - 2;
+      if (heading && updatedRows[rowNumForData]) {
+        updatedRows[rowNumForData] = {
+          ...updatedRows[rowNumForData],
+          data: {
+            ...updatedRows[rowNumForData].data,
+            [heading.name]: data,
+          },
+        };
+      }
+    }
+  });
+
+  return { ...group, rows: updatedRows, headings: updatedHeadings };
+};
 
 const GridView: React.FC<Props> = ({ group, setGroup }) => {
   useEffect(() => {
@@ -30,35 +66,25 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
     );
   }, [group.name]);
 
+  // const { parsedAgs, errors } = useValidator();
+
   const [columns, setColumns] = React.useState<GridColumn[]>([]);
 
   const onCellsEdited = React.useCallback(
     (newValues: readonly EditListItem[]) => {
-      const cells: Item[] = newValues.map((cell) => cell.location);
-      const values = newValues.map((cell) => cell.value) as EditableGridCell[];
+      // Transform the input data into the format expected by updateGroup
+      const updates = newValues.map((newItem) => ({
+        cell: newItem.location,
+        value: newItem.value,
+      }));
 
-      const newGroup = {
-        ...group,
-        rows: group.rows.map((row, rowIndex) => {
-          const updatedRow = { ...row };
-          cells.forEach((cell, index) => {
-            if (cell[1] === rowIndex) {
-              const colNum = cell[0];
-              const heading = group.headings[colNum];
-              if (heading) {
-                const newData =
-                  values[index]?.kind === GridCellKind.Text
-                    ? values[index].data
-                    : "";
+      // Perform all state updates at once by constructing the new group
+      const newGroup = updateGroup(group, updates);
 
-                updatedRow.data[heading.name] = newData;
-              }
-            }
-          });
-          return updatedRow;
-        }),
-      };
+      // Set the group state once with the updated data
+
       setGroup(group.name, newGroup);
+      console.log("setting group on cells edit");
     },
     [group, setGroup]
   );
@@ -66,51 +92,59 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
   // Handle single cell edit
   const onCellEdited = React.useCallback(
     (cell: Item, newValue: EditableGridCell) => {
-      if (newValue.kind !== GridCellKind.Text) {
-        return; // Only handle text cells
+      if (newValue.kind !== GridCellKind.Text) return; // Only handle text cells
+
+      // Single cell edit wrapped as an array
+      const updates = [{ cell, value: newValue }];
+
+      // Perform the state update at once by constructing the new group
+      const newGroup = updateGroup(group, updates);
+
+      // Check if there are any changes before setting the group state
+      if (JSON.stringify(group) !== JSON.stringify(newGroup)) {
+        setGroup(group.name, newGroup);
+        console.log("setting group on cell edit");
       }
-
-      const [colNum, rowNum] = cell;
-      const row = group.rows[rowNum];
-      const col = group.headings[colNum];
-
-      if (!row || !col) return;
-
-      const heading = group.headings[colNum];
-      if (!heading) return;
-      const newGroup = {
-        ...group,
-        rows: group.rows.map((r, i) =>
-          i === rowNum
-            ? { ...r, data: { ...r.data, [heading.name]: newValue.data } }
-            : r
-        ),
-      };
-
-      setGroup(group.name, newGroup);
+      // setGroup(group.name, newGroup);
+      // console.log("setting group on cell edit");
     },
     [group, setGroup]
   );
 
+  const getDataForCell = (colNum: number, rowNum: number): string => {
+    const col = group.headings[colNum];
+
+    // if first row we give units
+    if (rowNum == 0) {
+      return col?.unit || "";
+    } else if (rowNum == 1) {
+      return col?.type || "";
+    }
+
+    const row = group.rows[rowNum - 2];
+    console;
+
+    if (!row || !col) {
+      return "";
+    }
+
+    return row.data[col.name] || "";
+  };
+
   // Get cell data for rendering
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
-      const row = group.rows[rowNum];
-      const col = group.headings[colNum];
-
-      if (!row || !col) {
-        throw new Error("Invalid cell");
-      }
+      const data = getDataForCell(colNum, rowNum);
 
       return {
         kind: GridCellKind.Text,
-        data: row.data[col.name] || "",
+        data: data,
         allowOverlay: true,
-        displayData: row.data[col.name] || "",
+        displayData: data,
         readonly: false,
       };
     },
-    [group]
+    [group, getDataForCell]
   );
 
   const onColumnResize = useCallback(
@@ -138,10 +172,19 @@ const GridView: React.FC<Props> = ({ group, setGroup }) => {
         getCellContent={getData}
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
-        rows={group.rows.length}
+        rows={group.rows.length + 2}
         onPaste={true}
         overscrollX={0}
         overscrollY={0}
+        freezeTrailingRows={-2}
+        getRowThemeOverride={(i) =>
+          i > 1
+            ? undefined
+            : {
+                bgCell: "#e0f0ff88",
+              }
+        }
+        //
         // scaleToRem={true}
         maxColumnAutoWidth={200}
         maxColumnWidth={500}
