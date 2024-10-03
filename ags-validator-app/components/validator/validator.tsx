@@ -5,6 +5,7 @@ import ErrorMessages from "./ErrorMessages";
 import React, { useEffect, useState } from "react";
 import TextArea from "./TextArea";
 import AGSUpload from "./AGSUpload";
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Label } from "../ui/label";
@@ -34,6 +35,18 @@ export default function Validator() {
     }
   }, [parsedAgs, selectedGroup, setSelectedGroup]);
 
+
+  // Function to handle exporting the agsData as a .ags file
+  const handleExport = () => {
+    if (!agsData) return;
+
+    const blob = new Blob([agsData], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "exported.ags"; // Filename for the download
+    link.click();
+  };
+
   return (
     <div className="flex justify-center w-full">
       <div className="flex flex-col p-4 max-w-500 w-full">
@@ -60,6 +73,8 @@ export default function Validator() {
                       </TabsTrigger>
                     </TabsList>
                   </div>
+                  <Button disabled={agsData === ""} onClick={handleExport}>Export</Button>
+
                   {tabsViewValue === "tables" && parsedAgs !== undefined && (
                     <SelectTable
                       parsedAgs={parsedAgs}
