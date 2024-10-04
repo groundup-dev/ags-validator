@@ -1,4 +1,7 @@
 import { rulesForRawString } from "./rulesForRawData";
-import { rulesForParsedAgs } from "./rulesForParsedAgs";
+import {
+  rulesForParsedAgs,
+  rulesForParsedAgsWithDict,
+} from "./rulesForParsedAgs";
 
-export { rulesForRawString, rulesForParsedAgs };
+export { rulesForRawString, rulesForParsedAgs, rulesForParsedAgsWithDict };

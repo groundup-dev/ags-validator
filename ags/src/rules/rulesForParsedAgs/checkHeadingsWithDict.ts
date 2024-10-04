@@ -3,12 +3,7 @@
 // // GROUPs where they are indicated in the AGS FORMAT DATA DICTIONARY. These fields require
 // // data entry and cannot be null (i.e. left blank or empty).
 
-import {
-  AgsDictionaryVersion,
-  AgsError,
-  HeadingRaw,
-  RowRaw,
-} from "../../types";
+import { AgsDictionaryVersion, AgsError, RowRaw } from "../../types";
 import { AgsValidationStepParsedWithDict } from "./types";
 import { standardDictionaries } from "../../standardDictionaries";
 
@@ -94,16 +89,11 @@ export const rule10c: AgsValidationStepParsedWithDict = {
           entry.data.DICT_GRP === group && entry.data.DICT_TYPE === "GROUP",
       )?.data.DICT_PGRP;
 
-      if (!parentGroup || parentGroup === "-") {
-        // If parent group is not included in the file, skip the check
+      if (!parentGroup || parentGroup === "-" || parentGroup === "PROJ") {
+        // If parent group is not included in the file, skip the check, or if group is LOCA
 
         continue;
       }
-
-      const keyHeadings = dictEntries.filter(
-        (entry) =>
-          entry.data.DICT_GRP === group && entry.data.DICT_STAT.includes("KEY"),
-      );
 
       if (!ags[parentGroup]) {
         errors.push({
@@ -133,7 +123,7 @@ export const rule10c: AgsValidationStepParsedWithDict = {
 
       // Check if every key in the current group has a match in the parent group
       for (const row of ags[group].rows) {
-        const rowKey = keyHeadings
+        const rowKey = parentKeyHeadings
           .map((heading) => row.data[heading.data.DICT_HDNG])
           .join("|");
 
@@ -191,7 +181,7 @@ export const rule10a: AgsValidationStepParsedWithDict = {
         rowValues.get(key)!.push(row);
       }
 
-      for (const [key, rows] of rowValues.entries()) {
+      for (const [, rows] of rowValues.entries()) {
         if (rows.length > 1) {
           nonUniqueRows.push(...rows);
         }
