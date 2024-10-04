@@ -16,12 +16,16 @@ export default function Validator() {
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
 
-  const [lineNumber, setActiveLineNumber] = useState<number | undefined>(
+  const [activeLineNumber, setActiveLineNumber] = useState<number | undefined>(
     undefined
   );
   const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
 
   const [selectedGroup, setSelectedGroup] = useState<string>("");
+
+  // we need to scroll to the table row when an error is clicked
+  // and change the selected group based on the error
+  useEffect(() => {}, [activeLineNumber, selectedGroup, setSelectedGroup]);
 
   // we need to populate the selectedGroup state when tables view is selected the first time
   useEffect(() => {
@@ -77,7 +81,7 @@ export default function Validator() {
                       agsData={agsData}
                       setAgsData={setAgsData}
                       errors={errors}
-                      activeLineNumber={lineNumber}
+                      activeLineNumber={activeLineNumber}
                       hoverLineNumber={hoverLineNumber}
                     />
                   </CardContent>
