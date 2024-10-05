@@ -1,22 +1,11 @@
-// // Rule 10b
-// // Some HEADINGs are marked as REQUIRED. REQUIRED fields must appear in the data
-// // GROUPs where they are indicated in the AGS FORMAT DATA DICTIONARY. These fields require
-// // data entry and cannot be null (i.e. left blank or empty).
-
-import { AgsDictionaryVersion, AgsError, RowRaw } from "../../types";
+import { AgsError, RowRaw } from "../../types";
 import { AgsValidationStepParsedWithDict } from "./types";
-import { standardDictionaries } from "../../standardDictionaries";
+import { getDictForVersion } from "../../standardDictionaries";
 
-// Rule 10c
+// this also convers
+// Rule 12 Data does not have to be included against each HEADING unless REQUIRED (Rule 10b). The
+// data FIELD can be null; a null entry is defined as "" (two quotes together).
 
-function getDictForVersion(dictVersion?: AgsDictionaryVersion) {
-  if (!dictVersion) {
-    throw new Error("Dictionary version is required for this rule");
-  }
-  return standardDictionaries[dictVersion];
-}
-
-// must be included within the data file.
 export const rule10b: AgsValidationStepParsedWithDict = {
   rule: "10b",
   description:
@@ -209,8 +198,6 @@ export const rule9: AgsValidationStepParsedWithDict = {
   validate: function (ags, dictVersion): AgsError[] {
     const dict = getDictForVersion(dictVersion);
     const groups = Object.keys(ags);
-
-    // first filter out dict.DICT from groups
 
     const dictEntries = dict.DICT.rows.filter((row) => {
       return groups.includes(row.data.DICT_GRP);
