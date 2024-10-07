@@ -6,11 +6,18 @@ export function parseLine(input: string): string[] {
   // Each entry should be separated by a comma
   // Input should be parsed into an array of strings
 
-  const parsedInput = input.split(",");
-  const parsedInputNoQuotes = parsedInput.map((entry) =>
-    entry.replace(/"/g, ""),
-  );
-  return parsedInputNoQuotes;
+  const regex = /"([^"]*)"/g;
+
+  const parsedLine: string[] = [];
+  let match: RegExpExecArray | null = regex.exec(input); // Initial assignment
+
+  // Extract all quoted strings from the current line
+  while (match !== null) {
+    parsedLine.push(match[1]); // Match group 1 contains the value inside quotes
+    match = regex.exec(input); // Update match for the next iteration
+  }
+
+  return parsedLine;
 }
 
 // Function to parse a single group

@@ -111,14 +111,11 @@ export const rule17: AgsValidationStepParsed = {
     // collect all types defined listed in TYPE into set
     const types = ags.TYPE.rows.map((row) => row.data.TYPE_TYPE);
     const uniqueTypes = new Set(types);
-    console.log(uniqueTypes);
 
     // loop through all groups and check if all types are defined in TYPE
     const errors: AgsError[] = [];
     for (const [groupName, group] of Object.entries(ags)) {
       for (const heading of group.headings) {
-        console.log(heading);
-        console.log(uniqueTypes.has(heading.type));
         if (!uniqueTypes.has(heading.type)) {
           errors.push({
             ...baseError,
@@ -308,8 +305,6 @@ export const rule11: AgsValidationStepParsedWithDict = {
                   keys[index],
                 ]),
               );
-
-              console.log(keyFieldsMap);
 
               // now need to find rows in the group that match the key fields
               const matchingRows = ags[linkGroup].rows.filter((row) => {
