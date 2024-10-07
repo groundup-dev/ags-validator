@@ -1,6 +1,10 @@
 import { AgsDictionaryVersion, AgsError, AgsRaw } from "./types";
 import { parseAgs } from "./parse";
-import { rulesForRawString, rulesForParsedAgs } from "./rules";
+import {
+  rulesForRawString,
+  rulesForParsedAgs,
+  rulesForParsedAgsWithDict,
+} from "./rules";
 
 function validateAgsDataRaw(rawAgs: string): AgsError[] {
   let allErrors: AgsError[] = [];
@@ -21,6 +25,21 @@ function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
   const parsedRulesAsArray = Object.values(rulesForParsedAgs);
   parsedRulesAsArray.forEach((step) => {
     const errors = step.validate(rawAgs);
+    allErrors = [...allErrors, ...errors];
+  });
+
+  return allErrors;
+}
+
+function validateAgsDataParsedWithDict(
+  rawAgs: AgsRaw,
+  dictionary: AgsDictionaryVersion,
+): AgsError[] {
+  let allErrors: AgsError[] = [];
+
+  const parsedRulesAsArray = Object.values(rulesForParsedAgsWithDict);
+  parsedRulesAsArray.forEach((step) => {
+    const errors = step.validate(rawAgs, dictionary);
     allErrors = [...allErrors, ...errors];
   });
 
@@ -49,8 +68,18 @@ export function validateAgsData(
   const parsedAgs = parseAgs(rawAgs);
 
   const agsErrorsForParsed = validateAgsDataParsed(parsedAgs);
+
+  const agsErrorsForParsedWithDict = validateAgsDataParsedWithDict(
+    parsedAgs,
+    dictionary,
+  );
+
   return {
-    errors: agsErrorsForParsed,
+    errors: [
+      ...agsErrorsForRaw,
+      ...agsErrorsForParsed,
+      ...agsErrorsForParsedWithDict,
+    ],
     parsedAgs: parsedAgs,
   };
 }

@@ -203,7 +203,7 @@ export const rule8: AgsValidationStepParsed = {
 
           try {
             schemas[groupName][fieldName].parse(fieldValue);
-          } catch (error) {
+          } catch {
             errors.push({
               rule: this.rule,
               lineNumber: row.lineNumber,
