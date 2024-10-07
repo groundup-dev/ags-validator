@@ -1,5 +1,6 @@
 import { AgsRaw } from "../../../src/types";
 import {
+  rule11,
   rule13,
   rule14,
   rule15,
@@ -229,5 +230,186 @@ describe("AGS Rule 17: Validate TYPE group", () => {
   it("should return no errors when all types are defined in TYPE", () => {
     const errors = rule17.validate(validDataWithTypeAndUnits);
     expect(errors).toHaveLength(0);
+  });
+});
+
+// Test for Rule 11: Record Link (RL) field validation
+describe("AGS Rule 11: Record Link (RL) field validation", () => {
+  const dictVersion = "v4_0_4";
+
+  it("should return an error if the linked group in RL field does not exist", () => {
+    const dataWithMissingGroup: AgsRaw = {
+      ...validDataWithTypeAndUnits,
+      TRAN: {
+        name: "TRAN",
+        lineNumber: 1,
+        headings: [
+          { name: "TRAN_DLIM", type: "X", unit: "" },
+          { name: "TRAN_RCON", type: "X", unit: "" },
+        ],
+        rows: [{ data: { TRAN_DLIM: "|", TRAN_RCON: "+" }, lineNumber: 2 }],
+      },
+      SAMP: {
+        name: "SAMP",
+        lineNumber: 3,
+        headings: [
+          { name: "SAMP_LINK", type: "RL", unit: "" },
+          { name: "SAMP_ID", type: "X", unit: "" },
+        ],
+        rows: [
+          {
+            data: { SAMP_LINK: "MONG|BH1|Pipe1", SAMP_ID: "SAMP_001" },
+            lineNumber: 4,
+          },
+        ],
+      },
+      // MONG group does not exist
+    };
+
+    const errors = rule11.validate(dataWithMissingGroup, dictVersion);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toContain("Group 'MONG' is not defined in AGS");
+    expect(errors[0].severity).toBe("error");
+  });
+
+  it("should return no errors if RL field correctly links to a group", () => {
+    const validDataWithLink = {
+      ...validDataWithTypeAndUnits,
+      TRAN: {
+        name: "TRAN",
+        lineNumber: 1,
+        headings: [
+          { name: "TRAN_DLIM", type: "X", unit: "" },
+          { name: "TRAN_RCON", type: "X", unit: "" },
+        ],
+        rows: [{ data: { TRAN_DLIM: "|", TRAN_RCON: "+" }, lineNumber: 2 }],
+      },
+      LOCA: {
+        name: "LOCA",
+        lineNumber: 3,
+        headings: [
+          { name: "LOCA_ID", type: "X", unit: "" },
+          { name: "LOCA_DESC", type: "X", unit: "" },
+        ],
+        rows: [
+          { data: { LOCA_ID: "BH1", LOCA_DESC: "Borehole 1" }, lineNumber: 4 },
+        ],
+      },
+      SAMP: {
+        name: "SAMP",
+        lineNumber: 5,
+        headings: [
+          { name: "SAMP_LINK", type: "RL", unit: "" },
+          { name: "SAMP_ID", type: "X", unit: "" },
+        ],
+        rows: [
+          {
+            data: { SAMP_LINK: "LOCA|BH1", SAMP_ID: "SAMP_001" },
+            lineNumber: 6,
+          },
+        ],
+      },
+    };
+
+    const errors = rule11.validate(validDataWithLink, dictVersion);
+    expect(errors).toHaveLength(0); // No errors since the link is valid
+  });
+
+  it("should return an error if no matching row is found in the linked group", () => {
+    const dataWithMissingRow: AgsRaw = {
+      ...validDataWithTypeAndUnits,
+      TRAN: {
+        name: "TRAN",
+        lineNumber: 1,
+        headings: [
+          { name: "TRAN_DLIM", type: "X", unit: "" },
+          { name: "TRAN_RCON", type: "X", unit: "" },
+        ],
+        rows: [{ data: { TRAN_DLIM: "|", TRAN_RCON: "+" }, lineNumber: 2 }],
+      },
+      LOCA: {
+        name: "LOCA",
+        lineNumber: 3,
+        headings: [
+          { name: "LOCA_ID", type: "X", unit: "" },
+          { name: "LOCA_DESC", type: "X", unit: "" },
+        ],
+        rows: [
+          { data: { LOCA_ID: "BH2", LOCA_DESC: "Borehole 2" }, lineNumber: 4 },
+        ],
+      },
+      SAMP: {
+        name: "SAMP",
+        lineNumber: 5,
+        headings: [
+          { name: "SAMP_LINK", type: "RL", unit: "" },
+          { name: "SAMP_ID", type: "X", unit: "" },
+        ],
+        rows: [
+          {
+            data: { SAMP_LINK: "LOCA|BH1", SAMP_ID: "SAMP_001" },
+            lineNumber: 6,
+          },
+        ],
+      },
+    };
+
+    const errors = rule11.validate(dataWithMissingRow, dictVersion);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toContain(
+      "No matching row found in group 'LOCA' for LOCA|BH1",
+    );
+    expect(errors[0].severity).toBe("error");
+  });
+
+  it("should return an error if multiple matching rows are found in the linked group", () => {
+    const dataWithMultipleRows = {
+      ...validDataWithTypeAndUnits,
+      TRAN: {
+        name: "TRAN",
+        lineNumber: 1,
+        headings: [
+          { name: "TRAN_DLIM", type: "X", unit: "" },
+          { name: "TRAN_RCON", type: "X", unit: "" },
+        ],
+        rows: [{ data: { TRAN_DLIM: "|", TRAN_RCON: "+" }, lineNumber: 2 }],
+      },
+      LOCA: {
+        name: "LOCA",
+        lineNumber: 3,
+        headings: [
+          { name: "LOCA_ID", type: "X", unit: "" },
+          { name: "LOCA_DESC", type: "X", unit: "" },
+        ],
+        rows: [
+          { data: { LOCA_ID: "BH1", LOCA_DESC: "Borehole 1" }, lineNumber: 4 },
+          {
+            data: { LOCA_ID: "BH1", LOCA_DESC: "Borehole 1 duplicate" },
+            lineNumber: 5,
+          },
+        ], // Duplicate MONG_ID entries
+      },
+      SAMP: {
+        name: "SAMP",
+        lineNumber: 6,
+        headings: [
+          { name: "SAMP_LINK", type: "RL", unit: "" },
+          { name: "SAMP_ID", type: "X", unit: "" },
+        ],
+        rows: [
+          {
+            data: { SAMP_LINK: "LOCA|BH1", SAMP_ID: "SAMP_001" },
+            lineNumber: 7,
+          },
+        ],
+      },
+    };
+
+    const errors = rule11.validate(dataWithMultipleRows, dictVersion);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toContain(
+      "Multiple matching rows found in group 'LOCA' for LOCA|BH1",
+    );
+    expect(errors[0].severity).toBe("error");
   });
 });

@@ -4,15 +4,19 @@ export interface HeadingRaw {
   unit: string;
 }
 
-export interface RowRaw {
-  data: Record<string, string>;
+// Utility type to extract names from headings
+type HeadingNames<T extends HeadingRaw[]> = T[number]["name"];
+
+export interface RowRaw<T extends HeadingRaw[]> {
+  // Constrain keys of data to the names from the headings
+  data: Record<HeadingNames<T>, string>;
   lineNumber: number;
 }
 
 export interface GroupRaw {
   name: string;
   headings: HeadingRaw[];
-  rows: RowRaw[];
+  rows: RowRaw<this["headings"]>[];
   lineNumber: number;
 }
 

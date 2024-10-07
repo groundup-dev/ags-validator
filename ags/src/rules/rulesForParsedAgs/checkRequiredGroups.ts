@@ -289,16 +289,17 @@ export const rule11: AgsValidationStepParsedWithDict = {
             // there can be multiple links in a single field
 
             for (const link of links) {
-              const [group, ...keys] = link.split(delimiter);
-              if (!ags[group]) {
+              const [linkGroup, ...keys] = link.split(delimiter);
+              if (!ags[linkGroup]) {
                 errors.push({
                   rule: this.rule,
                   lineNumber: row.lineNumber,
                   group: groupName,
                   field: heading.name,
                   severity: "error",
-                  message: `Group '${group}' is not defined in AGS`,
+                  message: `Group '${linkGroup}' is not defined in AGS`,
                 });
+                continue;
               }
 
               const keyFieldsMap = Object.fromEntries(
@@ -308,8 +309,10 @@ export const rule11: AgsValidationStepParsedWithDict = {
                 ]),
               );
 
+              console.log(keyFieldsMap);
+
               // now need to find rows in the group that match the key fields
-              const matchingRows = ags[group].rows.filter((row) => {
+              const matchingRows = ags[linkGroup].rows.filter((row) => {
                 for (const key of keyHeadings) {
                   if (
                     row.data[key.data.DICT_HDNG] !==
@@ -328,7 +331,7 @@ export const rule11: AgsValidationStepParsedWithDict = {
                   group: groupName,
                   field: heading.name,
                   severity: "error",
-                  message: `No matching row found in group '${group}' for ${value} `,
+                  message: `No matching row found in group '${linkGroup}' for ${value} `,
                 });
               }
 
@@ -339,7 +342,7 @@ export const rule11: AgsValidationStepParsedWithDict = {
                   group: groupName,
                   field: heading.name,
                   severity: "error",
-                  message: `Multiple matching rows found in group '${group}' for ${value} `,
+                  message: `Multiple matching rows found in group '${linkGroup}' for ${value} `,
                 });
               }
             }

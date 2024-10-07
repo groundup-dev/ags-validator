@@ -1,4 +1,4 @@
-import { AgsError, RowRaw } from "../../types";
+import { AgsError } from "../../types";
 import { AgsValidationStepParsedWithDict } from "./types";
 import { combineDicts, getDictForVersion } from "../../standardDictionaries";
 
@@ -161,8 +161,8 @@ export const rule10a: AgsValidationStepParsedWithDict = {
 
       // find non-unique rows in the group
 
-      const nonUniqueRows: RowRaw[] = [];
-      const rowValues = new Map<string, RowRaw[]>();
+      const nonUniqueRows = [];
+      const rowValues = new Map<string, typeof keyHeadings>();
 
       for (const row of ags[group].rows) {
         const key = keyHeadings
