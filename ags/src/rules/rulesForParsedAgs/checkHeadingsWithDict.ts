@@ -1,6 +1,6 @@
 import { AgsError, RowRaw } from "../../types";
 import { AgsValidationStepParsedWithDict } from "./types";
-import { getDictForVersion } from "../../standardDictionaries";
+import { combineDicts, getDictForVersion } from "../../standardDictionaries";
 
 // this also convers
 // Rule 12 Data does not have to be included against each HEADING unless REQUIRED (Rule 10b). The
@@ -14,11 +14,13 @@ export const rule10b: AgsValidationStepParsedWithDict = {
     const dict = getDictForVersion(dictVersion);
     const groups = Object.keys(ags);
 
+    const dictCombined = combineDicts(dict.DICT, ags.DICT);
+
     const errors: AgsError[] = [];
 
     for (const group of groups) {
       // Get the dictionary entries for the current group
-      const requiredHeadings = dict.DICT.rows.filter(
+      const requiredHeadings = dictCombined.rows.filter(
         (entry) =>
           entry.data.DICT_GRP === group &&
           entry.data.DICT_STAT.includes("REQUIRED"),
@@ -65,8 +67,10 @@ export const rule10c: AgsValidationStepParsedWithDict = {
 
     const errors: AgsError[] = [];
 
+    const dictCombined = combineDicts(dict.DICT, ags.DICT);
+
     // get dictionary entries for relevant groups
-    const dictEntries = dict.DICT.rows.filter((row) => {
+    const dictEntries = dictCombined.rows.filter((row) => {
       return groups.includes(row.data.DICT_GRP);
     });
 
@@ -140,8 +144,10 @@ export const rule10a: AgsValidationStepParsedWithDict = {
     const dict = getDictForVersion(dictVersion);
     const groups = Object.keys(ags);
 
+    const dictCombined = combineDicts(dict.DICT, ags.DICT);
+
     // first filter out dict.DICT from groups
-    const dictEntries = dict.DICT.rows.filter((row) => {
+    const dictEntries = dictCombined.rows.filter((row) => {
       return groups.includes(row.data.DICT_GRP);
     });
 
