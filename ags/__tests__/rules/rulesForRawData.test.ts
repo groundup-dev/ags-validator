@@ -94,6 +94,12 @@ describe("AGS Data Validation Rules", () => {
       const errors = rulesForRawString.rule5.validate(validData);
       expect(errors).toHaveLength(0);
     });
+    it("should return no errors for properly quoted fields", () => {
+      const validData =
+        '"DATA","831024","36A Halsey Street, London","Kensington, London","Drake Investments Limited","Ground Engineering Limited","Unknown","",""';
+      const errors = rulesForRawString.rule5.validate(validData);
+      expect(errors).toHaveLength(0);
+    });
 
     it("should return an error if fields are not properly enclosed in double quotes", () => {
       const invalidData = 'GROUP,"GROUP_NAME"\r\n"DATA","Field1","Field2"\r\n'; // Missing quotes around GROUP

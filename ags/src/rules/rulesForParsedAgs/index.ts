@@ -1,4 +1,5 @@
 import { rule19, rule19a, rule19b, rule7 } from "./checkGroupAndHeadings";
+import { rule10a, rule10b, rule10c, rule9 } from "./checkHeadingsWithDict";
 import { rule8 } from "./checkDataTypes";
 import {
   AgsValidationStepParsed,
@@ -16,4 +17,9 @@ export const rulesForParsedAgs: Record<string, AgsValidationStepParsed> = {
 export const rulesForParsedAgsWithDict: Record<
   string,
   AgsValidationStepParsedWithDict
-> = {};
+> = {
+  rule10a,
+  rule10b,
+  rule10c,
+  rule9,
+};

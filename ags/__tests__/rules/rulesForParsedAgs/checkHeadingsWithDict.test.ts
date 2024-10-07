@@ -180,6 +180,41 @@ describe("AGS Rule 10c: Key field links between groups", () => {
     const errors = rule10c.validate(invalidData, dictVersion);
     expect(errors).toHaveLength(1);
   });
+
+  it("should pass when values found in parent group", () => {
+    const invalidData = {
+      PROJ: validData.PROJ,
+      LOCA: {
+        name: "LOCA",
+        lineNumber: 1,
+        headings: [
+          { name: "LOCA_ID", type: "ID", unit: "" },
+          { name: "LOCA_TYPE", type: "X", unit: "" },
+        ],
+        rows: [
+          { data: { LOCA_ID: "001", LOCA_TYPE: "Type A" }, lineNumber: 2 },
+        ],
+      },
+      GEOL: {
+        name: "GEOL",
+        lineNumber: 10,
+        headings: [
+          { name: "LOCA_ID", type: "ID", unit: "" },
+          { name: "GEOL_TOP", type: "2DP", unit: "" },
+          { name: "GEOL_BASE", type: "2DP", unit: "m" },
+        ],
+        rows: [
+          {
+            data: { GEOL_TOP: "10.00", GEOL_BASE: "9.00", LOCA_ID: "001" }, // LOCA_ID does not match the parent group
+            lineNumber: 11,
+          },
+        ],
+      },
+    };
+
+    const errors = rule10c.validate(invalidData, dictVersion);
+    expect(errors).toHaveLength(0);
+  });
 });
 
 // Test for Rule 10a: No duplicate key values

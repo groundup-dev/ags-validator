@@ -1,27 +1,11 @@
-// // Rule 10b
-// // Some HEADINGs are marked as REQUIRED. REQUIRED fields must appear in the data
-// // GROUPs where they are indicated in the AGS FORMAT DATA DICTIONARY. These fields require
-// // data entry and cannot be null (i.e. left blank or empty).
-
-import {
-  AgsDictionaryVersion,
-  AgsError,
-  HeadingRaw,
-  RowRaw,
-} from "../../types";
+import { AgsError } from "../../types";
 import { AgsValidationStepParsedWithDict } from "./types";
-import { standardDictionaries } from "../../standardDictionaries";
+import { combineDicts, getDictForVersion } from "../../standardDictionaries";
 
-// Rule 10c
+// this also convers
+// Rule 12 Data does not have to be included against each HEADING unless REQUIRED (Rule 10b). The
+// data FIELD can be null; a null entry is defined as "" (two quotes together).
 
-function getDictForVersion(dictVersion?: AgsDictionaryVersion) {
-  if (!dictVersion) {
-    throw new Error("Dictionary version is required for this rule");
-  }
-  return standardDictionaries[dictVersion];
-}
-
-// must be included within the data file.
 export const rule10b: AgsValidationStepParsedWithDict = {
   rule: "10b",
   description:
@@ -30,11 +14,13 @@ export const rule10b: AgsValidationStepParsedWithDict = {
     const dict = getDictForVersion(dictVersion);
     const groups = Object.keys(ags);
 
+    const dictCombined = combineDicts(dict.DICT, ags.DICT);
+
     const errors: AgsError[] = [];
 
     for (const group of groups) {
       // Get the dictionary entries for the current group
-      const requiredHeadings = dict.DICT.rows.filter(
+      const requiredHeadings = dictCombined.rows.filter(
         (entry) =>
           entry.data.DICT_GRP === group &&
           entry.data.DICT_STAT.includes("REQUIRED"),
@@ -81,8 +67,10 @@ export const rule10c: AgsValidationStepParsedWithDict = {
 
     const errors: AgsError[] = [];
 
+    const dictCombined = combineDicts(dict.DICT, ags.DICT);
+
     // get dictionary entries for relevant groups
-    const dictEntries = dict.DICT.rows.filter((row) => {
+    const dictEntries = dictCombined.rows.filter((row) => {
       return groups.includes(row.data.DICT_GRP);
     });
 
@@ -94,16 +82,11 @@ export const rule10c: AgsValidationStepParsedWithDict = {
           entry.data.DICT_GRP === group && entry.data.DICT_TYPE === "GROUP",
       )?.data.DICT_PGRP;
 
-      if (!parentGroup || parentGroup === "-") {
-        // If parent group is not included in the file, skip the check
+      if (!parentGroup || parentGroup === "-" || parentGroup === "PROJ") {
+        // If parent group is not included in the file, skip the check, or if group is LOCA
 
         continue;
       }
-
-      const keyHeadings = dictEntries.filter(
-        (entry) =>
-          entry.data.DICT_GRP === group && entry.data.DICT_STAT.includes("KEY"),
-      );
 
       if (!ags[parentGroup]) {
         errors.push({
@@ -133,7 +116,7 @@ export const rule10c: AgsValidationStepParsedWithDict = {
 
       // Check if every key in the current group has a match in the parent group
       for (const row of ags[group].rows) {
-        const rowKey = keyHeadings
+        const rowKey = parentKeyHeadings
           .map((heading) => row.data[heading.data.DICT_HDNG])
           .join("|");
 
@@ -161,8 +144,10 @@ export const rule10a: AgsValidationStepParsedWithDict = {
     const dict = getDictForVersion(dictVersion);
     const groups = Object.keys(ags);
 
+    const dictCombined = combineDicts(dict.DICT, ags.DICT);
+
     // first filter out dict.DICT from groups
-    const dictEntries = dict.DICT.rows.filter((row) => {
+    const dictEntries = dictCombined.rows.filter((row) => {
       return groups.includes(row.data.DICT_GRP);
     });
 
@@ -176,8 +161,8 @@ export const rule10a: AgsValidationStepParsedWithDict = {
 
       // find non-unique rows in the group
 
-      const nonUniqueRows: RowRaw[] = [];
-      const rowValues = new Map<string, RowRaw[]>();
+      const nonUniqueRows = [];
+      const rowValues = new Map<string, typeof keyHeadings>();
 
       for (const row of ags[group].rows) {
         const key = keyHeadings
@@ -191,7 +176,7 @@ export const rule10a: AgsValidationStepParsedWithDict = {
         rowValues.get(key)!.push(row);
       }
 
-      for (const [key, rows] of rowValues.entries()) {
+      for (const [, rows] of rowValues.entries()) {
         if (rows.length > 1) {
           nonUniqueRows.push(...rows);
         }
@@ -219,8 +204,6 @@ export const rule9: AgsValidationStepParsedWithDict = {
   validate: function (ags, dictVersion): AgsError[] {
     const dict = getDictForVersion(dictVersion);
     const groups = Object.keys(ags);
-
-    // first filter out dict.DICT from groups
 
     const dictEntries = dict.DICT.rows.filter((row) => {
       return groups.includes(row.data.DICT_GRP);

@@ -91,6 +91,7 @@ export default function Validator() {
                       <GridView
                         group={parsedAgs?.[selectedGroup]}
                         setGroup={setGroup}
+                        errors={errors}
                       />
                     )}
                   </CardContent>

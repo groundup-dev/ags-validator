@@ -55,6 +55,10 @@ export default function ErrorMessage({
             <strong> Group: </strong>
             {error.group ?? "n/a"}
           </p>
+          <p>
+            <strong> Heading: </strong>
+            {error.field ?? "n/a"}
+          </p>
         </div>
         <p>
           <strong>Message: </strong>
