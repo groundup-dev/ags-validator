@@ -1,35 +1,44 @@
 {
-  "name": "@groundup/ags",
-  "version": "1.0.0",
-  "main": "dist/index.js",
+  "name": "@groundup-dev/ags",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "build:browser": "webpack --mode production",
-    "build:node": "tsc",
-    "build": "npm run build:browser && npm run build:node",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "rollup -c",
+    "build": "rimraf ./dist && npm run build:types && npm run build:js",
+    "prepublishOnly": "npm run build",
     "test": "jest",
-    "lint": "npx eslint src/ "
+    "lint": "eslint src/"
   },
   "files": [
-    "dist",
-    "assets"
+    "dist"
   ],
   "dependencies": {
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^12.1.0",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.5.4",
     "eslint": "^9.11.1",
     "globals": "^15.9.0",
     "jest": "^29.7.0",
-    "jest-raw-loader": "^1.0.1",
-    "raw-loader": "^4.0.2",
+    "rollup": "^4.24.0",
     "ts-jest": "^29.2.5",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.7.0",
-    "webpack": "^5.94.0",
-    "webpack-cli": "^5.1.4"
+    "typescript-eslint": "^8.7.0"
   },
   "keywords": [],
   "author": "",

@@ -11,7 +11,7 @@
   "dependencies": {
     "@codemirror/view": "^6.33.0",
     "@glideapps/glide-data-grid": "^6.0.3",
-    "@groundup/ags": "file:../ags",
+    "@groundup-dev/ags": "^0.0.1",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.8",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -36,14 +36,16 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.8",
     "postcss": "^8",
+
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.6.2"
   },
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
   "main": "index.js",
