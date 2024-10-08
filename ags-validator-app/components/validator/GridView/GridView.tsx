@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import DataGrid, {
   DataEditorProps,
   EditableGridCell,
@@ -9,6 +9,7 @@ import DataGrid, {
   GridCellKind,
   GridColumn,
   Item,
+  Theme,
 } from "@glideapps/glide-data-grid";
 import { AgsError, GroupRaw } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
@@ -20,7 +21,40 @@ interface Props {
   errors: AgsError[];
 }
 
+const getCSSVariable = (variableName: string) => {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(variableName)
+    .trim();
+};
+
 const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
+  // Create a custom theme using your CSS variables
+  const customTheme: Partial<Theme> = useMemo(
+    () => ({
+      accentColor: getCSSVariable("--border"), // Maps to your primary color
+      accentFg: getCSSVariable("--accent-foreground"),
+      accentLight: getCSSVariable("--background"),
+      // textDark: getCSSVariable("--foreground"),
+      // textMedium: getCSSVariable("--muted-foreground"),
+      // textLight: getCSSVariable("--primary-foreground"),
+      // textBubble: getCSSVariable("--foreground"),
+      // bgIconHeader: getCSSVariable("--card"),
+      // fgIconHeader: getCSSVariable("--card-foreground"),
+      // textHeader: getCSSVariable("--popover-foreground"),
+      // textGroupHeader: getCSSVariable("--primary-foreground"),
+      // textHeaderSelected: getCSSVariable("--primary-foreground"),
+      bgCell: getCSSVariable("--card"),
+      bgCellMedium: getCSSVariable("--muted"),
+      // bgHeader: getCSSVariable("--secondary"),
+      // bgHeaderHasFocus: getCSSVariable("--border"),
+      // bgHeaderHovered: getCSSVariable("--accent"),
+
+      borderColor: getCSSVariable("--border"),
+      horizontalBorderColor: getCSSVariable("--ring"),
+    }),
+    []
+  );
+
   useEffect(() => {
     setColumns(
       group.headings.map((heading) => ({
@@ -119,15 +153,13 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
       const row = group.rows[rowNum];
       const col = group.headings[colNum];
 
-      if (!row || !col) {
-        throw new Error("Invalid cell");
-      }
+      const data = row && col ? row.data[col.name] : "";
 
       return {
         kind: GridCellKind.Text,
-        data: row.data[col.name] || "",
+        data: data,
         allowOverlay: true,
-        displayData: row.data[col.name] || "",
+        displayData: data,
         readonly: false,
       };
     },
@@ -153,6 +185,7 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
   return (
     <div className="w-full h-full">
       <DataGrid
+        theme={customTheme}
         onCellsEdited={onCellsEdited}
         highlightRegions={highlights}
         rowMarkers={"checkbox"}
