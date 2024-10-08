@@ -153,15 +153,13 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
       const row = group.rows[rowNum];
       const col = group.headings[colNum];
 
-      if (!row || !col) {
-        throw new Error("Invalid cell");
-      }
+      const data = row && col ? row.data[col.name] : "";
 
       return {
         kind: GridCellKind.Text,
-        data: row.data[col.name] || "",
+        data: data,
         allowOverlay: true,
-        displayData: row.data[col.name] || "",
+        displayData: data,
         readonly: false,
       };
     },
