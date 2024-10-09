@@ -24,12 +24,12 @@ const themeDemo = EditorView.baseTheme({
     color: "black",
   },
   "& .cm-activeLine.error-line": {
-    backgroundColor: "rgba(255, 0, 0, 0.4)",
+    backgroundColor: "var(--destructive-foreground)",
     color: "black",
   },
   "& .hover-line": {
     // Add a style for hovered line
-    backgroundColor: "yellow !important",
+    backgroundColor: "#FFF372 !important",
   },
 });
 

@@ -39,7 +39,7 @@ export default function Validator() {
   }, [parsedAgs, selectedGroup, setSelectedGroup]);
 
   return (
-    <div className="flex justify-center w-full">
+    <div className="flex justify-center w-full bg-muted rounded-t-xl border-border border shadow-inner">
       <div className="flex flex-col p-4 max-w-500 w-full">
         <div className="flex gap-4 md:flex-row flex-col">
           <div className="w-full md:w-3/5 h-[calc(100vh-6rem)]">
