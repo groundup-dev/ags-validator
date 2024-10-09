@@ -8,25 +8,28 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { HelpCircle } from "lucide-react"; // Import the HelpCircle icon from shadcn
+import { HelpCircle } from "lucide-react";
 import Validator from "@/components/validator";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/logo";
 
 export default function Page() {
   return (
-    <div>
+    <div className="overflow-hidden">
       {/* Description Section */}
-      <div className="text-center bg-background my-9 mx-4">
-        <div className="flex justify-center items-center mb-4 flex-wrap">
-          <h1 className="text-4xl font-bold text-primary mr-4">
-            AGS4 Validator
-          </h1>
-          <h2 className="text-2xl text-secondary">by GroundUp</h2>
+      <div className="text-center my-12 mx-4">
+        <div className="flex justify-center items-center mb-8 flex-wrap gap-x-4 gap-y-4">
+          <div className="flex-0 sm:flex-1" />
+          <h1 className="text-3xl font-bold">AGS4 Validator</h1>
+          <div className="flex items-center gap-2 flex-0 sm:flex-1">
+            <p className="text-lg">by</p>
+            <Logo size="md" />
+          </div>
         </div>
-        <p className="text-lg text-foreground mb-2">
+        <p className="text-lg mb-4">
           Validate, fix, and edit your AGS4 data with ease.
         </p>
-        <p className="text-md text-foreground">
+        <p className="text-md mb-10">
           All your AGS data stays on your device and
           <strong> never leaves your browser</strong>.
           <Dialog>
@@ -35,12 +38,12 @@ export default function Page() {
                 <HelpCircle className="h-5 w-5 text-primary inline" />
               </span>
             </DialogTrigger>
-            <DialogContent className="bg-white p-6 rounded-lg max-w-md mx-auto shadow-lg">
+            <DialogContent className="p-6 rounded-lg max-w-md mx-auto shadow-lg">
               <DialogHeader>
                 <DialogTitle className="text-xl font-bold mb-2">
                   Data Privacy
                 </DialogTitle>
-                <DialogDescription className="text-md text-foreground">
+                <DialogDescription className="text-md">
                   Your AGS files are processed entirely within your browser.
                   This means that your data never leaves your device, and you
                   can use this tool without worrying about any data privacy and
@@ -50,9 +53,22 @@ export default function Page() {
             </DialogContent>
           </Dialog>
         </p>
+        <Button className="rounded-full w-36 shadow-md" variant="secondary">
+          Register now
+        </Button>
       </div>
-      <Separator className="my-2 w-full" />
-      <Validator />
+      <div className="relative">
+        <div
+          className="absolute w-[125%] h-[115%] top-1/2 left-1/2 -z-10"
+          style={{
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(var(--primary) 0%, transparent 70%)",
+          }}
+        />
+        <div className="px-4">
+          <Validator />
+        </div>
+      </div>
     </div>
   );
 }
