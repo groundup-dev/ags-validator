@@ -11,6 +11,8 @@ import {
 import { HelpCircle } from "lucide-react"; // Import the HelpCircle icon from shadcn
 import Validator from "@/components/validator";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 
 export default function Page() {
   return (
@@ -50,6 +52,23 @@ export default function Page() {
             </DialogContent>
           </Dialog>
         </p>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Register</Button>
+          </DialogTrigger>
+          <DialogContent className="bg-white p-6 rounded-lg  ">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold mb-2">
+                Register
+              </DialogTitle>
+              <DialogDescription className="text-md text-foreground">
+                Register for early access to GroundUp
+              </DialogDescription>
+            </DialogHeader>
+            <RegisterForm />
+          </DialogContent>
+        </Dialog>
       </div>
       <Separator className="my-2 w-full" />
       <Validator />
