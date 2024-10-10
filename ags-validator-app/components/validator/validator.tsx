@@ -22,10 +22,9 @@ export default function Validator() {
   const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
 
   const [selectedGroup, setSelectedGroup] = useState<string>("");
-
-  // we need to scroll to the table row when an error is clicked
-  // and change the selected group based on the error
-  useEffect(() => {}, [activeLineNumber, selectedGroup, setSelectedGroup]);
+  const [selectedErrorGroup, setSelectedErrorGroup] = useState<string>("");
+  
+  const [tableRowErrorNumber, setTableRowErrorNumber] = useState<number>(0);
 
   // we need to populate the selectedGroup state when tables view is selected the first time
   useEffect(() => {
@@ -96,6 +95,8 @@ export default function Validator() {
                         group={parsedAgs?.[selectedGroup]}
                         setGroup={setGroup}
                         errors={errors}
+                        tableRowErrorNumber={tableRowErrorNumber}
+                        selectedErrorGroup={selectedErrorGroup}
                       />
                     )}
                   </CardContent>
@@ -109,6 +110,9 @@ export default function Validator() {
                 errors={errors}
                 setActiveLineNumber={setActiveLineNumber}
                 setHoverLineNumber={setHoverLineNumber}
+                setSelectedGroup={setSelectedGroup}
+                setTableRowErrorNumber={setTableRowErrorNumber}
+                setSelectedErrorGroup={setSelectedErrorGroup}
               />
             </CardContent>
           </Card>
