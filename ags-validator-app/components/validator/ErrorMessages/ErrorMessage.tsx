@@ -12,6 +12,7 @@ const severityColor: Record<AgsError["severity"], string> = {
 interface ErrorMessageProps {
   error: AgsError;
   setTableRowErrorNumber: React.Dispatch<React.SetStateAction<number>>;
+  setTableHeaderErrorNumber: React.Dispatch<React.SetStateAction<number>>;
   onView: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -28,6 +29,7 @@ export default function ErrorMessage({
   setSelectedGroup,
   setTableRowErrorNumber,
   setSelectedErrorGroup,
+  setTableHeaderErrorNumber,
 }: ErrorMessageProps) {
   return (
     <div
@@ -51,6 +53,7 @@ export default function ErrorMessage({
           onView(); 
           setSelectedGroup(error.group ?? "");
           setTableRowErrorNumber(error.tableRowLineNumber)
+          setTableHeaderErrorNumber(error.tableHeaderNumber)
           setSelectedErrorGroup(error.group ?? "")
         }}>
           <SquareArrowUpLeft size={16} className="mr-2" />
@@ -75,6 +78,14 @@ export default function ErrorMessage({
         <p>
           <strong>Message: </strong>
           {error.message}
+        </p>
+        <p>
+          <strong>Row Number: </strong>
+          {error.tableRowLineNumber}
+        </p>
+        <p>
+          <strong>Header Number: </strong>
+          {error.tableHeaderNumber}
         </p>
       </div>
     </div>

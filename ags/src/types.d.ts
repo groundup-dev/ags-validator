@@ -41,6 +41,7 @@ export type AgsError = {
   severity: "error" | "warning";
   lineNumber: number;
   tableRowLineNumber: number;
+  tableHeaderNumber: number;
   group?: string;
   field?: string;
   message?: string;

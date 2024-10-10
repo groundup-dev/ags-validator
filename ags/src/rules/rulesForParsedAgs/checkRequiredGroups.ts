@@ -31,6 +31,8 @@ export const rule13: AgsValidationStepParsedWithDict = {
       rule: this.rule,
       severity: "error",
       lineNumber: -1,
+      tableRowLineNumber: 0,
+      tableHeaderNumber: 0,
       group: "PROJ",
     };
 
@@ -68,6 +70,8 @@ export const rule14: AgsValidationStepParsedWithDict = {
       rule: this.rule,
       severity: "error",
       lineNumber: -1,
+      tableRowLineNumber: 0,
+      tableHeaderNumber: 0,
       group: "TRAN",
     };
 
@@ -105,6 +109,8 @@ export const rule17: AgsValidationStepParsed = {
       rule: this.rule,
       severity: "error",
       lineNumber: -1,
+      tableRowLineNumber: 0,
+      tableHeaderNumber: 0,
       group: "TYPE",
     };
 
@@ -141,6 +147,8 @@ export const rule15: AgsValidationStepParsed = {
       rule: this.rule,
       severity: "error",
       lineNumber: -1,
+      tableRowLineNumber: 0,
+      tableHeaderNumber: 0,
       group: "UNIT",
     };
 
@@ -200,6 +208,8 @@ export const rule16: AgsValidationStepParsedWithDict = {
       rule: this.rule,
       severity: "error",
       lineNumber: -1,
+      tableRowLineNumber: 0,
+      tableHeaderNumber: 0,
       group: "ABBR",
     };
 
@@ -291,6 +301,8 @@ export const rule11: AgsValidationStepParsedWithDict = {
                 errors.push({
                   rule: this.rule,
                   lineNumber: row.lineNumber,
+                  tableRowLineNumber: 0,
+                  tableHeaderNumber: 0,
                   group: groupName,
                   field: heading.name,
                   severity: "error",
@@ -323,6 +335,8 @@ export const rule11: AgsValidationStepParsedWithDict = {
                 errors.push({
                   rule: this.rule,
                   lineNumber: row.lineNumber,
+                  tableRowLineNumber: 0,
+                  tableHeaderNumber: 0,
                   group: groupName,
                   field: heading.name,
                   severity: "error",
@@ -334,6 +348,8 @@ export const rule11: AgsValidationStepParsedWithDict = {
                 errors.push({
                   rule: this.rule,
                   lineNumber: row.lineNumber,
+                  tableRowLineNumber: 0,
+                  tableHeaderNumber: 0,
                   group: groupName,
                   field: heading.name,
                   severity: "error",

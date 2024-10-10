@@ -44,6 +44,8 @@ export const rule10b: AgsValidationStepParsedWithDict = {
               rule: "10b",
               severity: "error",
               lineNumber: row.lineNumber,
+              tableRowLineNumber: 0,
+              tableHeaderNumber: 0,
               group: group,
               field: requiredHeading,
               message: `The required field "${requiredHeading}" in group ${group} cannot be null or empty.`,
@@ -91,6 +93,8 @@ export const rule10c: AgsValidationStepParsedWithDict = {
       if (!ags[parentGroup]) {
         errors.push({
           lineNumber: ags[group].lineNumber,
+          tableRowLineNumber: 0,
+          tableHeaderNumber: 0,
           rule: "10c",
           severity: "error",
           group: group,
@@ -125,6 +129,8 @@ export const rule10c: AgsValidationStepParsedWithDict = {
             rule: "10c",
             severity: "error",
             lineNumber: row.lineNumber,
+            tableRowLineNumber: 0,
+            tableHeaderNumber: 0,
             group: group,
             message: `Key value "${rowKey}" in group ${group} does not have a corresponding entry in the parent group ${parentGroup}`,
           });
@@ -187,6 +193,8 @@ export const rule10a: AgsValidationStepParsedWithDict = {
           rule: "10a",
           severity: "error",
           lineNumber: row.lineNumber,
+          tableRowLineNumber: 0,
+          tableHeaderNumber: 0,
           group: group,
           message: `Duplicate key values found in group ${group}`,
         });
@@ -236,6 +244,8 @@ export const rule9: AgsValidationStepParsedWithDict = {
             rule: "10a",
             severity: "warning",
             lineNumber: ags[group].lineNumber,
+            tableRowLineNumber: 0,
+            tableHeaderNumber: 0,
             group: group,
             field: heading.name,
             message: `The heading ${heading.name} is non-standard and not found in AGS version ${dictVersion} dictionary`,
@@ -245,6 +255,8 @@ export const rule9: AgsValidationStepParsedWithDict = {
             rule: "10a",
             severity: "error",
             lineNumber: ags[group].lineNumber,
+            tableHeaderNumber: 0,
+            tableRowLineNumber: 0,
             group: group,
             field: heading.name,
             message: `${heading.name} is not found in AGS version ${dictVersion} dictionary, and is not included in the DICT group`,

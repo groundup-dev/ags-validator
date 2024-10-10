@@ -13,18 +13,14 @@ export const rule7: AgsValidationStepParsed = {
     for (const [groupName, group] of Object.entries(ags)) {
       // assert no duplicates headings in each group
 
-      let tableLineNumber = 0
-      group.rows.forEach((row, index) => {
-        tableLineNumber = index + 1;
-      });
-
       const headings = group.headings.map((heading) => heading.name);
       const uniqueHeadings = new Set(headings);
       if (headings.length !== uniqueHeadings.size) {
         errors.push({
           rule: this.rule,
           lineNumber: group.lineNumber + 2,
-          tableRowLineNumber: tableLineNumber,
+          tableRowLineNumber: 0,
+          tableHeaderNumber: 0,
           group: groupName,
           message: "Duplicate headings found in the group.",
           severity: "error",
@@ -43,16 +39,12 @@ export const rule19: AgsValidationStepParsed = {
     const errors: AgsError[] = [];
     for (const [groupName, group] of Object.entries(ags)) {
 
-      let tableLineNumber = 0
-      group.rows.forEach((row, index) => {
-        tableLineNumber = index + 1;
-      });
-
       if (groupName.length > 4 || !/^[A-Z0-9]+$/.test(groupName)) {
         errors.push({
           rule: this.rule,
           lineNumber: group.lineNumber,
-          tableRowLineNumber: tableLineNumber,
+          tableRowLineNumber: 0,
+          tableHeaderNumber: 0,
           group: groupName,
           message: "Invalid GROUP name format.",
           severity: "error",
@@ -83,7 +75,8 @@ export const rule19a: AgsValidationStepParsed = {
           errors.push({
             rule: this.rule,
             lineNumber: group.lineNumber + 1,
-            tableRowLineNumber: tableLineNumber,
+            tableRowLineNumber: 0,
+            tableHeaderNumber: 0,
             group: groupName,
             field: heading.name,
             message: "Invalid HEADING name format.",
@@ -121,10 +114,6 @@ export const rule19b: AgsValidationStepParsed = {
           .filter((name) => !name.startsWith(groupPrefix))
       );
 
-      let tableLineNumber = 0
-      group.rows.forEach((row, index) => {
-        tableLineNumber = index + 1;
-      });
 
         for (const heading of group.headings) {
           // Check if the heading name is invalid (based on the rules)
@@ -138,7 +127,8 @@ export const rule19b: AgsValidationStepParsed = {
             errors.push({
               rule: this.rule,
               lineNumber: groupLineNumber, 
-              tableRowLineNumber: tableLineNumber,
+              tableRowLineNumber: 0,
+              tableHeaderNumber: 0,
               group: groupName,
               field: heading.name,
               severity: "error",

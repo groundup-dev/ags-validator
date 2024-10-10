@@ -25,6 +25,7 @@ export default function Validator() {
   const [selectedErrorGroup, setSelectedErrorGroup] = useState<string>("");
   
   const [tableRowErrorNumber, setTableRowErrorNumber] = useState<number>(0);
+  const [tableHeaderErrorNumber, setTableHeaderErrorNumber] = useState<number>(0);
 
   // we need to populate the selectedGroup state when tables view is selected the first time
   useEffect(() => {
@@ -96,6 +97,7 @@ export default function Validator() {
                         setGroup={setGroup}
                         errors={errors}
                         tableRowErrorNumber={tableRowErrorNumber}
+                        tableHeaderErrorNumber={tableHeaderErrorNumber}
                         selectedErrorGroup={selectedErrorGroup}
                       />
                     )}
@@ -112,6 +114,7 @@ export default function Validator() {
                 setHoverLineNumber={setHoverLineNumber}
                 setSelectedGroup={setSelectedGroup}
                 setTableRowErrorNumber={setTableRowErrorNumber}
+                setTableHeaderErrorNumber={setTableHeaderErrorNumber}
                 setSelectedErrorGroup={setSelectedErrorGroup}
               />
             </CardContent>

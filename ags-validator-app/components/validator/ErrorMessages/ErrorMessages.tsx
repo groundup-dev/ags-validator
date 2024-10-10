@@ -10,6 +10,7 @@ interface ErrorTableProps {
   setHoverLineNumber: (hoverLineNumber: number | null) => void;
   setSelectedGroup: React.Dispatch<React.SetStateAction<string>>;
   setTableRowErrorNumber: React.Dispatch<React.SetStateAction<number>>;
+  setTableHeaderErrorNumber: React.Dispatch<React.SetStateAction<number>>;
   setSelectedErrorGroup: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -19,6 +20,7 @@ export default function ErrorMessages({
   setHoverLineNumber,
   setSelectedGroup,
   setTableRowErrorNumber,
+  setTableHeaderErrorNumber,
   setSelectedErrorGroup,
 }: ErrorTableProps) {
   const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
@@ -49,6 +51,7 @@ export default function ErrorMessages({
               <ErrorMessage
                 error={error}
                 setTableRowErrorNumber={setTableRowErrorNumber}
+                setTableHeaderErrorNumber={setTableHeaderErrorNumber}
                 onView={() => setActiveLineNumber(error.lineNumber)}
                 onMouseEnter={() => setHoverLineNumber(error.lineNumber)}
                 onMouseLeave={() => setHoverLineNumber(null)}
