@@ -81,7 +81,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
       }),
     [errorLines, hoverLineNumber]
   );
-
+  // console.log(agsData)
   return (
     <div className="h-full w-full flex flex-col overflow-auto">
       <CodeMirror
