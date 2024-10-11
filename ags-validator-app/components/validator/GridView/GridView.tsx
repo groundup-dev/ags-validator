@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import DataGrid, {
   GridCell,
   GridCellKind,
@@ -10,6 +16,7 @@ import DataGrid, {
   DataEditorProps,
   EditableGridCell,
   EditListItem,
+  DataEditorRef,
 } from "@glideapps/glide-data-grid";
 import { AgsError, GroupRaw } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
@@ -19,9 +26,7 @@ interface Props {
   group: GroupRaw;
   setGroup: (label: string, group: GroupRaw) => void;
   errors: AgsError[];
-  tableRowErrorNumber: number; 
-  tableHeaderErrorNumber: number;
-  selectedErrorGroup: string;
+  setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
 }
 
 const getCSSVariable = (variableName: string) => {
@@ -30,14 +35,14 @@ const getCSSVariable = (variableName: string) => {
     .trim();
 };
 
-const GridView: React.FC<Props> = ({ 
-  group, 
-  tableRowErrorNumber, 
-  tableHeaderErrorNumber, 
-  selectedErrorGroup, 
-  errors, 
-  setGroup 
+const GridView: React.FC<Props> = ({
+  group,
+  setGoToErrorCallback,
+  errors,
+  setGroup,
 }) => {
+  const ref = useRef<DataEditorRef | null>(null);
+
   const [selection, setSelection] = useState<GridSelection>({
     columns: CompactSelection.empty(),
     rows: CompactSelection.empty(),
@@ -56,14 +61,37 @@ const GridView: React.FC<Props> = ({
     []
   );
 
+  const scrollToError = useCallback(
+    (error: AgsError) => {
+      if (group.name !== error.group) {
+        return;
+      }
+
+      const rowIndex = error.lineNumber - group.lineNumber - 4;
+
+      if (rowIndex < 0) {
+        // if less than 0, then the error is in the group heading or units
+        return;
+      }
+
+      ref.current?.scrollTo(0, rowIndex, "both", 0, 0, {
+        vAlign: "center",
+        hAlign: "center",
+      });
+    },
+    [group.lineNumber, group.name, ref]
+  );
+
+  useEffect(() => {
+    setGoToErrorCallback(() => scrollToError);
+  }, [setGoToErrorCallback, scrollToError]);
+
   const [columns, setColumns] = useState<GridColumn[]>([]);
 
   const highlights = React.useMemo<DataEditorProps["highlightRegions"]>(() => {
     return errors
       .filter((error) => error.group === group.name)
       .map((error) => {
-        console.log(error);
-
         // minus 4 as there are 4 lines before the table starts
         const rowIndex = error.lineNumber - group.lineNumber - 4;
         return {
@@ -87,44 +115,6 @@ const GridView: React.FC<Props> = ({
       }))
     );
   }, [group.headings]);
-
-  // const incomingCol = 20; // Column 2, index 1
-
-  useEffect(() => {
-    // Only select if the group matches
-    if (group.name === selectedErrorGroup) {
-      const headerIndex = tableHeaderErrorNumber - 1;
-      const rowIndex = tableRowErrorNumber - 1; // Convert to zero-based index
-
-      // Check if the row index is within bounds
-      if (rowIndex >= 0 && rowIndex < group.rows.length) {
-        setSelection({
-          current: {
-            cell: [headerIndex, rowIndex], // Use the zero-based row index
-            range: {
-              x: headerIndex,
-              y: rowIndex,
-              width: 1,
-              height: 1,
-            },
-            rangeStack: [],
-          },
-          columns: CompactSelection.empty(),
-          rows: CompactSelection.empty(),
-        });
-
-        console.log(`Selected cell: [${headerIndex}, ${rowIndex}]`);
-      }
-    }
-
-    // Scroll to the selected cell
-    document.querySelector("div[role='grid']")?.scrollTo({
-      top: tableRowErrorNumber * 30, // Assuming each row is 30px high, adjust if needed
-      left: tableHeaderErrorNumber * 100, // Assuming each column is 100px wide, adjust if needed
-      behavior: "smooth",
-    });
-  }, [group.name, tableRowErrorNumber, selectedErrorGroup, group.rows.length, tableHeaderErrorNumber]);
-
 
   const onCellsEdited = React.useCallback(
     (newValues: readonly EditListItem[]) => {
@@ -157,7 +147,6 @@ const GridView: React.FC<Props> = ({
     [group, setGroup]
   );
 
-  // Handle single cell edit
   const onCellEdited = React.useCallback(
     (cell: Item, newValue: EditableGridCell) => {
       if (newValue.kind !== GridCellKind.Text) {
@@ -222,6 +211,7 @@ const GridView: React.FC<Props> = ({
   return (
     <div className="w-full h-full">
       <DataGrid
+        ref={ref}
         theme={customTheme}
         onCellsEdited={onCellsEdited}
         highlightRegions={highlights}
@@ -239,16 +229,9 @@ const GridView: React.FC<Props> = ({
         onColumnResize={onColumnResize}
         gridSelection={selection}
         onGridSelectionChange={setSelection}
-       
-        
       />
     </div>
   );
 };
 
 export default GridView;
-
-
-
-
-

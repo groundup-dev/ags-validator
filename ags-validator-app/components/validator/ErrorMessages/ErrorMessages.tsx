@@ -6,22 +6,15 @@ import { Separator } from "@/components/ui/separator";
 
 interface ErrorTableProps {
   errors: AgsError[];
-  setActiveLineNumber: (lineNumber: number) => void;
+
   setHoverLineNumber: (hoverLineNumber: number | null) => void;
-  setSelectedGroup: React.Dispatch<React.SetStateAction<string>>;
-  setTableRowErrorNumber: React.Dispatch<React.SetStateAction<number>>;
-  setTableHeaderErrorNumber: React.Dispatch<React.SetStateAction<number>>;
-  setSelectedErrorGroup: React.Dispatch<React.SetStateAction<string>>;
+  goToError: (error: AgsError) => void;
 }
 
 export default function ErrorMessages({
   errors,
-  setActiveLineNumber,
+  goToError,
   setHoverLineNumber,
-  setSelectedGroup,
-  setTableRowErrorNumber,
-  setTableHeaderErrorNumber,
-  setSelectedErrorGroup,
 }: ErrorTableProps) {
   const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
     null
@@ -50,14 +43,9 @@ export default function ErrorMessages({
               {index > 0 && <Separator className="my-2" />}
               <ErrorMessage
                 error={error}
-                setTableRowErrorNumber={setTableRowErrorNumber}
-                setTableHeaderErrorNumber={setTableHeaderErrorNumber}
-                onView={() => setActiveLineNumber(error.lineNumber)}
+                onView={() => goToError(error)}
                 onMouseEnter={() => setHoverLineNumber(error.lineNumber)}
                 onMouseLeave={() => setHoverLineNumber(null)}
-                setSelectedGroup={setSelectedGroup}
-                setSelectedErrorGroup={setSelectedErrorGroup}
-
               />
             </React.Fragment>
           ))

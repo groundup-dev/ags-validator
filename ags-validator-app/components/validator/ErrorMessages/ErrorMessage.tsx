@@ -11,14 +11,10 @@ const severityColor: Record<AgsError["severity"], string> = {
 
 interface ErrorMessageProps {
   error: AgsError;
-  setTableRowErrorNumber: React.Dispatch<React.SetStateAction<number>>;
-  setTableHeaderErrorNumber: React.Dispatch<React.SetStateAction<number>>;
+
   onView: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  setSelectedGroup: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedErrorGroup: React.Dispatch<React.SetStateAction<string>>;
-
 }
 
 export default function ErrorMessage({
@@ -26,10 +22,6 @@ export default function ErrorMessage({
   onView,
   onMouseEnter,
   onMouseLeave,
-  setSelectedGroup,
-  setTableRowErrorNumber,
-  setSelectedErrorGroup,
-  setTableHeaderErrorNumber,
 }: ErrorMessageProps) {
   return (
     <div
@@ -49,13 +41,14 @@ export default function ErrorMessage({
             {capitalize(error.severity)} at line {error.lineNumber}
           </p>
         </div>
-        <Button variant="ghost" size="sm" color="red"   onClick={() => {
-          onView(); 
-          setSelectedGroup(error.group ?? "");
-          setTableRowErrorNumber(error.tableRowLineNumber)
-          setTableHeaderErrorNumber(error.tableHeaderNumber)
-          setSelectedErrorGroup(error.group ?? "")
-        }}>
+        <Button
+          variant="ghost"
+          size="sm"
+          color="red"
+          onClick={() => {
+            onView();
+          }}
+        >
           <SquareArrowUpLeft size={16} className="mr-2" />
           View
         </Button>
@@ -78,14 +71,6 @@ export default function ErrorMessage({
         <p>
           <strong>Message: </strong>
           {error.message}
-        </p>
-        <p>
-          <strong>Row Number: </strong>
-          {error.tableRowLineNumber}
-        </p>
-        <p>
-          <strong>Header Number: </strong>
-          {error.tableHeaderNumber}
         </p>
       </div>
     </div>
