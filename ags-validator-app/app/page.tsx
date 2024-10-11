@@ -75,7 +75,7 @@ export default function Page() {
             <br />
             <p>
               Register for early access to GroundUp and be the first to know
-              when it's available.
+              when it&apos;s available.
               <br />.
             </p>
             <strong>
