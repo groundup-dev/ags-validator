@@ -6,13 +6,14 @@ import { Separator } from "@/components/ui/separator";
 
 interface ErrorTableProps {
   errors: AgsError[];
-  setActiveLineNumber: (lineNumber: number) => void;
+
   setHoverLineNumber: (hoverLineNumber: number | null) => void;
+  goToError: (error: AgsError) => void;
 }
 
 export default function ErrorMessages({
   errors,
-  setActiveLineNumber,
+  goToError,
   setHoverLineNumber,
 }: ErrorTableProps) {
   const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
@@ -42,7 +43,7 @@ export default function ErrorMessages({
               {index > 0 && <Separator className="my-2" />}
               <ErrorMessage
                 error={error}
-                onView={() => setActiveLineNumber(error.lineNumber)}
+                onView={() => goToError(error)}
                 onMouseEnter={() => setHoverLineNumber(error.lineNumber)}
                 onMouseLeave={() => setHoverLineNumber(null)}
               />

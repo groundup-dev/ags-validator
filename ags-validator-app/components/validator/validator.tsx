@@ -2,7 +2,7 @@
 
 import { useValidator } from "./hooks/useValidator";
 import ErrorMessages from "./ErrorMessages";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TextArea from "./TextArea";
 import AGSUpload from "./AGSUpload";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,22 +10,31 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Label } from "../ui/label";
 import GridView from "./GridView";
 import SelectTable from "./SelectTable";
+import { AgsError } from "@groundup/ags";
 
 export default function Validator() {
   const { agsData, setAgsData, errors, parsedAgs, setGroup } = useValidator();
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
 
-  const [activeLineNumber, setActiveLineNumber] = useState<number | undefined>(
-    undefined
-  );
   const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
 
   const [selectedGroup, setSelectedGroup] = useState<string>("");
 
-  // we need to scroll to the table row when an error is clicked
-  // and change the selected group based on the error
-  useEffect(() => {}, [activeLineNumber, selectedGroup, setSelectedGroup]);
+  const [goToErrorCallback, setGoToErrorCallback] = useState<
+    (error: AgsError) => void
+  >(() => {});
+
+  const goToError = useCallback(
+    (error: AgsError) => {
+      if (error.group) {
+        setSelectedGroup(error.group);
+      }
+
+      goToErrorCallback(error);
+    },
+    [setSelectedGroup, goToErrorCallback]
+  );
 
   // we need to populate the selectedGroup state when tables view is selected the first time
   useEffect(() => {
@@ -81,8 +90,8 @@ export default function Validator() {
                       agsData={agsData}
                       setAgsData={setAgsData}
                       errors={errors}
-                      activeLineNumber={activeLineNumber}
                       hoverLineNumber={hoverLineNumber}
+                      setGoToErrorCallback={setGoToErrorCallback}
                     />
                   </CardContent>
                 </Card>
@@ -96,6 +105,7 @@ export default function Validator() {
                         group={parsedAgs?.[selectedGroup]}
                         setGroup={setGroup}
                         errors={errors}
+                        setGoToErrorCallback={setGoToErrorCallback}
                       />
                     )}
                   </CardContent>
@@ -107,8 +117,8 @@ export default function Validator() {
             <CardContent className="p-4 h-full">
               <ErrorMessages
                 errors={errors}
-                setActiveLineNumber={setActiveLineNumber}
                 setHoverLineNumber={setHoverLineNumber}
+                goToError={goToError}
               />
             </CardContent>
           </Card>
