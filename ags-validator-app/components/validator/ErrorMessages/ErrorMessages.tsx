@@ -3,16 +3,19 @@ import ErrorMessage from "./ErrorMessage";
 import SortErrors, { sortOptions, SortOptionKey } from "./SortErrors";
 import { AgsError } from "@groundup/ags";
 import { Separator } from "@/components/ui/separator";
+import { CircleX } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ErrorTableProps {
   errors: AgsError[];
-  setActiveLineNumber: (lineNumber: number) => void;
+
   setHoverLineNumber: (hoverLineNumber: number | null) => void;
+  goToError: (error: AgsError) => void;
 }
 
 export default function ErrorMessages({
   errors,
-  setActiveLineNumber,
+  goToError,
   setHoverLineNumber,
 }: ErrorTableProps) {
   const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
@@ -29,7 +32,19 @@ export default function ErrorMessages({
   return (
     <div className="flex flex-col h-full">
       <div className="flex gap-2 justify-between">
-        <h2 className="text-xl font-semibold mb-4">Errors</h2>
+        <div className="flex gap-4">
+          <h2 className="text-xl font-semibold mb-4">Errors</h2>
+
+          <Badge variant="destructive" className="h-8 gap-1">
+            <CircleX size={16} />
+            {errors.filter((error) => error.severity === "error").length}
+          </Badge>
+          <Badge variant="warning" className="h-8 gap-1">
+            <CircleX size={16} />
+            {errors.filter((error) => error.severity === "warning").length}
+          </Badge>
+        </div>
+
         <SortErrors
           activeSortOptionKey={sortOptionKey}
           onChange={setSortOptionKey}
@@ -42,7 +57,7 @@ export default function ErrorMessages({
               {index > 0 && <Separator className="my-2" />}
               <ErrorMessage
                 error={error}
-                onView={() => setActiveLineNumber(error.lineNumber)}
+                onView={() => goToError(error)}
                 onMouseEnter={() => setHoverLineNumber(error.lineNumber)}
                 onMouseLeave={() => setHoverLineNumber(null)}
               />

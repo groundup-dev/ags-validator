@@ -1,24 +1,32 @@
-"use client";
-
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import DataGrid, {
-  DataEditorProps,
-  EditableGridCell,
-  EditListItem,
   GridCell,
   GridCellKind,
   GridColumn,
   Item,
   Theme,
+  GridSelection,
+  CompactSelection,
+  DataEditorProps,
+  EditableGridCell,
+  EditListItem,
+  DataEditorRef,
 } from "@glideapps/glide-data-grid";
 import { AgsError, GroupRaw } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
 
 // Props for the table component
 interface Props {
-  group: GroupRaw; // GroupRaw object
+  group: GroupRaw;
   setGroup: (label: string, group: GroupRaw) => void;
   errors: AgsError[];
+  setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
 }
 
 const getCSSVariable = (variableName: string) => {
@@ -27,51 +35,59 @@ const getCSSVariable = (variableName: string) => {
     .trim();
 };
 
-const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
-  // Create a custom theme using your CSS variables
+const GridView: React.FC<Props> = ({
+  group,
+  setGoToErrorCallback,
+  errors,
+  setGroup,
+}) => {
+  const ref = useRef<DataEditorRef | null>(null);
+
+  const [selection, setSelection] = useState<GridSelection>({
+    columns: CompactSelection.empty(),
+    rows: CompactSelection.empty(),
+  });
+
   const customTheme: Partial<Theme> = useMemo(
     () => ({
-      accentColor: getCSSVariable("--border"), // Maps to your primary color
-      accentFg: getCSSVariable("--accent-foreground"),
-      accentLight: getCSSVariable("--background"),
-      // textDark: getCSSVariable("--foreground"),
-      // textMedium: getCSSVariable("--muted-foreground"),
-      // textLight: getCSSVariable("--primary-foreground"),
-      // textBubble: getCSSVariable("--foreground"),
-      // bgIconHeader: getCSSVariable("--card"),
-      // fgIconHeader: getCSSVariable("--card-foreground"),
-      // textHeader: getCSSVariable("--popover-foreground"),
-      // textGroupHeader: getCSSVariable("--primary-foreground"),
-      // textHeaderSelected: getCSSVariable("--primary-foreground"),
-      bgCell: getCSSVariable("--card"),
-      bgCellMedium: getCSSVariable("--muted"),
-      // bgHeader: getCSSVariable("--secondary"),
-      // bgHeaderHasFocus: getCSSVariable("--border"),
-      // bgHeaderHovered: getCSSVariable("--accent"),
-
-      borderColor: getCSSVariable("--border"),
-      horizontalBorderColor: getCSSVariable("--ring"),
+      accentColor: getCSSVariable("--secondary"),
+      accentFg: getCSSVariable("--secondary-foreground"),
+      accentLight: getCSSVariable("--muted"),
     }),
     []
   );
 
-  useEffect(() => {
-    setColumns(
-      group.headings.map((heading) => ({
-        title: heading.name,
-        width: 100,
-      }))
-    );
-  }, [group.name]);
+  const scrollToError = useCallback(
+    (error: AgsError) => {
+      if (group.name !== error.group) {
+        return;
+      }
 
-  const [columns, setColumns] = React.useState<GridColumn[]>([]);
+      const rowIndex = error.lineNumber - group.lineNumber - 4;
+
+      if (rowIndex < 0) {
+        // if less than 0, then the error is in the group heading or units
+        return;
+      }
+
+      ref.current?.scrollTo(0, rowIndex, "both", 0, 0, {
+        vAlign: "center",
+        hAlign: "center",
+      });
+    },
+    [group.lineNumber, group.name, ref]
+  );
+
+  useEffect(() => {
+    setGoToErrorCallback(() => scrollToError);
+  }, [setGoToErrorCallback, scrollToError]);
+
+  const [columns, setColumns] = useState<GridColumn[]>([]);
 
   const highlights = React.useMemo<DataEditorProps["highlightRegions"]>(() => {
     return errors
       .filter((error) => error.group === group.name)
       .map((error) => {
-        console.log(error);
-
         // minus 4 as there are 4 lines before the table starts
         const rowIndex = error.lineNumber - group.lineNumber - 4;
         return {
@@ -86,6 +102,15 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
         };
       });
   }, [errors, group.name, group.lineNumber, group.headings.length]);
+
+  useEffect(() => {
+    setColumns(
+      group.headings.map((heading) => ({
+        title: heading.name,
+        width: 100,
+      }))
+    );
+  }, [group.headings]);
 
   const onCellsEdited = React.useCallback(
     (newValues: readonly EditListItem[]) => {
@@ -118,7 +143,6 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
     [group, setGroup]
   );
 
-  // Handle single cell edit
   const onCellEdited = React.useCallback(
     (cell: Item, newValue: EditableGridCell) => {
       if (newValue.kind !== GridCellKind.Text) {
@@ -147,12 +171,10 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
     [group, setGroup]
   );
 
-  // Get cell data for rendering
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
       const row = group.rows[rowNum];
       const col = group.headings[colNum];
-
       const data = row && col ? row.data[col.name] : "";
 
       return {
@@ -182,25 +204,53 @@ const GridView: React.FC<Props> = ({ group, setGroup, errors }) => {
     [setColumns]
   );
 
+  const onRowAppended = useCallback(() => {
+    const newRow = {
+      data: group.headings.reduce((acc, heading) => {
+        acc[heading.name] = "";
+        return acc;
+      }, {} as Record<string, string>),
+      lineNumber: group.rows.length + group.lineNumber + 4,
+    };
+
+    const newGroup = {
+      ...group,
+      rows: [...group.rows, newRow],
+    };
+
+    setGroup(group.name, newGroup);
+  }, [group, setGroup]);
+
   return (
     <div className="w-full h-full">
       <DataGrid
+        height={"100%"}
+        width={"100%"}
+        ref={ref}
         theme={customTheme}
         onCellsEdited={onCellsEdited}
         highlightRegions={highlights}
-        rowMarkers={"checkbox"}
+        rowMarkers={{
+          startIndex: group.lineNumber + 4,
+          kind: "both",
+        }}
+        onRowAppended={onRowAppended}
+        trailingRowOptions={{
+          hint: "Add Row...",
+          sticky: false,
+          tint: true,
+        }}
         columns={columns}
         getCellContent={getData}
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
         rows={group.rows.length}
         onPaste={true}
-        overscrollX={0}
-        overscrollY={0}
-        // scaleToRem={true}
         maxColumnAutoWidth={200}
         maxColumnWidth={500}
         onColumnResize={onColumnResize}
+        gridSelection={selection}
+        onGridSelectionChange={setSelection}
       />
     </div>
   );
