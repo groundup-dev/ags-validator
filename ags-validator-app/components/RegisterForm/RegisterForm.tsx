@@ -8,14 +8,13 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  //   FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Check, LoaderIcon } from "lucide-react";
+import { Check, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 
 const formSchema = z.object({
@@ -27,6 +26,7 @@ const formSchema = z.object({
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,6 +39,7 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    setError(null);
     const response = await fetch("/api/register", {
       method: "POST",
       body: JSON.stringify(values),
@@ -47,6 +48,9 @@ export function RegisterForm() {
 
     if (!response.ok) {
       console.error("Failed to submit form");
+      const data = await response.json();
+      setError(data.error);
+
       return;
     } else {
       setIsSuccess(true);
@@ -100,16 +104,19 @@ export function RegisterForm() {
         />
         <div>
           {isSuccess && (
-            // add a success message and icon
-
             <span className="flex flex-row gap-2">
               <Check />
               Success! We will contact you when GroundUp is ready.
             </span>
           )}
 
-          {isLoading && <LoaderIcon className="w-6 h-6 animate-spin" />}
-          {!isLoading && !isSuccess && <Button type="submit">Register</Button>}
+          {isLoading && <LoaderCircle className="animate-spin w-6 h-6" />}
+          {!isLoading && !isSuccess && (
+            <Button variant="secondary" type="submit">
+              Register
+            </Button>
+          )}
+          {error && <FormMessage>{error}</FormMessage>}
         </div>
       </form>
     </Form>

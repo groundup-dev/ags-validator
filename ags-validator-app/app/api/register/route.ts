@@ -49,8 +49,15 @@ export async function POST(req: Request) {
 
   if (!response.ok) {
     const errorData = await response.json();
+
+    if (errorData.title === "Member Exists") {
+      return NextResponse.json(
+        { error: "User is already subscribed" },
+        { status: response.status }
+      );
+    }
     return NextResponse.json(
-      { error: "Failed to subscribe user", details: errorData },
+      { error: "Failed to subscribe user" },
       { status: response.status }
     );
   }
