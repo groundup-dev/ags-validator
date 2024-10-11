@@ -211,6 +211,8 @@ const GridView: React.FC<Props> = ({
   return (
     <div className="w-full h-full">
       <DataGrid
+        height={"100%"}
+        width={"100%"}
         ref={ref}
         theme={customTheme}
         onCellsEdited={onCellsEdited}
@@ -222,8 +224,6 @@ const GridView: React.FC<Props> = ({
         onCellEdited={onCellEdited}
         rows={group.rows.length}
         onPaste={true}
-        overscrollX={0}
-        overscrollY={0}
         maxColumnAutoWidth={200}
         maxColumnWidth={500}
         onColumnResize={onColumnResize}

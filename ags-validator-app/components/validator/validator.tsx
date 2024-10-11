@@ -2,18 +2,37 @@
 
 import { useValidator } from "./hooks/useValidator";
 import ErrorMessages from "./ErrorMessages";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import TextArea from "./TextArea";
 import AGSUpload from "./AGSUpload";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Label } from "../ui/label";
 import GridView from "./GridView";
 import SelectTable from "./SelectTable";
-import { AgsError } from "@groundup/ags";
+import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
+import AutoComplete from "../ui/auto-complete";
+import { Button } from "../ui/button";
+import { Download } from "lucide-react";
 
 export default function Validator() {
-  const { agsData, setAgsData, errors, parsedAgs, setGroup } = useValidator();
+  const agsDictOptions = [
+    { value: "v4_0_3", label: "4.0.3" },
+    { value: "v4_0_4", label: "4.0.4" },
+    { value: "v4_1", label: "4.1" },
+    { value: "v4_1_1", label: "4.1.1" },
+  ];
+
+  const [agsDictVersion, setAgsDictVersion] =
+    useState<AgsDictionaryVersion>("v4_0_4");
+  const { agsData, setAgsData, errors, parsedAgs, setGroup } =
+    useValidator(agsDictVersion);
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
 
@@ -50,6 +69,38 @@ export default function Validator() {
   return (
     <div className="flex justify-center w-full bg-muted rounded-t-xl border-border border shadow-inner">
       <div className="flex flex-col p-4 max-w-500 w-full">
+        <Card className="mb-2 p-2">
+          <CardTitle className="text-lg">AGS Options</CardTitle>
+          <CardContent className="p-4 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col">
+            <AGSUpload setAgsData={setAgsData} />
+            <AutoComplete
+              options={agsDictOptions}
+              selectedOption={agsDictVersion}
+              setSelectedOption={
+                setAgsDictVersion as Dispatch<SetStateAction<string>>
+              }
+              label="Select AGS Version"
+              placeholder="Select AGS Version"
+            />
+            <Button
+              variant={"outline"}
+              disabled={!agsData}
+              onClick={() => {
+                const dataStr =
+                  "data:text/plain;charset=utf-8," +
+                  encodeURIComponent(agsData);
+                const downloadAnchorNode = document.createElement("a");
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", "export.ags");
+                document.body.appendChild(downloadAnchorNode); // required for firefox
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+              }}
+            >
+              <Download className="w-4 h-6 mr-1" /> Export
+            </Button>
+          </CardContent>
+        </Card>
         <div className="flex gap-4 md:flex-row flex-col">
           <div className="w-full md:w-3/5 h-[calc(100vh-6rem)]">
             <Tabs
@@ -59,8 +110,6 @@ export default function Validator() {
             >
               <Card className="mb-2">
                 <CardContent className="p-4 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col">
-                  <AGSUpload setAgsData={setAgsData} />
-
                   <div className="grid items-center gap-1.5 mb-4">
                     <Label htmlFor="tabsList">View as</Label>
                     <TabsList id="tabsList">
