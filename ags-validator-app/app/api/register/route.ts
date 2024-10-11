@@ -6,15 +6,11 @@ const MAILCHIMP_API_URL = `https://${process.env.MAILCHIMP_SERVER_PREFIX}.api.ma
 export async function POST(req: Request) {
   const { email, firstName, lastName } = await req.json();
 
-  console.log(email, firstName, lastName);
   const audienceId = process.env.MAILCHIMP_AUDIENCE_ID;
   const apiKey = process.env.MAILCHIMP_API_KEY;
 
   if (!audienceId) {
-    return NextResponse.json(
-      { error: "Mailchimp audience ID is required" },
-      { status: 500 }
-    );
+    return NextResponse.json({ status: 500 });
   }
 
   if (!email || !firstName || !lastName) {
@@ -62,9 +58,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const data = await response.json();
   return NextResponse.json({
     message: "User subscribed successfully",
-    data,
   });
 }
