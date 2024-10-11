@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
       >
         <Navbar />
         <main>{children}</main>
+        <Analytics />
         <div id="portal" className="fixed top-0 left-0 " />
       </body>
     </html>
