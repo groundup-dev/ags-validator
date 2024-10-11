@@ -4,52 +4,28 @@
 
 @layer base {
   :root {
-    --background: #f5f3e7; /* Light cream for light mode */
-    --foreground: #302003; /* Darker text color */
-    --card: #ffffff; /* White */
-    --card-foreground: #302003; /* Darker text color */
-    --popover: #ffffff; /* White */
-    --popover-foreground: #302003; /* Darker text color */
-    --primary: #376409; /* Dark green */
-    --primary-foreground: #ffffff; /* White */
-    --secondary: #775c39; /* Light brown */
-    --secondary-foreground: #302003; /* Darker text color */
-    --muted: #e7bb82; /* Slightly muted light brown */
-    --muted-foreground: #5a4b3d; /* Darker muted text */
-    --accent: #85a86f; /* Light green */
-    --accent-foreground: #302003; /* Darker text color */
-    --destructive: #d64933; /* Dark red */
-    --destructive-foreground: #ffffff; /* White */
-    --border: #5a4b3d; /* Muted brown */
-    --input: #5a4b3d; /* Same as border */
-    --ring: #302003; /* Dark brown */
+    --background: #ffffff; 
+    --foreground: #000000; 
+    --card: #ffffff; 
+    --card-foreground: #000000; 
+    --popover: #ffffff; 
+    --popover-foreground: #000000; 
+    --primary: #63A908; 
+    --primary-foreground: #ffffff; 
+    --secondary: #663B14; 
+    --secondary-foreground: #ffffff; 
+    --muted: #f3f1e2; 
+    --muted-foreground: #000000; 
+    --accent: #ededed; 
+    --accent-foreground: #000000; 
+    --destructive: #f84e23; 
+    --destructive-foreground: #fdc1b2;
+    --warning: #fcbb0a;
+    --warning-foreground: #fee7a9;
+    --border: #cfcfcf; 
+    --input: #cfcfcf; 
+    --ring: #cfcfcf; 
     --radius: 0.5rem;
-
-
-  }
-
-  .dark {
-    --background: #302003; /* Dark brown */
-    --foreground: #f5f3e7; /* Lighter text color for dark mode */
-    --card: #302003; /* Dark brown */
-    --card-foreground: #f5f3e7; /* Lighter text color for dark mode */
-    --popover: #302003; /* Dark brown */
-    --popover-foreground: #f5f3e7; /* Lighter text color for dark mode */
-    --primary: #85a86f; /* Slightly lighter primary color for dark mode */
-    --primary-foreground: #302003; /* Dark brown */
-    --secondary: #5a7a37; /* Slightly lighter secondary color for dark mode */
-    --secondary-foreground: #f5f3e7; /* Lighter text color for dark mode */
-    --muted: #5a7a37; /* Muted dark green */
-    --muted-foreground: #b08a57; /* Lighter muted text for dark mode */
-    --accent: #85a86f; /* Light green */
-    --accent-foreground: #302003; /* Dark brown */
-    --destructive: #d64933; /* Slightly lighter destructive color for dark mode */
-    --destructive-foreground: #f5f3e7; /* Lighter text color for dark mode */
-    --border: #5a7a37; /* Dark green */
-    --input: #5a7a37; /* Dark green input border */
-    --ring: #f5f3e7; /* Light cream ring */
-
-
   }
 }
 
