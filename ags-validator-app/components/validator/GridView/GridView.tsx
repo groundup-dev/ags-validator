@@ -50,13 +50,9 @@ const GridView: React.FC<Props> = ({
 
   const customTheme: Partial<Theme> = useMemo(
     () => ({
-      accentColor: getCSSVariable("--border"), // Maps to your primary color
-      accentFg: getCSSVariable("--accent-foreground"),
-      accentLight: getCSSVariable("--background"),
-      bgCell: getCSSVariable("--card"),
-      bgCellMedium: getCSSVariable("--muted"),
-      borderColor: getCSSVariable("--border"),
-      horizontalBorderColor: getCSSVariable("--ring"),
+      accentColor: getCSSVariable("--secondary"),
+      accentFg: getCSSVariable("--secondary-foreground"),
+      accentLight: getCSSVariable("--muted"),
     }),
     []
   );
@@ -208,6 +204,23 @@ const GridView: React.FC<Props> = ({
     [setColumns]
   );
 
+  const onRowAppended = useCallback(() => {
+    const newRow = {
+      data: group.headings.reduce((acc, heading) => {
+        acc[heading.name] = "";
+        return acc;
+      }, {} as Record<string, string>),
+      lineNumber: group.rows.length + group.lineNumber + 4,
+    };
+
+    const newGroup = {
+      ...group,
+      rows: [...group.rows, newRow],
+    };
+
+    setGroup(group.name, newGroup);
+  }, [group, setGroup]);
+
   return (
     <div className="w-full h-full">
       <DataGrid
@@ -217,7 +230,16 @@ const GridView: React.FC<Props> = ({
         theme={customTheme}
         onCellsEdited={onCellsEdited}
         highlightRegions={highlights}
-        rowMarkers="checkbox"
+        rowMarkers={{
+          startIndex: group.lineNumber + 4,
+          kind: "both",
+        }}
+        onRowAppended={onRowAppended}
+        trailingRowOptions={{
+          hint: "Add Row...",
+          sticky: false,
+          tint: true,
+        }}
         columns={columns}
         getCellContent={getData}
         getCellsForSelection={true}
