@@ -196,16 +196,10 @@ export const rule8: AgsValidationStepParsed = {
     const schemas = createZodSchemasForHeadings(ags);
 
     for (const [groupName, group] of Object.entries(ags)) {
-
-      let tableLineNumber = 0
-      for (let index = 0; index < group.rows.length; index++) {
-        const row = group.rows[index];
-        tableLineNumber = index + 1;
-        let tableHeaderNumber = 0
+      for (const row of group.rows) {
         for (const heading of group.headings) {
           const fieldName = heading.name;
           const fieldValue = row.data[fieldName];
-          tableHeaderNumber++
 
           try {
             schemas[groupName][fieldName].parse(fieldValue);
@@ -213,8 +207,6 @@ export const rule8: AgsValidationStepParsed = {
             errors.push({
               rule: this.rule,
               lineNumber: row.lineNumber,
-              tableRowLineNumber: tableLineNumber,
-              tableHeaderNumber: tableHeaderNumber,
               group: groupName,
               field: fieldName,
               severity: "error",

@@ -12,15 +12,12 @@ export const rule7: AgsValidationStepParsed = {
 
     for (const [groupName, group] of Object.entries(ags)) {
       // assert no duplicates headings in each group
-
       const headings = group.headings.map((heading) => heading.name);
       const uniqueHeadings = new Set(headings);
       if (headings.length !== uniqueHeadings.size) {
         errors.push({
           rule: this.rule,
           lineNumber: group.lineNumber + 2,
-          tableRowLineNumber: 0,
-          tableHeaderNumber: 0,
           group: groupName,
           message: "Duplicate headings found in the group.",
           severity: "error",
@@ -38,13 +35,10 @@ export const rule19: AgsValidationStepParsed = {
   validate: function (ags: AgsRaw): AgsError[] {
     const errors: AgsError[] = [];
     for (const [groupName, group] of Object.entries(ags)) {
-
       if (groupName.length > 4 || !/^[A-Z0-9]+$/.test(groupName)) {
         errors.push({
           rule: this.rule,
           lineNumber: group.lineNumber,
-          tableRowLineNumber: 0,
-          tableHeaderNumber: 0,
           group: groupName,
           message: "Invalid GROUP name format.",
           severity: "error",
@@ -64,19 +58,11 @@ export const rule19a: AgsValidationStepParsed = {
   validate: function (ags: AgsRaw): AgsError[] {
     const errors: AgsError[] = [];
     for (const [groupName, group] of Object.entries(ags)) {
-      
-      let tableLineNumber = 0
-      group.rows.forEach((row, index) => {
-        tableLineNumber = index + 1;
-      });
-
       for (const heading of group.headings) {
         if (heading.name.length > 9 || !/^[A-Z0-9_]+$/.test(heading.name)) {
           errors.push({
             rule: this.rule,
             lineNumber: group.lineNumber + 1,
-            tableRowLineNumber: 0,
-            tableHeaderNumber: 0,
             group: groupName,
             field: heading.name,
             message: "Invalid HEADING name format.",
@@ -105,41 +91,34 @@ export const rule19b: AgsValidationStepParsed = {
     for (const [groupName, group] of Object.entries(ags)) {
       const groupPrefix = groupName + "_";
 
-      // Remove group headings of current group, for lookup if heading is in another group
+      // remove group headings of current group, to provide lookup if heading is in another group
       const allHeadingsApartFromCurrentGroup = new Set(
         Object.values(ags)
           .filter((g) => g.name !== group.name)
           .flatMap((g) => g.headings)
           .map((heading) => heading.name)
-          .filter((name) => !name.startsWith(groupPrefix))
+          .filter((name) => !name.startsWith(groupPrefix)),
       );
 
-
-        for (const heading of group.headings) {
-          // Check if the heading name is invalid (based on the rules)
-          if (
-            !(
-              heading.name.startsWith(groupPrefix) ||
-              allHeadingsApartFromCurrentGroup.has(heading.name)
-            )
-          ) {
-            const groupLineNumber = group.lineNumber + 1
-            errors.push({
-              rule: this.rule,
-              lineNumber: groupLineNumber, 
-              tableRowLineNumber: 0,
-              tableHeaderNumber: 0,
-              group: groupName,
-              field: heading.name,
-              severity: "error",
-              message:
-                "HEADING name does not start with the GROUP name, or not found in another group.",
-            });
-          }
+      for (const heading of group.headings) {
+        if (
+          !(
+            heading.name.startsWith(groupPrefix) ||
+            allHeadingsApartFromCurrentGroup.has(heading.name)
+          )
+        ) {
+          errors.push({
+            rule: this.rule,
+            lineNumber: group.lineNumber + 1,
+            group: groupName,
+            field: heading.name,
+            severity: "error",
+            message:
+              "HEADING name does not start with the GROUP name, or not found in another group.",
+          });
         }
-      
+      }
     }
-
     return errors;
   },
 };

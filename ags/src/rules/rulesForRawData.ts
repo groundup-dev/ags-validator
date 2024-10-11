@@ -24,7 +24,6 @@ const rule1: AgsValidationStepRaw = {
         agsErrors.push({
           rule: 1,
           lineNumber,
-          tableRowLineNumber: 0,
           message,
           severity: "error",
         });
@@ -56,7 +55,6 @@ const rule2a: AgsValidationStepRaw = {
           agsErrors.push({
             rule: this.rule,
             lineNumber,
-            tableRowLineNumber: 0,
             message: "Line is not terminated by <CR> and <LF> characters.",
             severity: "warning",
           });
@@ -98,7 +96,6 @@ const rule3: AgsValidationStepRaw = {
         agsErrors.push({
           rule: this.rule,
           lineNumber,
-          tableRowLineNumber: 0,
           message: "Does not start with a valid data descriptor.",
           severity: "error",
         });
@@ -130,7 +127,6 @@ const rule4_1: AgsValidationStepRaw = {
           agsErrors.push({
             rule: this.rule,
             lineNumber,
-            tableRowLineNumber: 0,
             field: lineItems[1],
             message: "GROUP row has more than one field.",
             severity: "error",
@@ -139,7 +135,6 @@ const rule4_1: AgsValidationStepRaw = {
           agsErrors.push({
             rule: this.rule,
             lineNumber,
-            tableRowLineNumber: 0,
             field: "",
             message: "GROUP row is malformed.",
             severity: "error",
@@ -185,7 +180,6 @@ const rule4_2: AgsValidationStepRaw = {
           errors.push({
             rule: this.rule,
             lineNumber: -1, // Use -1 to indicate a missing row rather than a specific line
-            tableRowLineNumber: 0,
             group: currentGroup,
             message: "Headings row missing.",
             severity: "error",
@@ -195,7 +189,6 @@ const rule4_2: AgsValidationStepRaw = {
           errors.push({
             rule: this.rule,
             lineNumber,
-            tableRowLineNumber: 0,
             field: currentGroup,
             message: "Number of fields does not match the HEADING row.",
             severity: "error",
@@ -231,7 +224,6 @@ const rule5: AgsValidationStepRaw = {
         errors.push({
           rule: this.rule,
           lineNumber,
-          tableRowLineNumber: 0,
           message: `Fields are not properly enclosed in double quotes.`,
           severity: "error",
         });
@@ -246,7 +238,6 @@ const rule5: AgsValidationStepRaw = {
             errors.push({
               rule: this.rule,
               lineNumber,
-              tableRowLineNumber: 0,
               message: `Field contains quotes that are not properly escaped.`,
               severity: "error",
             });
