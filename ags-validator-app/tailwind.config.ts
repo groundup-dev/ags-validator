@@ -13,51 +13,55 @@ const config: Config = {
         400: "100rem",
       },
       colors: {
-        background: "var(--background)", // Light cream and dark mode
-        foreground: "var(--foreground)", // Darker text color and light mode text
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         card: {
-          DEFAULT: "var(--card)", // White for cards
-          foreground: "var(--card-foreground)", // Darker text color for cards
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
         },
         popover: {
-          DEFAULT: "var(--popover)", // White for popovers
-          foreground: "var(--popover-foreground)", // Darker text color for popovers
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
         },
         primary: {
-          DEFAULT: "var(--primary)", // Dark green
-          foreground: "var(--primary-foreground)", // White
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
         secondary: {
-          DEFAULT: "var(--secondary)", // Light brown
-          foreground: "var(--secondary-foreground)", // Darker text color for secondary
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
         },
         muted: {
-          DEFAULT: "var(--muted)", // Muted light brown
-          foreground: "var(--muted-foreground)", // Darker muted text
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
         accent: {
-          DEFAULT: "var(--accent)", // Light green
-          foreground: "var(--accent-foreground)", // Darker text color
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
         },
         destructive: {
-          DEFAULT: "var(--destructive)", // Dark red
-          foreground: "var(--destructive-foreground)", // White
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
         },
-        border: "var(--border)", // Muted brown
-        input: "var(--input)", // Same as border
-        ring: "var(--ring)", // Dark brown
+        warning: {
+          DEFAULT: "var(--warning)",
+          foreground: "var(--warning-foreground)",
+        },
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
         chart: {
-          "1": "var(--chart-1)", // Dark green
-          "2": "var(--chart-2)", // Light brown
-          "3": "var(--chart-3)", // Dark brown
-          "4": "var(--chart-4)", // Light green
-          "5": "var(--chart-5)", // Dark red
+          "1": "var(--chart-1)",
+          "2": "var(--chart-2)",
+          "3": "var(--chart-3)",
+          "4": "var(--chart-4)",
+          "5": "var(--chart-5)",
         },
       },
       borderRadius: {
-        lg: "var(--radius)", // Consistent with CSS variable
-        md: "calc(var(--radius) - 2px)", // Adjusted for consistency
-        sm: "calc(var(--radius) - 4px)", // Adjusted for consistency
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
     },
   },
