@@ -14,7 +14,6 @@
     "@groundup-dev/ags": "^0.0.1",
     "@hookform/resolvers": "^3.9.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.3.8",
-
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -40,7 +39,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
-    "@types/mailchimp__mailchimp_marketing": "^3.0.20",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
