@@ -27,6 +27,7 @@ interface Props {
   setGroup: (label: string, group: GroupRaw) => void;
   errors: AgsError[];
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
+  setSelectedRows: (rows: number[]) => void;
 }
 
 const getCSSVariable = (variableName: string) => {
@@ -40,13 +41,23 @@ const GridView: React.FC<Props> = ({
   setGoToErrorCallback,
   errors,
   setGroup,
+  setSelectedRows,
 }) => {
   const ref = useRef<DataEditorRef | null>(null);
 
   const [selection, setSelection] = useState<GridSelection>({
     columns: CompactSelection.empty(),
     rows: CompactSelection.empty(),
+    current: undefined,
   });
+
+  useEffect(() => {
+    if (selection.current) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(selection.rows.toArray());
+    }
+  }, [selection, setSelectedRows]);
 
   const customTheme: Partial<Theme> = useMemo(
     () => ({

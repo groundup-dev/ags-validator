@@ -19,7 +19,7 @@ import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download } from "lucide-react";
+import { Delete, Download, Trash, Trash2 } from "lucide-react";
 
 export default function Validator() {
   const agsDictOptions = [
@@ -37,6 +37,8 @@ export default function Validator() {
   const [tabsViewValue, setTabsViewValue] = useState("text");
 
   const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
+
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const [selectedGroup, setSelectedGroup] = useState<string>("");
 
@@ -102,7 +104,7 @@ export default function Validator() {
           </CardContent>
         </Card>
         <div className="flex gap-4 md:flex-row flex-col">
-          <div className="w-full md:w-3/5 h-[calc(100vh-6rem)]">
+          <div className="w-full md:w-3/5 h-[calc(100vh-5rem)]">
             <Tabs
               value={tabsViewValue}
               onValueChange={(value) => setTabsViewValue(value)}
@@ -129,6 +131,27 @@ export default function Validator() {
                       setSelectedGroup={setSelectedGroup}
                     />
                   )}
+                  {tabsViewValue === "tables" &&
+                    parsedAgs !== undefined &&
+                    selectedRows.length > 0 && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          const newGroup = {
+                            ...parsedAgs[selectedGroup],
+                            rows: parsedAgs[selectedGroup].rows.filter(
+                              (row, index) => !selectedRows.includes(index)
+                            ),
+                          };
+
+                          setGroup(selectedGroup, newGroup);
+                          setSelectedRows([]);
+                        }}
+                      >
+                        <Trash2 className="w-4 h-6 mr-1" />
+                        {`Delete ${selectedRows.length} rows`}
+                      </Button>
+                    )}
                 </CardContent>
               </Card>
 
@@ -155,6 +178,7 @@ export default function Validator() {
                         setGroup={setGroup}
                         errors={errors}
                         setGoToErrorCallback={setGoToErrorCallback}
+                        setSelectedRows={setSelectedRows}
                       />
                     )}
                   </CardContent>
@@ -162,7 +186,7 @@ export default function Validator() {
               </TabsContent>
             </Tabs>
           </div>
-          <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-6rem)]">
+          <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-5rem)]">
             <CardContent className="p-4 h-full">
               <ErrorMessages
                 errors={errors}
