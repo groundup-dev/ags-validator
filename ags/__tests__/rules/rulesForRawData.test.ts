@@ -73,20 +73,21 @@ describe("AGS Data Validation Rules", () => {
   describe("Rule 4.2: UNIT, TYPE, and DATA rows should have entries defined by the HEADING row", () => {
     it("should return no errors for UNIT, TYPE, DATA rows that match HEADING", () => {
       const validData =
-        '"GROUP","GROUP_NAME"\r\n"HEADING","Field1","Field2"\r\n"UNIT","Unit1","Unit2"\r\n';
+        '"GROUP","GROUP_NAME"\r\n"HEADING","Field1","Field2"\r\n"UNIT","Unit1","Unit2"\r\n"TYPE","X","X"\r\n"DATA","2","1"\r\n';
       const errors = rulesForRawString.rule4_2.validate(validData);
       expect(errors).toHaveLength(0);
     });
 
     it("should return an error if HEADING row is missing for UNIT/TYPE/DATA rows", () => {
-      const invalidData = '"GROUP","GROUP_NAME"\r\n"UNIT","Unit1","Unit2"\r\n';
+      const invalidData =
+        '"GROUP","GROUP_NAME"\r\n"UNIT","Unit1","Unit2"\r\n"TYPE","X","X"\r\n"DATA","2","1"\r\n';
       const errors = rulesForRawString.rule4_2.validate(invalidData);
       expect(errors).toHaveLength(1);
     });
 
     it("should return an error if UNIT/TYPE/DATA rows do not match the HEADING row length", () => {
       const invalidData =
-        '"GROUP","GROUP_NAME"\r\n"HEADING","Field1","Field2"\r\n"UNIT","Unit1"\r\n';
+        '"GROUP","GROUP_NAME"\r\n"HEADING","Field1","Field2"\r\n"UNIT","Unit1"\r\n"TYPE","X","X"\r\n"DATA","2","1"\r\n';
       const errors = rulesForRawString.rule4_2.validate(invalidData);
       expect(errors).toHaveLength(1);
     });
