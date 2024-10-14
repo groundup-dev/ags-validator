@@ -183,7 +183,7 @@ const rule4_2: AgsValidationStepRaw = {
         }
         // Reset the tracking variables for the new group
         currentGroup = fields[1];
-        if (currentGroup === undefined) {
+        if (currentGroup === undefined || currentGroup === "") {
           errors.push({
             rule: this.rule,
             lineNumber,
