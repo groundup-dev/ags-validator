@@ -20,6 +20,7 @@ import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
 import { Download, Trash2 } from "lucide-react";
+import { downloadFile } from "@/lib/utils";
 
 export default function Validator() {
   const agsDictOptions = [
@@ -87,17 +88,7 @@ export default function Validator() {
             <Button
               variant={"outline"}
               disabled={!agsData}
-              onClick={() => {
-                const dataStr =
-                  "data:text/plain;charset=utf-8," +
-                  encodeURIComponent(agsData);
-                const downloadAnchorNode = document.createElement("a");
-                downloadAnchorNode.setAttribute("href", dataStr);
-                downloadAnchorNode.setAttribute("download", "export.ags");
-                document.body.appendChild(downloadAnchorNode); // required for firefox
-                downloadAnchorNode.click();
-                downloadAnchorNode.remove();
-              }}
+              onClick={() => downloadFile(agsData, "export.ags")}
             >
               <Download className="w-4 h-6 mr-1" /> Export
             </Button>

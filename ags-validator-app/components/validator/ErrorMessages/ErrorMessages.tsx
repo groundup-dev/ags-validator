@@ -35,11 +35,11 @@ export default function ErrorMessages({
         <div className="flex gap-4">
           <h2 className="text-xl font-semibold mb-4">Errors</h2>
 
-          <Badge variant="destructive" className="h-8 gap-1">
+          <Badge variant="destructive" className="h-7 gap-1 ">
             <CircleX size={16} />
             {errors.filter((error) => error.severity === "error").length}
           </Badge>
-          <Badge variant="warning" className="h-8 gap-1">
+          <Badge variant="warning" className="h-7 gap-1">
             <CircleX size={16} />
             {errors.filter((error) => error.severity === "warning").length}
           </Badge>

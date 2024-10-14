@@ -105,7 +105,7 @@ export default function Page() {
       </div>
       <div className="relative">
         <div
-          className="absolute w-[130%] h-[130%] top-1/2 left-1/2 -z-10"
+          className="absolute w-[120%] h-[120%] top-1/2 left-1/2 -z-10"
           style={{
             transform: "translate(-50%, -50%)",
             background: "radial-gradient(var(--primary) 0%, transparent 70%)",
