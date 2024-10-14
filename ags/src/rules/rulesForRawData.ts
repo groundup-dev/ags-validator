@@ -158,6 +158,11 @@ const rule4_2: AgsValidationStepRaw = {
     let headings: string[] = [];
     let currentGroup = "";
 
+    // Track the presence of UNIT, TYPE, and DATA rows for the current group
+    let hasUnit = false;
+    let hasType = false;
+    let hasData = false;
+
     lines.forEach((line, index) => {
       const lineNumber = index + 1;
       const fields = line
@@ -166,7 +171,30 @@ const rule4_2: AgsValidationStepRaw = {
         .map((item) => item.replace(/"/g, ""));
 
       if (fields[0] === "GROUP") {
-        currentGroup = fields[1] || ""; // Update the current group name
+        // If we're starting a new group, check if the previous one had UNIT, TYPE, and DATA
+        if (currentGroup && (!hasUnit || !hasType || !hasData)) {
+          errors.push({
+            rule: this.rule,
+            lineNumber: -1, // No specific line number, but group level error
+            group: currentGroup,
+            message: `Group "${currentGroup}" is missing one of UNIT, TYPE, or DATA rows.`,
+            severity: "error",
+          });
+        }
+        // Reset the tracking variables for the new group
+        currentGroup = fields[1];
+        if (currentGroup === undefined || currentGroup === "") {
+          errors.push({
+            rule: this.rule,
+            lineNumber,
+            message: "GROUP row is malformed.",
+            severity: "error",
+          });
+        }
+        headings = []; // Reset headings
+        hasUnit = false;
+        hasType = false;
+        hasData = false;
       }
 
       if (fields[0] === "HEADING") {
@@ -177,25 +205,49 @@ const rule4_2: AgsValidationStepRaw = {
         if (headings.length === 0) {
           // Add error if the headings row is missing for the current group
 
-          errors.push({
-            rule: this.rule,
-            lineNumber: -1, // Use -1 to indicate a missing row rather than a specific line
-            group: currentGroup,
-            message: "Headings row missing.",
-            severity: "error",
-          });
+          // we only want to add one error per group, so we check if the current group has already been flagged
+          const groupAlreadyFlagged = errors.some(
+            (error) =>
+              error.group === currentGroup &&
+              error.message === "Headings row missing.",
+          );
+
+          if (!groupAlreadyFlagged) {
+            errors.push({
+              rule: this.rule,
+              lineNumber: -1, // Use -1 to indicate a missing row rather than a specific line
+              group: currentGroup,
+              message: "Headings row missing.",
+              severity: "error",
+            });
+          }
         } else if (fields.length - 1 !== headings.length) {
           // Add error if the number of fields does not match the HEADING row
           errors.push({
             rule: this.rule,
             lineNumber,
-            field: currentGroup,
+            group: currentGroup,
             message: "Number of fields does not match the HEADING row.",
             severity: "error",
           });
         }
+
+        if (fields[0] === "UNIT") hasUnit = true;
+        if (fields[0] === "TYPE") hasType = true;
+        if (fields[0] === "DATA") hasData = true;
       }
     });
+
+    // Check if the last group also had UNIT, TYPE, and DATA rows
+    if (currentGroup && (!hasUnit || !hasType || !hasData)) {
+      errors.push({
+        rule: this.rule,
+        lineNumber: -1, // No specific line number, but group level error
+        group: currentGroup,
+        message: `Group "${currentGroup}" is missing one of UNIT, TYPE, or DATA rows.`,
+        severity: "error",
+      });
+    }
 
     return errors;
   },
