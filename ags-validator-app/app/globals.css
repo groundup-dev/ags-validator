@@ -10,7 +10,7 @@
     --card-foreground: #000000; 
     --popover: #ffffff; 
     --popover-foreground: #000000; 
-    --primary: #63A908; 
+    --primary: #417201; 
     --primary-foreground: #ffffff; 
     --secondary: #663B14; 
     --secondary-foreground: #ffffff; 
@@ -20,11 +20,11 @@
     --accent-foreground: #000000; 
     --destructive: #f84e23; 
     --destructive-foreground: #fdc1b2;
-    --warning: #fcbb0a;
+    --warning: #fba904;
     --warning-foreground: #fee7a9;
     --border: #cfcfcf; 
     --input: #cfcfcf; 
-    --ring: #cfcfcf; 
+    --ring: #663B14; 
     --radius: 0.5rem;
   }
 }

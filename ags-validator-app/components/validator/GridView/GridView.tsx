@@ -27,6 +27,7 @@ interface Props {
   setGroup: (label: string, group: GroupRaw) => void;
   errors: AgsError[];
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
+  setSelectedRows: (rows: number[]) => void;
 }
 
 const getCSSVariable = (variableName: string) => {
@@ -40,23 +41,29 @@ const GridView: React.FC<Props> = ({
   setGoToErrorCallback,
   errors,
   setGroup,
+  setSelectedRows,
 }) => {
   const ref = useRef<DataEditorRef | null>(null);
 
   const [selection, setSelection] = useState<GridSelection>({
     columns: CompactSelection.empty(),
     rows: CompactSelection.empty(),
+    current: undefined,
   });
+
+  useEffect(() => {
+    if (selection.current) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(selection.rows.toArray());
+    }
+  }, [selection, setSelectedRows]);
 
   const customTheme: Partial<Theme> = useMemo(
     () => ({
-      accentColor: getCSSVariable("--border"), // Maps to your primary color
-      accentFg: getCSSVariable("--accent-foreground"),
-      accentLight: getCSSVariable("--background"),
-      bgCell: getCSSVariable("--card"),
-      bgCellMedium: getCSSVariable("--muted"),
-      borderColor: getCSSVariable("--border"),
-      horizontalBorderColor: getCSSVariable("--ring"),
+      accentColor: getCSSVariable("--secondary"),
+      accentFg: getCSSVariable("--secondary-foreground"),
+      accentLight: getCSSVariable("--muted"),
     }),
     []
   );
@@ -208,22 +215,48 @@ const GridView: React.FC<Props> = ({
     [setColumns]
   );
 
+  const onRowAppended = useCallback(() => {
+    const newRow = {
+      data: group.headings.reduce((acc, heading) => {
+        acc[heading.name] = "";
+        return acc;
+      }, {} as Record<string, string>),
+      lineNumber: group.rows.length + group.lineNumber + 4,
+    };
+
+    const newGroup = {
+      ...group,
+      rows: [...group.rows, newRow],
+    };
+
+    setGroup(group.name, newGroup);
+  }, [group, setGroup]);
+
   return (
     <div className="w-full h-full">
       <DataGrid
+        height={"100%"}
+        width={"100%"}
         ref={ref}
         theme={customTheme}
         onCellsEdited={onCellsEdited}
         highlightRegions={highlights}
-        rowMarkers="checkbox"
+        rowMarkers={{
+          startIndex: group.lineNumber + 4,
+          kind: "both",
+        }}
+        onRowAppended={onRowAppended}
+        trailingRowOptions={{
+          hint: "Add Row...",
+          sticky: false,
+          tint: true,
+        }}
         columns={columns}
         getCellContent={getData}
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
         rows={group.rows.length}
         onPaste={true}
-        overscrollX={0}
-        overscrollY={0}
         maxColumnAutoWidth={200}
         maxColumnWidth={500}
         onColumnResize={onColumnResize}
