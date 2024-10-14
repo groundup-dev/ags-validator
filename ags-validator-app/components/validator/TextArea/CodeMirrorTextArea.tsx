@@ -9,7 +9,7 @@ type CodeMirrorTextAreaProps = {
   agsData: string;
   setAgsData: React.Dispatch<React.SetStateAction<string>>;
   errors: AgsError[];
-  activeLineNumber: number | undefined;
+  setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
   hoverLineNumber: number | null;
 };
 
@@ -24,12 +24,12 @@ const themeDemo = EditorView.baseTheme({
     color: "black",
   },
   "& .cm-activeLine.error-line": {
-    backgroundColor: "rgba(255, 0, 0, 0.4)",
+    backgroundColor: "var(--destructive-foreground)",
     color: "black",
   },
   "& .hover-line": {
     // Add a style for hovered line
-    backgroundColor: "yellow !important",
+    backgroundColor: "#FFF372 !important",
   },
 });
 
@@ -37,7 +37,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   agsData,
   setAgsData,
   errors,
-  activeLineNumber,
+  setGoToErrorCallback,
   hoverLineNumber,
 }) => {
   const errorLines = errors?.map((error) => error.lineNumber);
@@ -49,22 +49,21 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   };
 
   useEffect(() => {
-    if (editorRef.current && activeLineNumber !== undefined) {
-      const view = editorRef.current;
-      const doc = view.state.doc;
+    setGoToErrorCallback(() => goToErrorInText);
+  }, [setGoToErrorCallback]);
 
-      if (activeLineNumber >= 1 && activeLineNumber <= doc.lines) {
-        const line = doc.line(activeLineNumber);
-
-        view.dispatch({
-          selection: { head: line.from, anchor: line.to },
-          scrollIntoView: true,
-        });
-      } else {
-        console.warn(`Invalid line number: ${activeLineNumber}`);
-      }
+  const goToErrorInText = (error: AgsError) => {
+    if (editorRef.current) {
+      editorRef.current.focus();
+      editorRef.current.dispatch({
+        selection: {
+          anchor: editorRef.current.state.doc.line(error.lineNumber).from,
+          head: editorRef.current.state.doc.line(error.lineNumber).to,
+        },
+        scrollIntoView: true,
+      });
     }
-  }, [activeLineNumber]);
+  };
 
   const classNameExt = useMemo(
     () =>
@@ -86,6 +85,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
     <div className="h-full w-full flex flex-col overflow-auto">
       <CodeMirror
         value={agsData} // Use agsData and fallback to default content if empty
+        placeholder={"Paste data here, or upload an AGS file..."}
         extensions={[basicSetup, themeDemo, classNameExt]} // Use dynamic classnameExt
         height="100%"
         width="100%"

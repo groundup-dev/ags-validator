@@ -5,12 +5,13 @@ import { CircleAlert, SquareArrowUpLeft } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
 
 const severityColor: Record<AgsError["severity"], string> = {
-  error: "text-red-600",
-  warning: "text-amber-500",
+  error: "text-destructive",
+  warning: "text-warning",
 };
 
 interface ErrorMessageProps {
   error: AgsError;
+
   onView: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -40,7 +41,14 @@ export default function ErrorMessage({
             {capitalize(error.severity)} at line {error.lineNumber}
           </p>
         </div>
-        <Button variant="ghost" size="sm" color="red" onClick={onView}>
+        <Button
+          variant="ghost"
+          size="sm"
+          color="red"
+          onClick={() => {
+            onView();
+          }}
+        >
           <SquareArrowUpLeft size={16} className="mr-2" />
           View
         </Button>

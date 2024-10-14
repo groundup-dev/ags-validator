@@ -40,7 +40,7 @@ export default function SelectTable({
         label: key,
       }))
     : [];
-
+    
   return (
     <div className="grid items-center gap-1.5 mb-4">
       <Label htmlFor="selectTable">Select Group</Label>
@@ -54,7 +54,7 @@ export default function SelectTable({
           >
             {selectedGroup
               ? groups.find((group) => group.value === selectedGroup)?.label
-              : "Select group..."}
+              : ""}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
