@@ -10,10 +10,10 @@ export default function Navbar() {
       <div className=" flex flex-row justify-between w-full ">
         <div className="max-w-400 w-full flex items-center gap-6 mx-auto">
           <Logo size="sm" />
-          <h1>AGS4 Validator</h1>
+          <h1>AGS Validator</h1>
         </div>
 
-        <div>
+        <div className="items-center flex">
           <Link href={"https://github.com/groundup-dev/ags-validator"}>
             <FaGithub className="h-6 w-6" />
           </Link>

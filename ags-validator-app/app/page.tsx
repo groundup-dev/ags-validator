@@ -22,14 +22,14 @@ export default function Page() {
       <div className="text-center my-12 mx-4">
         <div className="flex justify-center items-center mb-8 flex-wrap gap-x-4 gap-y-4">
           <div className="flex-0 sm:flex-1" />
-          <h1 className="text-3xl font-bold">AGS4 Validator</h1>
+          <h1 className="text-3xl font-bold">AGS Validator</h1>
           <div className="flex items-center gap-2 flex-0 sm:flex-1">
             <p className="text-lg">by</p>
             <Logo size="md" />
           </div>
         </div>
         <p className="text-lg mb-4">
-          Validate, fix, and edit your AGS4 data with ease.
+          Validate, fix, and edit your AGS data with ease.
         </p>
         <p className="text-md mb-10">
           All your AGS data stays on your device and
@@ -63,9 +63,9 @@ export default function Page() {
           </h2>
           <div className="flex flex-col items-center  max-w-prose">
             <p>
-              GroundUp is an open-source platform that aims to make geotechnical
-              data management and analysis easier, faster, and more
-              collaborative.
+              GroundUp is an open source platform that makes geotechnical
+              analysis and data management, easier, quicker, more transparent,
+              and more collaborative.
             </p>
             <br />
             <p>

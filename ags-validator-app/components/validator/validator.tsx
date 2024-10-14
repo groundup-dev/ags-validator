@@ -19,7 +19,7 @@ import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Delete, Download, Trash, Trash2 } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 
 export default function Validator() {
   const agsDictOptions = [
