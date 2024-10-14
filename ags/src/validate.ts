@@ -65,7 +65,24 @@ export function validateAgsData(
   }
 
   //   now the AGS data should be safe to parse into the AgsRaw object
-  const parsedAgs = parseAgs(rawAgs);
+
+  let parsedAgs: AgsRaw;
+  try {
+    parsedAgs = parseAgs(rawAgs);
+  } catch (error) {
+    return {
+      errors: [
+        {
+          rule: "",
+          lineNumber: 1,
+          field: "",
+          message: "Unknown error parsing AGS data.",
+          severity: "error",
+        },
+      ],
+      parsedAgs: undefined,
+    };
+  }
 
   const agsErrorsForParsed = validateAgsDataParsed(parsedAgs);
 
