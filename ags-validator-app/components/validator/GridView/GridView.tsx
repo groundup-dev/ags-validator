@@ -17,11 +17,17 @@ import DataGrid, {
   EditableGridCell,
   EditListItem,
   DataEditorRef,
+  Rectangle,
+  CellArray,
 } from "@glideapps/glide-data-grid";
-import { AgsError, GroupRaw } from "@groundup/ags";
+import { AgsError } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { applySetRowDataEffect, setRowData } from "@/lib/redux/ags";
+import {
+  applySetRowDataEffect,
+  GroupRawNormalized,
+  setRowsData,
+} from "@/lib/redux/ags";
 
 // Props for the table component
 interface Props {
@@ -44,11 +50,7 @@ const GridView: React.FC<Props> = ({
 }) => {
   const group = useAppSelector(
     (state) => state.ags.parsedAgsNormalized?.[groupName]
-  );
-
-  if (!group) {
-    return null;
-  }
+  ) as GroupRawNormalized;
 
   const errors = useAppSelector((state) => state.ags.errors);
 
@@ -61,6 +63,36 @@ const GridView: React.FC<Props> = ({
     rows: CompactSelection.empty(),
     current: undefined,
   });
+
+  const onPaste = useCallback(
+    (target: Item, values: readonly (readonly string[])[]): boolean => {
+      console.log("onPaste", target, values);
+
+      const lineNumber = group.lineNumber + 4 + target[1];
+      const headings = group.headings
+        .map((heading) => heading.name)
+        .slice(target[0], target[0] + values[0].length);
+
+      const updates = values.map((value, index) => {
+        const updateForRow = value.reduce((acc, val, idx) => {
+          acc[headings[idx]] = val;
+          return acc;
+        }, {} as Record<string, string>);
+
+        return {
+          group: group.name,
+          lineNumber: lineNumber + index,
+          update: updateForRow,
+        };
+      });
+
+      dispatch(setRowsData(updates));
+      dispatch(applySetRowDataEffect());
+
+      return false;
+    },
+    [dispatch, group.headings, group.lineNumber, group.name]
+  );
 
   useEffect(() => {
     if (selection.current) {
@@ -134,68 +166,35 @@ const GridView: React.FC<Props> = ({
     );
   }, [group.headings]);
 
-  // const onCellsEdited = React.useCallback(
-  //   (newValues: readonly EditListItem[]) => {
-  //     const cells: Item[] = newValues.map((cell) => cell.location);
-  //     const values = newValues.map((cell) => cell.value) as EditableGridCell[];
+  const onCellsEdited = (newValues: readonly EditListItem[]) => {
+    const cells: Item[] = newValues.map((cell) => cell.location);
+    const values = newValues.map((cell) => cell.value) as EditableGridCell[];
 
-  //     const newGroup = {
-  //       ...group,
-  //       rows: group.rows.map((row, rowIndex) => {
-  //         const updatedRow = { ...row };
-  //         cells.forEach((cell, index) => {
-  //           if (cell[1] === rowIndex) {
-  //             const colNum = cell[0];
-  //             const heading = group.headings[colNum];
-  //             if (heading) {
-  //               const newData =
-  //                 values[index]?.kind === GridCellKind.Text
-  //                   ? values[index].data
-  //                   : "";
+    dispatch(
+      setRowsData(
+        cells.map((cell, index) => {
+          const colNum = cell[0];
+          const rowNum = cell[1];
+          const heading = group.headings[colNum];
+          const data =
+            values[index]?.kind === GridCellKind.Text ? values[index].data : "";
 
-  //               updatedRow.data[heading.name] = newData;
-  //             }
-  //           }
-  //         });
-  //         return updatedRow;
-  //       }),
-  //     };
-  //     setGroup(group.name, newGroup);
-  //   },
-  //   [group, setGroup]
-  // );
+          return {
+            group: group.name,
+            lineNumber: group.lineNumber + 4 + rowNum,
+            update: {
+              [heading.name]: data,
+            },
+          };
+        })
+      )
+    );
+
+    dispatch(applySetRowDataEffect());
+  };
 
   const onCellEdited = (cell: Item, newValue: EditableGridCell) => {
-    if (newValue.kind !== GridCellKind.Text) {
-      return; // Only handle text cells
-    }
-
-    const [colNum, rowNum] = cell;
-    const lineNumber = group.lineNumber + 4 + rowNum;
-    const row = group.rows[lineNumber];
-    const col = group.headings[colNum];
-
-    if (!row || !col) return;
-
-    const heading = group.headings[colNum];
-    if (!heading) return;
-
-    dispatch(
-      setRowData({
-        group: group.name,
-        lineNumber: row.lineNumber,
-        data: newValue.data,
-        heading: heading.name,
-      })
-    );
-    dispatch(
-      applySetRowDataEffect({
-        group: group.name,
-        lineNumber: row.lineNumber,
-        data: newValue.data,
-        heading: heading.name,
-      })
-    );
+    console.log("onCellEdited", cell, newValue);
   };
 
   const getData = useCallback(
@@ -232,6 +231,25 @@ const GridView: React.FC<Props> = ({
     [setColumns]
   );
 
+  // const getCellsForSelection = useCallback(
+  //   (selection: Rectangle): CellArray => {
+  //     const cells = [];
+  //     for (let i = selection.y; i < selection.y + selection.height; i++) {
+  //       const rows = [];
+
+  //       for (let j = selection.x; j < selection.x + selection.width; j++) {
+  //         rows.push(getData([j, i]));
+  //       }
+
+  //       cells.push(rows);
+  //     }
+  //     console.log("getCellsForSelection", cells);
+
+  //     return cells;
+  //   },
+  //   [getData]
+  // );
+
   // const onRowAppended = useCallback(() => {
   //   const newRow = {
   //     data: group.headings.reduce((acc, heading) => {
@@ -256,7 +274,7 @@ const GridView: React.FC<Props> = ({
         width={"100%"}
         ref={ref}
         theme={customTheme}
-        // onCellsEdited={onCellsEdited}
+        onCellsEdited={onCellsEdited}
         highlightRegions={highlights}
         rowMarkers={{
           startIndex: group.lineNumber + 4,
@@ -273,7 +291,7 @@ const GridView: React.FC<Props> = ({
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
         rows={Object.keys(group.rows).length}
-        onPaste={true}
+        onPaste={onPaste}
         maxColumnAutoWidth={200}
         maxColumnWidth={500}
         onColumnResize={onColumnResize}

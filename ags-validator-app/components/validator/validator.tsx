@@ -39,8 +39,6 @@ export default function Validator() {
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
 
-  const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
-
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const [selectedGroup, setSelectedGroup] = useState<string>("");
@@ -155,10 +153,7 @@ export default function Validator() {
               <TabsContent value="text" className="min-h-0 grow">
                 <Card className="h-full">
                   <CardContent className="p-4 h-full">
-                    <TextArea
-                      hoverLineNumber={hoverLineNumber}
-                      setGoToErrorCallback={setGoToErrorCallback}
-                    />
+                    <TextArea setGoToErrorCallback={setGoToErrorCallback} />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -178,10 +173,7 @@ export default function Validator() {
           </div>
           <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-5rem)]">
             <CardContent className="p-4 h-full">
-              <ErrorMessages
-                setHoverLineNumber={setHoverLineNumber}
-                goToError={goToError}
-              />
+              <ErrorMessages goToError={goToError} />
             </CardContent>
           </Card>
         </div>

@@ -11,7 +11,7 @@ import {
   RowRaw,
 } from "@groundup/ags";
 
-interface GroupRawNormalized {
+export interface GroupRawNormalized {
   name: string;
   headings: HeadingRaw[];
   rows: Record<number, RowRaw<this["headings"]>>;
@@ -31,8 +31,7 @@ type AgsState = {
 interface SetRowDataPayload {
   group: string;
   lineNumber: number;
-  heading: string;
-  data: string;
+  update: Record<string, string>;
 }
 
 const initialState: AgsState = {
@@ -41,36 +40,31 @@ const initialState: AgsState = {
   parsedAgsNormalized: undefined,
 };
 
-// Create an async thunk to handle side effects after updating the row data
 export const applySetRowDataEffect = createAsyncThunk<
   { rawData?: string; errors?: AgsError[] },
-  SetRowDataPayload,
+  undefined,
   { state: { ags: AgsState } }
->("ags/applySetRowDataEffect", async (payload, { getState }) => {
+>("ags/applySetRowDataEffect", async (_, { getState }) => {
   const parsedAgsNormalized = getState().ags.parsedAgsNormalized;
   if (!parsedAgsNormalized) {
     return {};
   }
 
-  // Now perform the side effect logic (validate and convert)
-  const parsedAgs = Object.fromEntries(
-    Object.entries(parsedAgsNormalized).map(([label, group]) => [
-      label,
-      {
-        ...group,
-        rows: Object.values(group.rows),
-      },
-    ])
+  // Create a new Web Worker
+  const worker = new Worker(
+    new URL("../../workers/validationWorker.js", import.meta.url)
   );
 
-  // Validate and transform the data
-  const errors = [
-    ...validateAgsDataParsed(parsedAgs),
-    ...validateAgsDataParsedWithDict(parsedAgs, "v4_0_4"),
-  ];
-  const rawData = parsedAgsToString(parsedAgs);
+  // Return a promise that resolves when the worker sends back the result
+  return new Promise<{ rawData?: string; errors?: AgsError[] }>((resolve) => {
+    worker.onmessage = (event) => {
+      const { rawData, errors } = event.data;
+      resolve({ rawData, errors });
+    };
 
-  return { rawData, errors };
+    // Post the normalized AGS data to the worker for background processing
+    worker.postMessage(parsedAgsNormalized);
+  });
 });
 
 export const agsSlice = createSlice({
@@ -103,12 +97,18 @@ export const agsSlice = createSlice({
       state.parsedAgsNormalized = parsedAgsNormalized;
     },
 
-    setRowData: (state, action: PayloadAction<SetRowDataPayload>) => {
-      // Update the row data (this part stays synchronous and pure)
-      const { group, lineNumber, data, heading } = action.payload;
-      if (state.parsedAgsNormalized) {
-        state.parsedAgsNormalized[group].rows[lineNumber].data[heading] = data;
-      }
+    setRowsData: (state, action: PayloadAction<SetRowDataPayload[]>) => {
+      action.payload.forEach((payload) => {
+        const { group, lineNumber, update } = payload;
+        console.log("setRowsData", group, lineNumber, update);
+
+        if (state.parsedAgsNormalized) {
+          state.parsedAgsNormalized[group].rows[lineNumber].data = {
+            ...state.parsedAgsNormalized[group].rows[lineNumber].data,
+            ...update,
+          };
+        }
+      });
     },
   },
   extraReducers: (builder) => {
@@ -120,6 +120,6 @@ export const agsSlice = createSlice({
   },
 });
 
-export const { setRowData, setRawData } = agsSlice.actions;
+export const { setRowsData, setRawData } = agsSlice.actions;
 
 export default agsSlice.reducer;

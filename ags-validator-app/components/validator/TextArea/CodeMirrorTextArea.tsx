@@ -9,7 +9,6 @@ import { setRawData } from "@/lib/redux/ags";
 
 type CodeMirrorTextAreaProps = {
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
-  hoverLineNumber: number | null;
 };
 
 const themeDemo = EditorView.baseTheme({
@@ -34,7 +33,6 @@ const themeDemo = EditorView.baseTheme({
 
 const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   setGoToErrorCallback,
-  hoverLineNumber,
 }) => {
   const agsData = useAppSelector((state) => state.ags.rawData);
 
@@ -71,16 +69,13 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
     () =>
       classname({
         add: (lineNumber) => {
-          if (hoverLineNumber !== null && lineNumber === hoverLineNumber) {
-            return "hover-line"; // Highlight the hovered line
-          }
           if (errorLines.includes(lineNumber)) {
             return "error-line"; // Highlight error lines
           }
           return undefined;
         },
       }),
-    [errorLines, hoverLineNumber]
+    [errorLines]
   );
 
   return (
