@@ -5,19 +5,19 @@ import { AgsError } from "@groundup/ags";
 import { Separator } from "@/components/ui/separator";
 import { CircleX } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useAppSelector } from "@/lib/redux/hooks";
 
 interface ErrorTableProps {
-  errors: AgsError[];
-
   setHoverLineNumber: (hoverLineNumber: number | null) => void;
   goToError: (error: AgsError) => void;
 }
 
 export default function ErrorMessages({
-  errors,
   goToError,
   setHoverLineNumber,
 }: ErrorTableProps) {
+  const errors = useAppSelector((state) => state.ags.errors);
+
   const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
     null
   );

@@ -3,13 +3,12 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { setRawData } from "@/lib/redux/ags";
 
-// Props type for AGSUpload component
-type AGSUploadProps = {
-  setAgsData: (data: string) => void; // Function to set AGS data
-};
+export default function AGSUpload() {
+  const dispatch = useAppDispatch();
 
-export default function AGSUpload({ setAgsData }: AGSUploadProps) {
   // Handle file input change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -19,7 +18,7 @@ export default function AGSUpload({ setAgsData }: AGSUploadProps) {
       reader.onload = (e) => {
         const content = e.target?.result;
         if (typeof content === "string") {
-          setAgsData(content); // Set the AGS data from the uploaded file content
+          dispatch(setRawData(content));
         }
       };
       reader.readAsText(selectedFile); // Read file as text
