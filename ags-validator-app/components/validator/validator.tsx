@@ -1,6 +1,5 @@
 "use client";
 
-import { useValidator } from "./hooks/useValidator";
 import ErrorMessages from "./ErrorMessages";
 import React, {
   Dispatch,
@@ -19,8 +18,10 @@ import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download, Trash2 } from "lucide-react";
+import { Download } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
+
+import { useAppSelector } from "@/lib/redux/hooks";
 
 export default function Validator() {
   const agsDictOptions = [
@@ -30,14 +31,12 @@ export default function Validator() {
     { value: "v4_1_1", label: "4.1.1" },
   ];
 
+  const agsData = useAppSelector((state) => state.ags.rawData);
+
   const [agsDictVersion, setAgsDictVersion] =
     useState<AgsDictionaryVersion>("v4_0_4");
-  const { agsData, setAgsData, errors, parsedAgs, setGroup } =
-    useValidator(agsDictVersion);
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
-
-  const [hoverLineNumber, setHoverLineNumber] = useState<number | null>(null);
 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -58,6 +57,8 @@ export default function Validator() {
     [setSelectedGroup, goToErrorCallback]
   );
 
+  const parsedAgs = useAppSelector((state) => state.ags.parsedAgsNormalized);
+
   // we need to populate the selectedGroup state when tables view is selected the first time
   useEffect(() => {
     if (parsedAgs && !selectedGroup && Object.keys(parsedAgs).length > 0) {
@@ -75,7 +76,7 @@ export default function Validator() {
         <Card className="mb-2 p-2">
           <CardTitle className="text-lg">AGS Options</CardTitle>
           <CardContent className="p-4 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col">
-            <AGSUpload setAgsData={setAgsData} />
+            <AGSUpload />
             <AutoComplete
               options={agsDictOptions}
               selectedOption={agsDictVersion}
@@ -117,45 +118,41 @@ export default function Validator() {
                   </div>
                   {tabsViewValue === "tables" && parsedAgs !== undefined && (
                     <SelectTable
-                      parsedAgs={parsedAgs}
                       selectedGroup={selectedGroup}
                       setSelectedGroup={setSelectedGroup}
+                      groups={Object.keys(parsedAgs)}
                     />
                   )}
-                  {tabsViewValue === "tables" &&
-                    parsedAgs !== undefined &&
-                    selectedRows.length > 0 && (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          const newGroup = {
-                            ...parsedAgs[selectedGroup],
-                            rows: parsedAgs[selectedGroup].rows.filter(
-                              (row, index) => !selectedRows.includes(index)
-                            ),
-                          };
+                  {
+                    tabsViewValue === "tables" &&
+                      parsedAgs !== undefined &&
+                      selectedRows.length > 0
 
-                          setGroup(selectedGroup, newGroup);
-                          setSelectedRows([]);
-                        }}
-                      >
-                        <Trash2 className="w-4 h-6 mr-1" />
-                        {`Delete ${selectedRows.length} rows`}
-                      </Button>
-                    )}
+                    // <Button
+                    //   variant="outline"
+                    //   onClick={() => {
+                    //     const newGroup = {
+                    //       ...parsedAgs[selectedGroup],
+                    //       rows: parsedAgs[selectedGroup].rows.filter(
+                    //         (row, index) => !selectedRows.includes(index)
+                    //       ),
+                    //     };
+
+                    //     setGroup(selectedGroup, newGroup);
+                    //     setSelectedRows([]);
+                    //   }}
+                    // >
+                    //   <Trash2 className="w-4 h-6 mr-1" />
+                    //   {`Delete ${selectedRows.length} rows`}
+                    // </Button>
+                  }
                 </CardContent>
               </Card>
 
               <TabsContent value="text" className="min-h-0 grow">
                 <Card className="h-full">
                   <CardContent className="p-4 h-full">
-                    <TextArea
-                      agsData={agsData}
-                      setAgsData={setAgsData}
-                      errors={errors}
-                      hoverLineNumber={hoverLineNumber}
-                      setGoToErrorCallback={setGoToErrorCallback}
-                    />
+                    <TextArea setGoToErrorCallback={setGoToErrorCallback} />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -163,15 +160,11 @@ export default function Validator() {
               <TabsContent value="tables" className="min-h-0 grow">
                 <Card className="h-full">
                   <CardContent className="p-4 h-full">
-                    {parsedAgs?.[selectedGroup] && (
-                      <GridView
-                        group={parsedAgs?.[selectedGroup]}
-                        setGroup={setGroup}
-                        errors={errors}
-                        setGoToErrorCallback={setGoToErrorCallback}
-                        setSelectedRows={setSelectedRows}
-                      />
-                    )}
+                    <GridView
+                      groupName={selectedGroup}
+                      setGoToErrorCallback={setGoToErrorCallback}
+                      setSelectedRows={setSelectedRows}
+                    />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -179,11 +172,7 @@ export default function Validator() {
           </div>
           <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-5rem)]">
             <CardContent className="p-4 h-full">
-              <ErrorMessages
-                errors={errors}
-                setHoverLineNumber={setHoverLineNumber}
-                goToError={goToError}
-              />
+              <ErrorMessages goToError={goToError} />
             </CardContent>
           </Card>
         </div>

@@ -4,13 +4,11 @@ import { classname } from "@uiw/codemirror-extensions-classname";
 import { basicSetup } from "codemirror";
 import { EditorView } from "@codemirror/view";
 import { AgsError } from "@groundup/ags";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { applySetRawDataEffect, setRawData } from "@/lib/redux/ags";
 
 type CodeMirrorTextAreaProps = {
-  agsData: string;
-  setAgsData: React.Dispatch<React.SetStateAction<string>>;
-  errors: AgsError[];
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
-  hoverLineNumber: number | null;
 };
 
 const themeDemo = EditorView.baseTheme({
@@ -34,18 +32,21 @@ const themeDemo = EditorView.baseTheme({
 });
 
 const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
-  agsData,
-  setAgsData,
-  errors,
   setGoToErrorCallback,
-  hoverLineNumber,
 }) => {
+  const agsData = useAppSelector((state) => state.ags.rawData);
+
+  const errors = useAppSelector((state) => state.ags.errors);
+
+  const dispatch = useAppDispatch();
+
   const errorLines = errors?.map((error) => error.lineNumber);
 
   const editorRef = useRef<EditorView | null>(null);
 
   const handleEditorChange = (value: string) => {
-    setAgsData(value); // Sync the editor value back to agsData state
+    dispatch(setRawData(value));
+    dispatch(applySetRawDataEffect());
   };
 
   useEffect(() => {
@@ -69,16 +70,13 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
     () =>
       classname({
         add: (lineNumber) => {
-          if (hoverLineNumber !== null && lineNumber === hoverLineNumber) {
-            return "hover-line"; // Highlight the hovered line
-          }
           if (errorLines.includes(lineNumber)) {
             return "error-line"; // Highlight error lines
           }
           return undefined;
         },
       }),
-    [errorLines, hoverLineNumber]
+    [errorLines]
   );
 
   return (

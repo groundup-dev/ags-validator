@@ -11,24 +11,12 @@ const severityColor: Record<AgsError["severity"], string> = {
 
 interface ErrorMessageProps {
   error: AgsError;
-
   onView: () => void;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
 }
 
-export default function ErrorMessage({
-  error,
-  onView,
-  onMouseEnter,
-  onMouseLeave,
-}: ErrorMessageProps) {
+export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
   return (
-    <div
-      className="flex flex-col p-2 gap-1"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+    <div className="flex flex-col p-2 gap-1">
       <div className="flex gap-2 justify-between items-center">
         <div
           className={cn(
