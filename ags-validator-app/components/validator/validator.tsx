@@ -1,6 +1,5 @@
 "use client";
 
-import { useValidator } from "./hooks/useValidator";
 import ErrorMessages from "./ErrorMessages";
 import React, {
   Dispatch,
@@ -19,7 +18,7 @@ import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download, Trash2 } from "lucide-react";
+import { Download } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
 
 import { useAppSelector } from "@/lib/redux/hooks";

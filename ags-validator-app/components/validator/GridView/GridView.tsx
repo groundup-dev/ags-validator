@@ -189,7 +189,7 @@ const GridView: React.FC<Props> = ({
     dispatch(applySetRowDataEffect());
   };
 
-  const onCellEdited = (cell: Item, newValue: EditableGridCell) => {};
+  const onCellEdited = () => {};
 
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
