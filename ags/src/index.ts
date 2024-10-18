@@ -1,4 +1,4 @@
-import { validateAgsData } from "./validate";
+import { validateAgsData, defaultRulesConfig } from "./validate";
 import type { AgsError, AgsRaw, AgsDictionaryVersion, GroupRaw } from "./types";
 import { parsedAgsToString } from "./parse";
 
@@ -9,4 +9,5 @@ export {
   AgsDictionaryVersion,
   GroupRaw,
   parsedAgsToString,
+  defaultRulesConfig,
 };

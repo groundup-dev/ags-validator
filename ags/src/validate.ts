@@ -6,24 +6,49 @@ import {
   rulesForParsedAgsWithDict,
 } from "./rules";
 
-function validateAgsDataRaw(rawAgs: string): AgsError[] {
+type RulesConfig = {
+  [key: string | number]: boolean;
+};
+
+// happy to overwrite ts here
+export const defaultRulesConfig = Object.fromEntries(
+  [
+    ...Object.keys(rulesForParsedAgs),
+    ...Object.keys(rulesForParsedAgsWithDict),
+    ...Object.keys(rulesForRawString),
+  ].map((rule) => [rule, true]),
+);
+
+function validateAgsDataRaw(rawAgs: string, config?: RulesConfig): AgsError[] {
   let allErrors: AgsError[] = [];
+
+  const rulesConfig = config || defaultRulesConfig;
 
   // this only applies to the rulesForRawString object
   const rulesAsArray = Object.values(rulesForRawString);
 
   rulesAsArray.forEach((step) => {
+    if (!rulesConfig[step.rule]) {
+      return;
+    }
     const errors = step.validate(rawAgs);
     allErrors = [...allErrors, ...errors];
   });
   return allErrors;
 }
 
-function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
+function validateAgsDataParsed(
+  rawAgs: AgsRaw,
+  config?: RulesConfig,
+): AgsError[] {
+  const rulesConfig = config || defaultRulesConfig;
   let allErrors: AgsError[] = [];
 
   const parsedRulesAsArray = Object.values(rulesForParsedAgs);
   parsedRulesAsArray.forEach((step) => {
+    if (!rulesConfig[step.rule]) {
+      return;
+    }
     const errors = step.validate(rawAgs);
     allErrors = [...allErrors, ...errors];
   });
@@ -34,11 +59,16 @@ function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
 function validateAgsDataParsedWithDict(
   rawAgs: AgsRaw,
   dictionary: AgsDictionaryVersion,
+  config?: RulesConfig,
 ): AgsError[] {
   let allErrors: AgsError[] = [];
+  const rulesConfig = config || defaultRulesConfig;
 
   const parsedRulesAsArray = Object.values(rulesForParsedAgsWithDict);
   parsedRulesAsArray.forEach((step) => {
+    if (!rulesConfig[step.rule]) {
+      return;
+    }
     const errors = step.validate(rawAgs, dictionary);
     allErrors = [...allErrors, ...errors];
   });
@@ -50,11 +80,12 @@ function validateAgsDataParsedWithDict(
 export function validateAgsData(
   rawAgs: string,
   dictionary: AgsDictionaryVersion = "v4_0_4",
+  config?: RulesConfig,
 ): {
   errors: AgsError[];
   parsedAgs?: AgsRaw | undefined;
 } {
-  const agsErrorsForRaw = validateAgsDataRaw(rawAgs);
+  const agsErrorsForRaw = validateAgsDataRaw(rawAgs, config);
   if (
     agsErrorsForRaw.filter((error) => error.severity === "error").length > 0
   ) {
@@ -65,11 +96,10 @@ export function validateAgsData(
   }
 
   //   now the AGS data should be safe to parse into the AgsRaw object
-
   let parsedAgs: AgsRaw;
   try {
     parsedAgs = parseAgs(rawAgs);
-  } catch (error) {
+  } catch {
     return {
       errors: [
         {
@@ -84,11 +114,12 @@ export function validateAgsData(
     };
   }
 
-  const agsErrorsForParsed = validateAgsDataParsed(parsedAgs);
+  const agsErrorsForParsed = validateAgsDataParsed(parsedAgs, config);
 
   const agsErrorsForParsedWithDict = validateAgsDataParsedWithDict(
     parsedAgs,
     dictionary,
+    config,
   );
 
   return {
