@@ -17,8 +17,6 @@ import DataGrid, {
   EditableGridCell,
   EditListItem,
   DataEditorRef,
-  Rectangle,
-  CellArray,
 } from "@glideapps/glide-data-grid";
 import { AgsError } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
@@ -66,8 +64,6 @@ const GridView: React.FC<Props> = ({
 
   const onPaste = useCallback(
     (target: Item, values: readonly (readonly string[])[]): boolean => {
-      console.log("onPaste", target, values);
-
       const lineNumber = group.lineNumber + 4 + target[1];
       const headings = group.headings
         .map((heading) => heading.name)
@@ -193,9 +189,7 @@ const GridView: React.FC<Props> = ({
     dispatch(applySetRowDataEffect());
   };
 
-  const onCellEdited = (cell: Item, newValue: EditableGridCell) => {
-    console.log("onCellEdited", cell, newValue);
-  };
+  const onCellEdited = (cell: Item, newValue: EditableGridCell) => {};
 
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
@@ -230,25 +224,6 @@ const GridView: React.FC<Props> = ({
     },
     [setColumns]
   );
-
-  // const getCellsForSelection = useCallback(
-  //   (selection: Rectangle): CellArray => {
-  //     const cells = [];
-  //     for (let i = selection.y; i < selection.y + selection.height; i++) {
-  //       const rows = [];
-
-  //       for (let j = selection.x; j < selection.x + selection.width; j++) {
-  //         rows.push(getData([j, i]));
-  //       }
-
-  //       cells.push(rows);
-  //     }
-  //     console.log("getCellsForSelection", cells);
-
-  //     return cells;
-  //   },
-  //   [getData]
-  // );
 
   // const onRowAppended = useCallback(() => {
   //   const newRow = {

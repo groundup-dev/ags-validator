@@ -1,15 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  AgsError,
-  //   AgsRaw,
-  //   AgsDictionaryVersion,
-  validateAgsData,
-  parsedAgsToString,
-  validateAgsDataParsed,
-  validateAgsDataParsedWithDict,
-  HeadingRaw,
-  RowRaw,
-} from "@groundup/ags";
+import { AgsError, HeadingRaw, RowRaw } from "@groundup/ags";
 
 export interface GroupRawNormalized {
   name: string;
@@ -52,7 +42,7 @@ export const applySetRowDataEffect = createAsyncThunk<
 
   // Create a new Web Worker
   const worker = new Worker(
-    new URL("../../workers/validationWorker.js", import.meta.url)
+    new URL("../../workers/validateRowUpdateWorker.js", import.meta.url)
   );
 
   // Return a promise that resolves when the worker sends back the result
@@ -67,40 +57,45 @@ export const applySetRowDataEffect = createAsyncThunk<
   });
 });
 
+export const applySetRawDataEffect = createAsyncThunk<
+  { errors?: AgsError[]; parsedAgsNormalized?: AgsRawNormalized },
+  undefined,
+  { state: { ags: AgsState } }
+>("ags/applySetRawDataEffect", async (_, { getState }) => {
+  // Create a new Web Worker
+  const worker = new Worker(
+    new URL("../../workers/validateRawUpdateWorker.js", import.meta.url)
+  );
+
+  const rawData = getState().ags.rawData;
+
+  // Return a promise that resolves when the worker sends back the result
+  return new Promise<{
+    parsedAgsNormalized?: AgsRawNormalized;
+    errors?: AgsError[];
+  }>((resolve) => {
+    worker.onmessage = (event) => {
+      const { parsedAgsNormalized, errors } = event.data;
+
+      resolve({ parsedAgsNormalized, errors });
+    };
+
+    // Post the normalized AGS data to the worker for background processing
+    worker.postMessage(rawData);
+  });
+});
+
 export const agsSlice = createSlice({
   name: "ags",
   initialState,
   reducers: {
     setRawData: (state, action: PayloadAction<string>) => {
       state.rawData = action.payload;
-      const { errors, parsedAgs } = validateAgsData(action.payload);
-
-      state.errors = errors;
-
-      if (!parsedAgs) {
-        state.parsedAgsNormalized = undefined;
-        return;
-      }
-
-      const parsedAgsNormalized = Object.fromEntries(
-        Object.entries(parsedAgs).map(([label, group]) => [
-          label,
-          {
-            ...group,
-            rows: Object.fromEntries(
-              group.rows.map((row) => [row.lineNumber, row])
-            ),
-          },
-        ])
-      );
-
-      state.parsedAgsNormalized = parsedAgsNormalized;
     },
 
     setRowsData: (state, action: PayloadAction<SetRowDataPayload[]>) => {
       action.payload.forEach((payload) => {
         const { group, lineNumber, update } = payload;
-        console.log("setRowsData", group, lineNumber, update);
 
         if (state.parsedAgsNormalized) {
           state.parsedAgsNormalized[group].rows[lineNumber].data = {
@@ -112,9 +107,15 @@ export const agsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Handle the side effect thunk results and only update the state if successful
+    // we need this to be able to update the state with the results of the worker
     builder.addCase(applySetRowDataEffect.fulfilled, (state, action) => {
       state.rawData = action.payload.rawData ?? state.rawData;
+      state.errors = action.payload.errors ?? state.errors;
+    });
+
+    builder.addCase(applySetRawDataEffect.fulfilled, (state, action) => {
+      state.parsedAgsNormalized =
+        action.payload.parsedAgsNormalized ?? state.parsedAgsNormalized;
       state.errors = action.payload.errors ?? state.errors;
     });
   },

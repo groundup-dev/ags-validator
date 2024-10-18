@@ -5,7 +5,7 @@ import { basicSetup } from "codemirror";
 import { EditorView } from "@codemirror/view";
 import { AgsError } from "@groundup/ags";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { setRawData } from "@/lib/redux/ags";
+import { applySetRawDataEffect, setRawData } from "@/lib/redux/ags";
 
 type CodeMirrorTextAreaProps = {
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
@@ -46,6 +46,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
 
   const handleEditorChange = (value: string) => {
     dispatch(setRawData(value));
+    dispatch(applySetRawDataEffect());
   };
 
   useEffect(() => {
