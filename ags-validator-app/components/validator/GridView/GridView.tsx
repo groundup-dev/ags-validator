@@ -22,6 +22,7 @@ import { AgsError } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import {
+  addRow,
   applySetRowDataEffect,
   GroupRawNormalized,
   setRowsData,
@@ -229,22 +230,9 @@ const GridView: React.FC<Props> = ({
     [setColumns]
   );
 
-  // const onRowAppended = useCallback(() => {
-  //   const newRow = {
-  //     data: group.headings.reduce((acc, heading) => {
-  //       acc[heading.name] = "";
-  //       return acc;
-  //     }, {} as Record<string, string>),
-  //     lineNumber: group.rows.length + group.lineNumber + 4,
-  //   };
-
-  //   const newGroup = {
-  //     ...group,
-  //     rows: [...group.rows, newRow],
-  //   };
-
-  //   setGroup(group.name, newGroup);
-  // }, [group, setGroup]);
+  const onRowAppended = useCallback(() => {
+    dispatch(addRow({ group: group.name }));
+  }, [dispatch, group.name]);
 
   return (
     <div className="w-full h-full">
@@ -259,7 +247,7 @@ const GridView: React.FC<Props> = ({
           startIndex: group.lineNumber + 4,
           kind: "both",
         }}
-        // onRowAppended={onRowAppended}
+        onRowAppended={onRowAppended}
         trailingRowOptions={{
           hint: "Add Row...",
           sticky: false,

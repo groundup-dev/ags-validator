@@ -120,21 +120,25 @@ export const agsSlice = createSlice({
         action.payload.group
       ].headings.map((heading) => heading.name);
 
-      console.log(state.parsedAgsNormalized?.[action.payload.group]);
-
       if (!headings) {
         return;
       }
 
       if (state.parsedAgsNormalized) {
-        const lineNumber = Object.keys(
-          state.parsedAgsNormalized[action.payload.group].rows
-        ).length;
+        const lineNumberLast =
+          Object.keys(state.parsedAgsNormalized[action.payload.group].rows)
+            .length +
+          state.parsedAgsNormalized[action.payload.group].lineNumber +
+          3;
 
-        state.parsedAgsNormalized[action.payload.group].rows[lineNumber] = {
+        const newRow = {
           data: Object.fromEntries(headings.map((heading) => [heading, ""])),
-          lineNumber: lineNumber,
+          lineNumber: lineNumberLast + 1,
         };
+
+        state.parsedAgsNormalized[action.payload.group].rows[
+          lineNumberLast + 1
+        ] = newRow;
       }
     },
 
