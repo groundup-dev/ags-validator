@@ -18,29 +18,36 @@ import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
 
-import { useAppSelector } from "@/lib/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
+import { applySetRowDataEffect, deleteRows } from "@/lib/redux/ags";
+import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
+
+const agsDictOptions = [
+  { value: "v4_0_3", label: "4.0.3" },
+  { value: "v4_0_4", label: "4.0.4" },
+  { value: "v4_1", label: "4.1" },
+  { value: "v4_1_1", label: "4.1.1" },
+];
 
 export default function Validator() {
-  const agsDictOptions = [
-    { value: "v4_0_3", label: "4.0.3" },
-    { value: "v4_0_4", label: "4.0.4" },
-    { value: "v4_1", label: "4.1" },
-    { value: "v4_1_1", label: "4.1.1" },
-  ];
-
-  const agsData = useAppSelector((state) => state.ags.rawData);
-
   const [agsDictVersion, setAgsDictVersion] =
     useState<AgsDictionaryVersion>("v4_0_4");
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
-
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
   const [selectedGroup, setSelectedGroup] = useState<string>("");
+
+  const [selection, setSelection] = useState<GridSelection | undefined>(
+    undefined
+  );
+
+  const parsedAgs = useAppSelector((state) => state.ags.parsedAgsNormalized);
+  const agsData = useAppSelector((state) => state.ags.rawData);
+
+  const dispatch = useAppDispatch();
 
   const [goToErrorCallback, setGoToErrorCallback] = useState<
     (error: AgsError) => void
@@ -56,8 +63,6 @@ export default function Validator() {
     },
     [setSelectedGroup, goToErrorCallback]
   );
-
-  const parsedAgs = useAppSelector((state) => state.ags.parsedAgsNormalized);
 
   // we need to populate the selectedGroup state when tables view is selected the first time
   useEffect(() => {
@@ -123,29 +128,31 @@ export default function Validator() {
                       groups={Object.keys(parsedAgs)}
                     />
                   )}
-                  {
-                    tabsViewValue === "tables" &&
-                      parsedAgs !== undefined &&
-                      selectedRows.length > 0
+                  {tabsViewValue === "tables" &&
+                    parsedAgs !== undefined &&
+                    selectedRows.length > 0 && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          dispatch(
+                            deleteRows({
+                              group: selectedGroup,
+                              rows: selectedRows,
+                            })
+                          );
 
-                    // <Button
-                    //   variant="outline"
-                    //   onClick={() => {
-                    //     const newGroup = {
-                    //       ...parsedAgs[selectedGroup],
-                    //       rows: parsedAgs[selectedGroup].rows.filter(
-                    //         (row, index) => !selectedRows.includes(index)
-                    //       ),
-                    //     };
-
-                    //     setGroup(selectedGroup, newGroup);
-                    //     setSelectedRows([]);
-                    //   }}
-                    // >
-                    //   <Trash2 className="w-4 h-6 mr-1" />
-                    //   {`Delete ${selectedRows.length} rows`}
-                    // </Button>
-                  }
+                          setSelection({
+                            columns: CompactSelection.empty(),
+                            rows: CompactSelection.empty(),
+                            current: undefined,
+                          });
+                          dispatch(applySetRowDataEffect());
+                        }}
+                      >
+                        <Trash2 className="w-4 h-6 mr-1" />
+                        {`Delete ${selectedRows.length} rows`}
+                      </Button>
+                    )}
                 </CardContent>
               </Card>
 
@@ -164,6 +171,8 @@ export default function Validator() {
                       groupName={selectedGroup}
                       setGoToErrorCallback={setGoToErrorCallback}
                       setSelectedRows={setSelectedRows}
+                      selection={selection}
+                      setSelection={setSelection}
                     />
                   </CardContent>
                 </Card>

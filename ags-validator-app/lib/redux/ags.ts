@@ -40,19 +40,16 @@ export const applySetRowDataEffect = createAsyncThunk<
     return {};
   }
 
-  // Create a new Web Worker
   const worker = new Worker(
     new URL("../../workers/validateRowUpdateWorker.js", import.meta.url)
   );
 
-  // Return a promise that resolves when the worker sends back the result
   return new Promise<{ rawData?: string; errors?: AgsError[] }>((resolve) => {
     worker.onmessage = (event) => {
       const { rawData, errors } = event.data;
       resolve({ rawData, errors });
     };
 
-    // Post the normalized AGS data to the worker for background processing
     worker.postMessage(parsedAgsNormalized);
   });
 });
@@ -62,14 +59,12 @@ export const applySetRawDataEffect = createAsyncThunk<
   undefined,
   { state: { ags: AgsState } }
 >("ags/applySetRawDataEffect", async (_, { getState }) => {
-  // Create a new Web Worker
   const worker = new Worker(
     new URL("../../workers/validateRawUpdateWorker.js", import.meta.url)
   );
 
   const rawData = getState().ags.rawData;
 
-  // Return a promise that resolves when the worker sends back the result
   return new Promise<{
     parsedAgsNormalized?: AgsRawNormalized;
     errors?: AgsError[];
@@ -80,7 +75,6 @@ export const applySetRawDataEffect = createAsyncThunk<
       resolve({ parsedAgsNormalized, errors });
     };
 
-    // Post the normalized AGS data to the worker for background processing
     worker.postMessage(rawData);
   });
 });
@@ -91,6 +85,57 @@ export const agsSlice = createSlice({
   reducers: {
     setRawData: (state, action: PayloadAction<string>) => {
       state.rawData = action.payload;
+    },
+
+    deleteRows: (
+      state,
+      action: PayloadAction<{ group: string; rows: number[] }>
+    ) => {
+      const { group, rows } = action.payload;
+
+      if (!state.parsedAgsNormalized) {
+        return;
+      }
+
+      console.log(state.parsedAgsNormalized?.[action.payload.group]);
+
+      const rowNums = rows.map(
+        (row) => row + 4 + state.parsedAgsNormalized![group].lineNumber
+      );
+
+      const rowsFlat = Object.values(
+        state.parsedAgsNormalized[group].rows
+      ).filter((row) => !rowNums.includes(row.lineNumber));
+
+      state.parsedAgsNormalized![group].rows = Object.fromEntries(
+        rowsFlat.map((row, index) => [
+          index + 4 + state.parsedAgsNormalized![group].lineNumber,
+          row,
+        ])
+      );
+    },
+
+    addRow: (state, action: PayloadAction<{ group: string }>) => {
+      const headings = state.parsedAgsNormalized?.[
+        action.payload.group
+      ].headings.map((heading) => heading.name);
+
+      console.log(state.parsedAgsNormalized?.[action.payload.group]);
+
+      if (!headings) {
+        return;
+      }
+
+      if (state.parsedAgsNormalized) {
+        const lineNumber = Object.keys(
+          state.parsedAgsNormalized[action.payload.group].rows
+        ).length;
+
+        state.parsedAgsNormalized[action.payload.group].rows[lineNumber] = {
+          data: Object.fromEntries(headings.map((heading) => [heading, ""])),
+          lineNumber: lineNumber,
+        };
+      }
     },
 
     setRowsData: (state, action: PayloadAction<SetRowDataPayload[]>) => {
@@ -107,7 +152,7 @@ export const agsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // we need this to be able to update the state with the results of the worker
+    // we need this to be able to update the state with the results of the workers
     builder.addCase(applySetRowDataEffect.fulfilled, (state, action) => {
       state.rawData = action.payload.rawData ?? state.rawData;
       state.errors = action.payload.errors ?? state.errors;
@@ -121,6 +166,6 @@ export const agsSlice = createSlice({
   },
 });
 
-export const { setRowsData, setRawData } = agsSlice.actions;
+export const { setRowsData, setRawData, deleteRows, addRow } = agsSlice.actions;
 
 export default agsSlice.reducer;

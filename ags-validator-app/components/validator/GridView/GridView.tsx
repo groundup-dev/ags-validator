@@ -30,6 +30,8 @@ import {
 // Props for the table component
 interface Props {
   groupName: string;
+  selection?: GridSelection;
+  setSelection?: (selection: GridSelection) => void;
 
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
   setSelectedRows: (rows: number[]) => void;
@@ -61,6 +63,8 @@ const GridView: React.FC<Props> = ({
     rows: CompactSelection.empty(),
     current: undefined,
   });
+
+  console.log("selection", selection);
 
   const onPaste = useCallback(
     (target: Item, values: readonly (readonly string[])[]): boolean => {
