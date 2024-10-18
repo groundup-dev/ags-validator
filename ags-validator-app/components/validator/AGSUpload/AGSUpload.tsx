@@ -4,7 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/lib/redux/hooks";
-import { setRawData } from "@/lib/redux/ags";
+import { applySetRawDataEffect, setRawData } from "@/lib/redux/ags";
 
 export default function AGSUpload() {
   const dispatch = useAppDispatch();
@@ -19,6 +19,7 @@ export default function AGSUpload() {
         const content = e.target?.result;
         if (typeof content === "string") {
           dispatch(setRawData(content));
+          dispatch(applySetRawDataEffect());
         }
       };
       reader.readAsText(selectedFile); // Read file as text
