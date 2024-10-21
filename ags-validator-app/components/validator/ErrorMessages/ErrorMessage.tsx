@@ -1,7 +1,7 @@
 import React from "react";
 import { AgsError } from "@groundup/ags";
 import { Button } from "@/components/ui/button";
-import { CircleAlert, SquareArrowUpLeft } from "lucide-react";
+import { CircleAlert, CircleX, SquareArrowUpLeft } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
 
 const severityColor: Record<AgsError["severity"], string> = {
@@ -24,7 +24,12 @@ export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
             severityColor[error.severity]
           )}
         >
-          <CircleAlert size={20} />
+          {error.severity === "error" ? (
+            <CircleX size={20} />
+          ) : (
+            <CircleAlert size={20} />
+          )}
+
           <p className="font-semibold">
             {capitalize(error.severity)} at line {error.lineNumber}
           </p>
