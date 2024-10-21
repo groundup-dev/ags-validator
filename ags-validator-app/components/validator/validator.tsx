@@ -1,29 +1,21 @@
 "use client";
 
 import ErrorMessages from "./ErrorMessages";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import TextArea from "./TextArea";
 import AGSUpload from "./AGSUpload";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Label } from "../ui/label";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import GridView from "./GridView";
-import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download, Trash2 } from "lucide-react";
+import { Download } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
 
-import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
-import { applySetRowDataEffect, deleteRows } from "@/lib/redux/ags";
-import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { GridSelection } from "@glideapps/glide-data-grid";
+import ViewToolbar from "./ViewToolbar/ViewToolbar";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -44,10 +36,7 @@ export default function Validator() {
     undefined
   );
 
-  const parsedAgs = useAppSelector((state) => state.ags.parsedAgsNormalized);
   const agsData = useAppSelector((state) => state.ags.rawData);
-
-  const dispatch = useAppDispatch();
 
   const [goToErrorCallback, setGoToErrorCallback] = useState<
     (error: AgsError) => void
@@ -63,17 +52,6 @@ export default function Validator() {
     },
     [setSelectedGroup, goToErrorCallback]
   );
-
-  // we need to populate the selectedGroup state when tables view is selected the first time
-  useEffect(() => {
-    if (parsedAgs && !selectedGroup && Object.keys(parsedAgs).length > 0) {
-      const firstKey = Object.keys(parsedAgs)[0];
-
-      if (firstKey) {
-        setSelectedGroup(firstKey);
-      }
-    }
-  }, [parsedAgs, selectedGroup, setSelectedGroup]);
 
   return (
     <div className="flex justify-center w-full bg-muted rounded-t-xl border-border border shadow-inner">
@@ -100,73 +78,29 @@ export default function Validator() {
             </Button>
           </CardContent>
         </Card>
+
         <div className="flex gap-4 md:flex-row flex-col">
-          <div className="w-full md:w-3/5 h-[calc(100vh-5rem)]">
+          <div className="w-full  h-[50vh] md:h-[calc(100vh-5rem)] ">
             <Tabs
               value={tabsViewValue}
               onValueChange={(value) => setTabsViewValue(value)}
               className="flex flex-col h-full"
             >
-              <Card className="mb-2">
-                <CardContent className="p-4 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col">
-                  <div className="grid items-center gap-1.5 mb-4">
-                    <Label htmlFor="tabsList">View as</Label>
-                    <TabsList id="tabsList">
-                      <TabsTrigger value="text">Text</TabsTrigger>
-                      <TabsTrigger
-                        disabled={parsedAgs === undefined}
-                        value="tables"
-                      >
-                        Tables
-                      </TabsTrigger>
-                    </TabsList>
-                  </div>
-                  {tabsViewValue === "tables" && parsedAgs !== undefined && (
-                    <SelectTable
-                      selectedGroup={selectedGroup}
-                      setSelectedGroup={setSelectedGroup}
-                      groups={Object.keys(parsedAgs)}
-                    />
-                  )}
-                  {tabsViewValue === "tables" &&
-                    parsedAgs !== undefined &&
-                    selectedRows.length > 0 && (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setSelection({
-                            columns: CompactSelection.empty(),
-                            rows: CompactSelection.empty(),
-                            current: undefined,
-                          });
-                          dispatch(
-                            deleteRows({
-                              group: selectedGroup,
-                              rows: selectedRows,
-                            })
-                          );
+              <Card className="">
+                <CardContent>
+                  <ViewToolbar
+                    tabsViewValue={tabsViewValue}
+                    selectedRows={selectedRows}
+                    setSelection={setSelection}
+                    selectedGroup={selectedGroup}
+                    setSelectedGroup={setSelectedGroup}
+                  />
 
-                          dispatch(applySetRowDataEffect());
-                        }}
-                      >
-                        <Trash2 className="w-4 h-6 mr-1" />
-                        {`Delete ${selectedRows.length} rows`}
-                      </Button>
-                    )}
-                </CardContent>
-              </Card>
-
-              <TabsContent value="text" className="min-h-0 grow">
-                <Card className="h-full">
-                  <CardContent className="p-4 h-full">
+                  <TabsContent value="text" className="min-h-0 grow">
                     <TextArea setGoToErrorCallback={setGoToErrorCallback} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                  </TabsContent>
 
-              <TabsContent value="tables" className="min-h-0 grow">
-                <Card className="h-full">
-                  <CardContent className="p-4 h-full">
+                  <TabsContent value="tables" className="min-h-0 grow">
                     <GridView
                       groupName={selectedGroup}
                       setGoToErrorCallback={setGoToErrorCallback}
@@ -174,9 +108,9 @@ export default function Validator() {
                       selection={selection}
                       setSelection={setSelection}
                     />
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                  </TabsContent>
+                </CardContent>
+              </Card>
             </Tabs>
           </div>
           <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-5rem)]">

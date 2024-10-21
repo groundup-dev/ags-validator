@@ -60,9 +60,7 @@ export default function AutoComplete({
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {
-                      setSelectedOption(
-                        currentValue === selectedOption ? "" : currentValue
-                      );
+                      setSelectedOption(currentValue);
                       setOpen(false);
                     }}
                   >
