@@ -3,7 +3,7 @@ import ErrorMessage from "./ErrorMessage";
 import SortErrors, { sortOptions, SortOptionKey } from "./SortErrors";
 import { AgsError } from "@groundup/ags";
 import { Separator } from "@/components/ui/separator";
-import { CircleX } from "lucide-react";
+import { CircleX, LoaderCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAppSelector } from "@/lib/redux/hooks";
 
@@ -13,6 +13,7 @@ interface ErrorTableProps {
 
 export default function ErrorMessages({ goToError }: ErrorTableProps) {
   const errors = useAppSelector((state) => state.ags.errors);
+  const isLoading = useAppSelector((state) => state.ags.loading);
 
   const [sortOptionKey, setSortOptionKey] = useState<SortOptionKey | null>(
     null
@@ -39,6 +40,7 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
             <CircleX size={16} />
             {errors.filter((error) => error.severity === "warning").length}
           </Badge>
+          {isLoading && <LoaderCircle className="animate-spin w-6 h-6 gap-1" />}
         </div>
 
         <SortErrors

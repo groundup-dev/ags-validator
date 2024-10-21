@@ -16,6 +16,7 @@ type AgsState = {
   rawData: string;
   errors: AgsError[];
   parsedAgsNormalized: AgsRawNormalized | undefined;
+  loading: boolean;
 };
 
 interface SetRowDataPayload {
@@ -28,6 +29,7 @@ const initialState: AgsState = {
   rawData: "",
   errors: [],
   parsedAgsNormalized: undefined,
+  loading: false,
 };
 
 export const applySetRowDataEffect = createAsyncThunk<
@@ -97,8 +99,6 @@ export const agsSlice = createSlice({
         return;
       }
 
-      console.log(state.parsedAgsNormalized?.[action.payload.group]);
-
       const rowNums = rows.map(
         (row) => row + 4 + state.parsedAgsNormalized![group].lineNumber
       );
@@ -156,16 +156,24 @@ export const agsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(applySetRowDataEffect.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(applySetRawDataEffect.pending, (state) => {
+      state.loading = true;
+    });
     // we need this to be able to update the state with the results of the workers
     builder.addCase(applySetRowDataEffect.fulfilled, (state, action) => {
       state.rawData = action.payload.rawData ?? state.rawData;
       state.errors = action.payload.errors ?? state.errors;
+      state.loading = false;
     });
 
     builder.addCase(applySetRawDataEffect.fulfilled, (state, action) => {
       state.parsedAgsNormalized =
         action.payload.parsedAgsNormalized ?? state.parsedAgsNormalized;
       state.errors = action.payload.errors ?? state.errors;
+      state.loading = false;
     });
   },
 });
