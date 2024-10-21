@@ -37,7 +37,7 @@ function validateAgsDataRaw(rawAgs: string, config?: RulesConfig): AgsError[] {
   return allErrors;
 }
 
-function validateAgsDataParsed(
+export function validateAgsDataParsed(
   rawAgs: AgsRaw,
   config?: RulesConfig,
 ): AgsError[] {
@@ -56,7 +56,7 @@ function validateAgsDataParsed(
   return allErrors;
 }
 
-function validateAgsDataParsedWithDict(
+export function validateAgsDataParsedWithDict(
   rawAgs: AgsRaw,
   dictionary: AgsDictionaryVersion,
   config?: RulesConfig,

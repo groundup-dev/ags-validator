@@ -9,21 +9,21 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { AgsError } from "@groundup/ags";
 
-export type SortOptionKey =
-  | "rule"
-  | "lineNumberAsc"
-  | "lineNumberDesc"
-  | "type";
+export type SortOptionKey = "rule" | "lineNumberAsc" | "lineNumberDesc";
 
 export type SortOption = {
   name: string;
   compareFn: (_e1: AgsError, _e2: AgsError) => number;
 };
 
+function parseRule(rule: string | number): number {
+  return parseInt(rule.toString().match(/\d+/)![0]);
+}
+
 export const sortOptions: Record<SortOptionKey, SortOption> = {
   rule: {
     name: "Rule",
-    compareFn: (e1, e2) => `${e1.rule}`.localeCompare(`${e2.rule}`),
+    compareFn: (e1, e2) => parseRule(e1.rule) - parseRule(e2.rule),
   },
   lineNumberAsc: {
     name: "Line number (Asc)",
@@ -32,10 +32,6 @@ export const sortOptions: Record<SortOptionKey, SortOption> = {
   lineNumberDesc: {
     name: "Line number (Desc)",
     compareFn: (e1, e2) => e2.lineNumber - e1.lineNumber,
-  },
-  type: {
-    name: "Type",
-    compareFn: (e1, e2) => `${e2.rule}`.localeCompare(`${e1.rule}`),
   },
 };
 

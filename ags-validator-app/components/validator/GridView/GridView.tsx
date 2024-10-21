@@ -12,20 +12,29 @@ import DataGrid, {
   Item,
   Theme,
   GridSelection,
-  CompactSelection,
   DataEditorProps,
   EditableGridCell,
   EditListItem,
   DataEditorRef,
 } from "@glideapps/glide-data-grid";
-import { AgsError, GroupRaw } from "@groundup/ags";
+import { AgsError } from "@groundup/ags";
 import "@glideapps/glide-data-grid/dist/index.css";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import {
+  addRow,
+  applySetRowDataEffect,
+  GroupRawNormalized,
+  setRowsData,
+} from "@/lib/redux/ags";
 
 // Props for the table component
 interface Props {
-  group: GroupRaw;
-  setGroup: (label: string, group: GroupRaw) => void;
-  errors: AgsError[];
+  groupName: string;
+  selection?: GridSelection;
+  setSelection?: React.Dispatch<
+    React.SetStateAction<GridSelection | undefined>
+  >;
+
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
   setSelectedRows: (rows: number[]) => void;
 }
@@ -37,25 +46,55 @@ const getCSSVariable = (variableName: string) => {
 };
 
 const GridView: React.FC<Props> = ({
-  group,
   setGoToErrorCallback,
-  errors,
-  setGroup,
+  groupName,
   setSelectedRows,
+  selection,
+  setSelection,
 }) => {
+  const group = useAppSelector(
+    (state) => state.ags.parsedAgsNormalized?.[groupName]
+  ) as GroupRawNormalized;
+
+  const errors = useAppSelector((state) => state.ags.errors);
+
+  const dispatch = useAppDispatch();
+
   const ref = useRef<DataEditorRef | null>(null);
 
-  const [selection, setSelection] = useState<GridSelection>({
-    columns: CompactSelection.empty(),
-    rows: CompactSelection.empty(),
-    current: undefined,
-  });
+  const onPaste = useCallback(
+    (target: Item, values: readonly (readonly string[])[]): boolean => {
+      const lineNumber = group.lineNumber + 4 + target[1];
+      const headings = group.headings
+        .map((heading) => heading.name)
+        .slice(target[0], target[0] + values[0].length);
+
+      const updates = values.map((value, index) => {
+        const updateForRow = value.reduce((acc, val, idx) => {
+          acc[headings[idx]] = val;
+          return acc;
+        }, {} as Record<string, string>);
+
+        return {
+          group: group.name,
+          lineNumber: lineNumber + index,
+          update: updateForRow,
+        };
+      });
+
+      dispatch(setRowsData(updates));
+      dispatch(applySetRowDataEffect());
+
+      return false;
+    },
+    [dispatch, group.headings, group.lineNumber, group.name]
+  );
 
   useEffect(() => {
-    if (selection.current) {
+    if (selection?.current) {
       setSelectedRows([]);
     } else {
-      setSelectedRows(selection.rows.toArray());
+      if (selection) setSelectedRows(selection.rows.toArray());
     }
   }, [selection, setSelectedRows]);
 
@@ -76,17 +115,43 @@ const GridView: React.FC<Props> = ({
 
       const rowIndex = error.lineNumber - group.lineNumber - 4;
 
+      const colIndex = group.headings.findIndex(
+        (heading) => heading.name === error.field
+      );
+
+      const colNum = colIndex > -1 ? colIndex : 0; // if no field is found, default to the first column
+
       if (rowIndex < 0) {
         // if less than 0, then the error is in the group heading or units
         return;
       }
 
-      ref.current?.scrollTo(0, rowIndex, "both", 0, 0, {
+      if (setSelection)
+        setSelection((cv: GridSelection | undefined) => {
+          if (!cv) {
+            return cv;
+          }
+          return {
+            ...cv,
+            current: {
+              cell: [colNum, rowIndex],
+              range: {
+                x: colNum,
+                y: rowIndex,
+                width: 1,
+                height: 1,
+              },
+              rangeStack: [],
+            },
+          };
+        });
+
+      ref.current?.scrollTo(colIndex, rowIndex, "both", 0, 0, {
         vAlign: "center",
         hAlign: "center",
       });
     },
-    [group.lineNumber, group.name, ref]
+    [group.headings, group.lineNumber, group.name, setSelection]
   );
 
   useEffect(() => {
@@ -123,68 +188,39 @@ const GridView: React.FC<Props> = ({
     );
   }, [group.headings]);
 
-  const onCellsEdited = React.useCallback(
-    (newValues: readonly EditListItem[]) => {
-      const cells: Item[] = newValues.map((cell) => cell.location);
-      const values = newValues.map((cell) => cell.value) as EditableGridCell[];
+  const onCellsEdited = (newValues: readonly EditListItem[]) => {
+    const cells: Item[] = newValues.map((cell) => cell.location);
+    const values = newValues.map((cell) => cell.value) as EditableGridCell[];
 
-      const newGroup = {
-        ...group,
-        rows: group.rows.map((row, rowIndex) => {
-          const updatedRow = { ...row };
-          cells.forEach((cell, index) => {
-            if (cell[1] === rowIndex) {
-              const colNum = cell[0];
-              const heading = group.headings[colNum];
-              if (heading) {
-                const newData =
-                  values[index]?.kind === GridCellKind.Text
-                    ? values[index].data
-                    : "";
+    dispatch(
+      setRowsData(
+        cells.map((cell, index) => {
+          const colNum = cell[0];
+          const rowNum = cell[1];
+          const heading = group.headings[colNum];
+          const data =
+            values[index]?.kind === GridCellKind.Text ? values[index].data : "";
 
-                updatedRow.data[heading.name] = newData;
-              }
-            }
-          });
-          return updatedRow;
-        }),
-      };
-      setGroup(group.name, newGroup);
-    },
-    [group, setGroup]
-  );
+          return {
+            group: group.name,
+            lineNumber: group.lineNumber + 4 + rowNum,
+            update: {
+              [heading.name]: data,
+            },
+          };
+        })
+      )
+    );
 
-  const onCellEdited = React.useCallback(
-    (cell: Item, newValue: EditableGridCell) => {
-      if (newValue.kind !== GridCellKind.Text) {
-        return; // Only handle text cells
-      }
+    dispatch(applySetRowDataEffect());
+  };
 
-      const [colNum, rowNum] = cell;
-      const row = group.rows[rowNum];
-      const col = group.headings[colNum];
-
-      if (!row || !col) return;
-
-      const heading = group.headings[colNum];
-      if (!heading) return;
-      const newGroup = {
-        ...group,
-        rows: group.rows.map((r, i) =>
-          i === rowNum
-            ? { ...r, data: { ...r.data, [heading.name]: newValue.data } }
-            : r
-        ),
-      };
-
-      setGroup(group.name, newGroup);
-    },
-    [group, setGroup]
-  );
+  const onCellEdited = () => {};
 
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
-      const row = group.rows[rowNum];
+      const lineNumber = group.lineNumber + 4 + rowNum;
+      const row = group.rows[lineNumber];
       const col = group.headings[colNum];
       const data = row && col ? row.data[col.name] : "";
 
@@ -216,21 +252,8 @@ const GridView: React.FC<Props> = ({
   );
 
   const onRowAppended = useCallback(() => {
-    const newRow = {
-      data: group.headings.reduce((acc, heading) => {
-        acc[heading.name] = "";
-        return acc;
-      }, {} as Record<string, string>),
-      lineNumber: group.rows.length + group.lineNumber + 4,
-    };
-
-    const newGroup = {
-      ...group,
-      rows: [...group.rows, newRow],
-    };
-
-    setGroup(group.name, newGroup);
-  }, [group, setGroup]);
+    dispatch(addRow({ group: group.name }));
+  }, [dispatch, group.name]);
 
   return (
     <div className="w-full h-full">
@@ -255,8 +278,8 @@ const GridView: React.FC<Props> = ({
         getCellContent={getData}
         getCellsForSelection={true}
         onCellEdited={onCellEdited}
-        rows={group.rows.length}
-        onPaste={true}
+        rows={Object.keys(group.rows).length}
+        onPaste={onPaste}
         maxColumnAutoWidth={200}
         maxColumnWidth={500}
         onColumnResize={onColumnResize}
