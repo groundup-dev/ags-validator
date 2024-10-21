@@ -33,20 +33,23 @@ const initialState: AgsState = {
 };
 
 export const applySetRowDataEffect = createAsyncThunk<
-  { rawData?: string; errors?: AgsError[] },
+  { rawData: string; errors: AgsError[] },
   undefined,
   { state: { ags: AgsState } }
 >("ags/applySetRowDataEffect", async (_, { getState }) => {
   const parsedAgsNormalized = getState().ags.parsedAgsNormalized;
   if (!parsedAgsNormalized) {
-    return {};
+    return {
+      rawData: getState().ags.rawData,
+      errors: getState().ags.errors,
+    };
   }
 
   const worker = new Worker(
     new URL("../../workers/validateRowUpdateWorker.js", import.meta.url)
   );
 
-  return new Promise<{ rawData?: string; errors?: AgsError[] }>((resolve) => {
+  return new Promise<{ rawData: string; errors: AgsError[] }>((resolve) => {
     worker.onmessage = (event) => {
       const { rawData, errors } = event.data;
       resolve({ rawData, errors });
@@ -57,7 +60,7 @@ export const applySetRowDataEffect = createAsyncThunk<
 });
 
 export const applySetRawDataEffect = createAsyncThunk<
-  { errors?: AgsError[]; parsedAgsNormalized?: AgsRawNormalized },
+  { errors: AgsError[]; parsedAgsNormalized?: AgsRawNormalized },
   undefined,
   { state: { ags: AgsState } }
 >("ags/applySetRawDataEffect", async (_, { getState }) => {
@@ -69,7 +72,7 @@ export const applySetRawDataEffect = createAsyncThunk<
 
   return new Promise<{
     parsedAgsNormalized?: AgsRawNormalized;
-    errors?: AgsError[];
+    errors: AgsError[];
   }>((resolve) => {
     worker.onmessage = (event) => {
       const { parsedAgsNormalized, errors } = event.data;
@@ -164,15 +167,14 @@ export const agsSlice = createSlice({
     });
     // we need this to be able to update the state with the results of the workers
     builder.addCase(applySetRowDataEffect.fulfilled, (state, action) => {
-      state.rawData = action.payload.rawData ?? state.rawData;
-      state.errors = action.payload.errors ?? state.errors;
+      state.rawData = action.payload.rawData;
+      state.errors = action.payload.errors;
       state.loading = false;
     });
 
     builder.addCase(applySetRawDataEffect.fulfilled, (state, action) => {
-      state.parsedAgsNormalized =
-        action.payload.parsedAgsNormalized ?? state.parsedAgsNormalized;
-      state.errors = action.payload.errors ?? state.errors;
+      state.parsedAgsNormalized = action.payload.parsedAgsNormalized;
+      state.errors = action.payload.errors;
       state.loading = false;
     });
   },
