@@ -2,7 +2,10 @@ import {
   validateAgsData,
   validateAgsDataParsed,
   validateAgsDataParsedWithDict,
+  defaultRulesConfig,
 } from "./validate";
+import type { RulesConfig } from "./validate";
+
 import type {
   AgsError,
   AgsRaw,
@@ -14,6 +17,7 @@ import type {
 import { parsedAgsToString } from "./parse";
 
 export {
+  defaultRulesConfig,
   validateAgsData,
   validateAgsDataParsed,
   validateAgsDataParsedWithDict,
@@ -24,4 +28,5 @@ export {
   parsedAgsToString,
   HeadingRaw,
   RowRaw,
+  RulesConfig,
 };

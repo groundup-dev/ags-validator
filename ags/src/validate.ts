@@ -6,21 +6,29 @@ import {
   rulesForParsedAgsWithDict,
 } from "./rules";
 
-type RulesConfig = {
-  [key: string | number]: boolean;
+type RuleName =
+  | keyof typeof rulesForRawString
+  | keyof typeof rulesForParsedAgs
+  | keyof typeof rulesForParsedAgsWithDict;
+
+export type RulesConfig = {
+  [key in RuleName]: boolean;
 };
 
 // happy to overwrite ts here
+
 export const defaultRulesConfig = Object.fromEntries(
   [
     ...Object.keys(rulesForParsedAgs),
     ...Object.keys(rulesForParsedAgsWithDict),
     ...Object.keys(rulesForRawString),
   ].map((rule) => [rule, true]),
-);
+) as RulesConfig;
 
 function validateAgsDataRaw(rawAgs: string, config?: RulesConfig): AgsError[] {
   let allErrors: AgsError[] = [];
+
+  console.log("config", config);
 
   const rulesConfig = config || defaultRulesConfig;
 
@@ -28,7 +36,7 @@ function validateAgsDataRaw(rawAgs: string, config?: RulesConfig): AgsError[] {
   const rulesAsArray = Object.values(rulesForRawString);
 
   rulesAsArray.forEach((step) => {
-    if (!rulesConfig[step.rule]) {
+    if (!rulesConfig[step.rule as keyof RulesConfig]) {
       return;
     }
     const errors = step.validate(rawAgs);
@@ -46,7 +54,7 @@ export function validateAgsDataParsed(
 
   const parsedRulesAsArray = Object.values(rulesForParsedAgs);
   parsedRulesAsArray.forEach((step) => {
-    if (!rulesConfig[step.rule]) {
+    if (!rulesConfig[step.rule as keyof RulesConfig]) {
       return;
     }
     const errors = step.validate(rawAgs);
@@ -66,7 +74,7 @@ export function validateAgsDataParsedWithDict(
 
   const parsedRulesAsArray = Object.values(rulesForParsedAgsWithDict);
   parsedRulesAsArray.forEach((step) => {
-    if (!rulesConfig[step.rule]) {
+    if (!rulesConfig[step.rule as keyof RulesConfig]) {
       return;
     }
     const errors = step.validate(rawAgs, dictionary);
