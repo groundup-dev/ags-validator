@@ -12,7 +12,6 @@ import DataGrid, {
   Item,
   Theme,
   GridSelection,
-  CompactSelection,
   DataEditorProps,
   EditableGridCell,
   EditListItem,
@@ -32,7 +31,9 @@ import {
 interface Props {
   groupName: string;
   selection?: GridSelection;
-  setSelection?: (selection: GridSelection) => void;
+  setSelection?: React.Dispatch<
+    React.SetStateAction<GridSelection | undefined>
+  >;
 
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
   setSelectedRows: (rows: number[]) => void;
@@ -48,6 +49,8 @@ const GridView: React.FC<Props> = ({
   setGoToErrorCallback,
   groupName,
   setSelectedRows,
+  selection,
+  setSelection,
 }) => {
   const group = useAppSelector(
     (state) => state.ags.parsedAgsNormalized?.[groupName]
@@ -58,14 +61,6 @@ const GridView: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const ref = useRef<DataEditorRef | null>(null);
-
-  const [selection, setSelection] = useState<GridSelection>({
-    columns: CompactSelection.empty(),
-    rows: CompactSelection.empty(),
-    current: undefined,
-  });
-
-  console.log("selection", selection);
 
   const onPaste = useCallback(
     (target: Item, values: readonly (readonly string[])[]): boolean => {
@@ -96,10 +91,10 @@ const GridView: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    if (selection.current) {
+    if (selection?.current) {
       setSelectedRows([]);
     } else {
-      setSelectedRows(selection.rows.toArray());
+      if (selection) setSelectedRows(selection.rows.toArray());
     }
   }, [selection, setSelectedRows]);
 
@@ -120,17 +115,43 @@ const GridView: React.FC<Props> = ({
 
       const rowIndex = error.lineNumber - group.lineNumber - 4;
 
+      const colIndex = group.headings.findIndex(
+        (heading) => heading.name === error.field
+      );
+
+      const colNum = colIndex > -1 ? colIndex : 0; // if no field is found, default to the first column
+
       if (rowIndex < 0) {
         // if less than 0, then the error is in the group heading or units
         return;
       }
 
-      ref.current?.scrollTo(0, rowIndex, "both", 0, 0, {
+      if (setSelection)
+        setSelection((cv: GridSelection | undefined) => {
+          if (!cv) {
+            return cv;
+          }
+          return {
+            ...cv,
+            current: {
+              cell: [colNum, rowIndex],
+              range: {
+                x: colNum,
+                y: rowIndex,
+                width: 1,
+                height: 1,
+              },
+              rangeStack: [],
+            },
+          };
+        });
+
+      ref.current?.scrollTo(colIndex, rowIndex, "both", 0, 0, {
         vAlign: "center",
         hAlign: "center",
       });
     },
-    [group.lineNumber, group.name, ref]
+    [group.headings, group.lineNumber, group.name, setSelection]
   );
 
   useEffect(() => {

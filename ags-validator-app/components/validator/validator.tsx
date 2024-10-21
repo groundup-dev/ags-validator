@@ -134,6 +134,11 @@ export default function Validator() {
                       <Button
                         variant="outline"
                         onClick={() => {
+                          setSelection({
+                            columns: CompactSelection.empty(),
+                            rows: CompactSelection.empty(),
+                            current: undefined,
+                          });
                           dispatch(
                             deleteRows({
                               group: selectedGroup,
@@ -141,11 +146,6 @@ export default function Validator() {
                             })
                           );
 
-                          setSelection({
-                            columns: CompactSelection.empty(),
-                            rows: CompactSelection.empty(),
-                            current: undefined,
-                          });
                           dispatch(applySetRowDataEffect());
                         }}
                       >
