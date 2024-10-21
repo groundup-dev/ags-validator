@@ -1,7 +1,7 @@
 import React from "react";
 import { AgsError } from "@groundup/ags";
 import { Button } from "@/components/ui/button";
-import { CircleAlert, SquareArrowUpLeft } from "lucide-react";
+import { CircleAlert, CircleX, SquareArrowUpLeft } from "lucide-react";
 import { capitalize, cn } from "@/lib/utils";
 
 const severityColor: Record<AgsError["severity"], string> = {
@@ -11,24 +11,12 @@ const severityColor: Record<AgsError["severity"], string> = {
 
 interface ErrorMessageProps {
   error: AgsError;
-
   onView: () => void;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
 }
 
-export default function ErrorMessage({
-  error,
-  onView,
-  onMouseEnter,
-  onMouseLeave,
-}: ErrorMessageProps) {
+export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
   return (
-    <div
-      className="flex flex-col p-2 gap-1"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+    <div className="flex flex-col p-2 gap-1">
       <div className="flex gap-2 justify-between items-center">
         <div
           className={cn(
@@ -36,7 +24,12 @@ export default function ErrorMessage({
             severityColor[error.severity]
           )}
         >
-          <CircleAlert size={20} />
+          {error.severity === "error" ? (
+            <CircleX size={20} />
+          ) : (
+            <CircleAlert size={20} />
+          )}
+
           <p className="font-semibold">
             {capitalize(error.severity)} at line {error.lineNumber}
           </p>

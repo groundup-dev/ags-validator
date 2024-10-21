@@ -19,7 +19,7 @@ function validateAgsDataRaw(rawAgs: string): AgsError[] {
   return allErrors;
 }
 
-function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
+export function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
   let allErrors: AgsError[] = [];
 
   const parsedRulesAsArray = Object.values(rulesForParsedAgs);
@@ -31,7 +31,7 @@ function validateAgsDataParsed(rawAgs: AgsRaw): AgsError[] {
   return allErrors;
 }
 
-function validateAgsDataParsedWithDict(
+export function validateAgsDataParsedWithDict(
   rawAgs: AgsRaw,
   dictionary: AgsDictionaryVersion,
 ): AgsError[] {
