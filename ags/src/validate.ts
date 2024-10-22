@@ -28,18 +28,15 @@ export const defaultRulesConfig = Object.fromEntries(
 function validateAgsDataRaw(rawAgs: string, config?: RulesConfig): AgsError[] {
   let allErrors: AgsError[] = [];
 
-  console.log("config", config);
-
+  console.log("rulesConfig", config);
   const rulesConfig = config || defaultRulesConfig;
 
-  // this only applies to the rulesForRawString object
-  const rulesAsArray = Object.values(rulesForRawString);
-
-  rulesAsArray.forEach((step) => {
-    if (!rulesConfig[step.rule as keyof RulesConfig]) {
+  Object.entries(rulesForRawString).forEach(([key, value]) => {
+    if (!rulesConfig[key as RuleName]) {
       return;
     }
-    const errors = step.validate(rawAgs);
+
+    const errors = value.validate(rawAgs);
     allErrors = [...allErrors, ...errors];
   });
   return allErrors;
@@ -52,12 +49,12 @@ export function validateAgsDataParsed(
   const rulesConfig = config || defaultRulesConfig;
   let allErrors: AgsError[] = [];
 
-  const parsedRulesAsArray = Object.values(rulesForParsedAgs);
-  parsedRulesAsArray.forEach((step) => {
-    if (!rulesConfig[step.rule as keyof RulesConfig]) {
+  Object.entries(rulesForParsedAgs).forEach(([key, value]) => {
+    if (!rulesConfig[key as RuleName]) {
       return;
     }
-    const errors = step.validate(rawAgs);
+
+    const errors = value.validate(rawAgs);
     allErrors = [...allErrors, ...errors];
   });
 
@@ -72,12 +69,12 @@ export function validateAgsDataParsedWithDict(
   let allErrors: AgsError[] = [];
   const rulesConfig = config || defaultRulesConfig;
 
-  const parsedRulesAsArray = Object.values(rulesForParsedAgsWithDict);
-  parsedRulesAsArray.forEach((step) => {
-    if (!rulesConfig[step.rule as keyof RulesConfig]) {
+  Object.entries(rulesForParsedAgsWithDict).forEach(([key, value]) => {
+    if (!rulesConfig[key as RuleName]) {
       return;
     }
-    const errors = step.validate(rawAgs, dictionary);
+
+    const errors = value.validate(rawAgs, dictionary);
     allErrors = [...allErrors, ...errors];
   });
 

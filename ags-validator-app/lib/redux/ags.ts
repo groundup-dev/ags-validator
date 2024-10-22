@@ -5,6 +5,7 @@ import {
   RowRaw,
   defaultRulesConfig,
   RulesConfig,
+  AgsDictionaryVersion,
 } from "@groundup/ags";
 
 export interface GroupRawNormalized {
@@ -24,6 +25,7 @@ type AgsState = {
   parsedAgsNormalized: AgsRawNormalized | undefined;
   loading: boolean;
   rulesConfig: RulesConfig;
+  agsDictionaryVersion: AgsDictionaryVersion;
 };
 
 interface SetRowDataPayload {
@@ -37,6 +39,7 @@ const initialState: AgsState = {
   errors: [],
   parsedAgsNormalized: undefined,
   loading: false,
+  agsDictionaryVersion: "v4_0_4",
   rulesConfig: {
     ...defaultRulesConfig,
     rule2a: false, // for now disabling cr and lf rule
@@ -71,6 +74,7 @@ export const applySetRowDataEffect = createAsyncThunk<
     worker.postMessage({
       parsedAgsNormalized,
       rulesConfig: config,
+      agsDictionaryVersion: getState().ags.agsDictionaryVersion,
     });
   });
 });
@@ -97,7 +101,11 @@ export const applySetRawDataEffect = createAsyncThunk<
       resolve({ parsedAgsNormalized, errors });
     };
 
-    worker.postMessage({ rawData, rulesConfig: config });
+    worker.postMessage({
+      rawData,
+      rulesConfig: config,
+      agsDictionaryVersion: getState().ags.agsDictionaryVersion,
+    });
   });
 });
 

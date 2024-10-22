@@ -1,10 +1,13 @@
 import { validateAgsData } from "@groundup/ags";
+
   
   self.onmessage = (event) => {
 
-    const {rawData, rulesConfig } = event.data;
-    const {errors, parsedAgs} = validateAgsData(rawData, rulesConfig);
-    console.log(errors);
+    const {rawData, rulesConfig, agsDictionaryVersion } = event.data;
+
+
+    const {errors, parsedAgs} = validateAgsData(rawData,agsDictionaryVersion, rulesConfig);
+
 
     const parsedAgsNormalized = parsedAgs ? Object.fromEntries(
          Object.entries(parsedAgs).map(([label, group]) => [
