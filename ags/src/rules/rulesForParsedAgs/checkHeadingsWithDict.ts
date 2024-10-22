@@ -120,13 +120,17 @@ export const rule10c: AgsValidationStepParsedWithDict = {
           .map((heading) => row.data[heading.data.DICT_HDNG])
           .join("|");
 
+        const keys = rowKey.split("|");
+
         if (!parentKeySet.has(rowKey)) {
           errors.push({
             rule: "10c",
             severity: "error",
             lineNumber: row.lineNumber,
             group: group,
-            message: `Key value "${rowKey}" in group ${group} does not have a corresponding entry in the parent group ${parentGroup}`,
+            message: `Key value combination '${keys.join(
+              ",",
+            )}' in group ${group} does not have a corresponding entry in the parent group ${parentGroup}`,
           });
         }
       }

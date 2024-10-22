@@ -91,6 +91,8 @@ export const rule19b: AgsValidationStepParsed = {
     for (const [groupName, group] of Object.entries(ags)) {
       const groupPrefix = groupName + "_";
 
+      const allowedPrefixes = [groupPrefix, "SPEC_", "TEST_"];
+
       // remove group headings of current group, to provide lookup if heading is in another group
       const allHeadingsApartFromCurrentGroup = new Set(
         Object.values(ags)
@@ -103,7 +105,7 @@ export const rule19b: AgsValidationStepParsed = {
       for (const heading of group.headings) {
         if (
           !(
-            heading.name.startsWith(groupPrefix) ||
+            allowedPrefixes.some((prefix) => heading.name.startsWith(prefix)) ||
             allHeadingsApartFromCurrentGroup.has(heading.name)
           )
         ) {

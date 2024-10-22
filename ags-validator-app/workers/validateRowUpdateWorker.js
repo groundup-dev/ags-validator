@@ -6,8 +6,7 @@ import {
   } from "@groundup/ags";
   
   self.onmessage = (event) => {
-    const parsedAgsNormalized = event.data;
-  
+    const {parsedAgsNormalized, rulesConfig, agsDictionaryVersion} = event.data;
 
     const parsedAgs = Object.fromEntries(
       Object.entries(parsedAgsNormalized).map(([label, group]) => [
@@ -20,8 +19,8 @@ import {
     );
   
     const errors = [
-      ...validateAgsDataParsed(parsedAgs),
-      ...validateAgsDataParsedWithDict(parsedAgs, "v4_0_4"),
+      ...validateAgsDataParsed(parsedAgs, rulesConfig),
+      ...validateAgsDataParsedWithDict(parsedAgs, agsDictionaryVersion, rulesConfig),
     ];
     const rawData = parsedAgsToString(parsedAgs);
   
