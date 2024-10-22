@@ -3,28 +3,6 @@ import { HeadingRaw, AgsRaw, AgsError } from "../../types";
 
 import { AgsValidationStepParsed } from "./types";
 
-// Define the structure for validation steps
-
-// AGS4 data type according to
-// https://www.ags.org.uk/content/uploads/2022/02/AGS4-v-4.1.1-2022.pdf
-// const dataTypeSchema = z.union([
-//   z.literal("ID"),
-//   z.literal("PA"),
-//   z.literal("PT"),
-//   z.literal("PU"),
-//   z.literal("X"),
-//   z.literal("XN"),
-//   z.literal("T"),
-//   z.literal("DT"),
-//   z.string().regex(/\dDP/),
-//   z.string().regex(/\dSF/),
-//   z.string().regex(/\dSCI/),
-//   z.literal("U"),
-//   z.literal("DMS"),
-//   z.literal("YN"),
-//   z.literal("RL"),
-// ]);
-
 function createDpHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
   const decimalPlaces = parseInt(heading.type[0]);
 
@@ -80,10 +58,13 @@ function createSigFigHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
   const nSigFig = parseInt(heading.type.replace(/SF/g, ""));
 
   const regex = new RegExp(
-    `^(?=.*[1-9])(?:[1-9]\\d{0,${nSigFig - 1}}|0\\.\\d{${
-      nSigFig - 1
-    }}[1-9]\\d{0,${nSigFig - 1}}|0?\\.\\d{${nSigFig}})$`,
+    `^-?(?:` +
+      `[1-9]\\d{0,${nSigFig - 1}}|` + // case for whole numbers with no decimal
+      `0\\.\\d{0,${nSigFig - 1}}[1-9]|` + // case for numbers with decimal points
+      `[1-9]\\d*\\.\\d{0,${nSigFig - 1}}[1-9]` + // whole numbers with decimal and significant figures
+      `)$`,
   );
+
   return z
     .string()
     .regex(regex, `Must have exactly ${nSigFig} significant figures`);
