@@ -60,34 +60,36 @@ export function RegisterForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>First Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+        <div className="flex flex-row gap-8 ">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem className="w-1/2">
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="email"
@@ -102,7 +104,16 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <div>
+        <div className="flex flex-col ">
+          {!isLoading && !isSuccess && (
+            <Button
+              variant="secondary"
+              type="submit"
+              className="w-32 self-center"
+            >
+              Sign up
+            </Button>
+          )}
           {isSuccess && (
             <span className="flex flex-row gap-2">
               <Check />
@@ -111,11 +122,6 @@ export function RegisterForm() {
           )}
 
           {isLoading && <LoaderCircle className="animate-spin w-6 h-6" />}
-          {!isLoading && !isSuccess && (
-            <Button variant="secondary" type="submit">
-              Register
-            </Button>
-          )}
           {error && <FormMessage>{error}</FormMessage>}
         </div>
       </form>
