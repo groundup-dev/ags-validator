@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AgsError, HeadingRaw, RowRaw } from "@groundup/ags";
+import {
+  AgsError,
+  HeadingRaw,
+  RowRaw,
+  defaultRulesConfig,
+  RulesConfig,
+  AgsDictionaryVersion,
+} from "@groundup/ags";
 
 export interface GroupRawNormalized {
   name: string;
@@ -17,6 +24,8 @@ type AgsState = {
   errors: AgsError[];
   parsedAgsNormalized: AgsRawNormalized | undefined;
   loading: boolean;
+  rulesConfig: RulesConfig;
+  agsDictionaryVersion: AgsDictionaryVersion;
 };
 
 interface SetRowDataPayload {
@@ -30,6 +39,11 @@ const initialState: AgsState = {
   errors: [],
   parsedAgsNormalized: undefined,
   loading: false,
+  agsDictionaryVersion: "v4_0_4",
+  rulesConfig: {
+    ...defaultRulesConfig,
+    rule2a: false, // for now disabling cr and lf rule
+  },
 };
 
 export const applySetRowDataEffect = createAsyncThunk<
@@ -49,13 +63,19 @@ export const applySetRowDataEffect = createAsyncThunk<
     new URL("../../workers/validateRowUpdateWorker.js", import.meta.url)
   );
 
+  const config = getState().ags.rulesConfig;
+
   return new Promise<{ rawData: string; errors: AgsError[] }>((resolve) => {
     worker.onmessage = (event) => {
       const { rawData, errors } = event.data;
       resolve({ rawData, errors });
     };
 
-    worker.postMessage(parsedAgsNormalized);
+    worker.postMessage({
+      parsedAgsNormalized,
+      rulesConfig: config,
+      agsDictionaryVersion: getState().ags.agsDictionaryVersion,
+    });
   });
 });
 
@@ -69,6 +89,7 @@ export const applySetRawDataEffect = createAsyncThunk<
   );
 
   const rawData = getState().ags.rawData;
+  const config = getState().ags.rulesConfig;
 
   return new Promise<{
     parsedAgsNormalized?: AgsRawNormalized;
@@ -80,7 +101,11 @@ export const applySetRawDataEffect = createAsyncThunk<
       resolve({ parsedAgsNormalized, errors });
     };
 
-    worker.postMessage(rawData);
+    worker.postMessage({
+      rawData,
+      rulesConfig: config,
+      agsDictionaryVersion: getState().ags.agsDictionaryVersion,
+    });
   });
 });
 

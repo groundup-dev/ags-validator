@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import ErrorMessage from "./ErrorMessage";
 import SortErrors, { sortOptions, SortOptionKey } from "./SortErrors";
 import { AgsError } from "@groundup/ags";
@@ -33,6 +34,15 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
       ? [...filteredErrors].sort(sortOptions[sortOptionKey].compareFn)
       : filteredErrors;
   }, [sortOptionKey, filteredErrors]);
+
+  const parentRef = useRef(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: sortedErrors.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 150,
+    overscan: 5,
+  });
 
   return (
     <div className="flex flex-col h-full">
@@ -82,14 +92,32 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
           onChange={setSortOptionKey}
         />
       </div>
-      <div className="overflow-auto h-full">
+
+      <div ref={parentRef} className="overflow-auto h-full relative">
         {errors.length > 0 ? (
-          sortedErrors.map((error, index) => (
-            <React.Fragment key={`error-message-${index}`}>
-              {index > 0 && <Separator className="my-2" />}
-              <ErrorMessage error={error} onView={() => goToError(error)} />
-            </React.Fragment>
-          ))
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              position: "relative",
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const error = sortedErrors[virtualRow.index];
+
+              return (
+                <div
+                  key={`error-message-${virtualRow.index}`}
+                  className="absolute top-0 left-0 w-full"
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  {virtualRow.index > 0 && <Separator className="my-2" />}
+                  <ErrorMessage error={error} onView={() => goToError(error)} />
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <p className="text-muted-foreground">No errors or warnings found</p>
         )}

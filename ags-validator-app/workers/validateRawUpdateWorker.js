@@ -1,7 +1,13 @@
 import { validateAgsData } from "@groundup/ags";
+
   
   self.onmessage = (event) => {
-    const {errors, parsedAgs} = validateAgsData(event.data);
+
+    const {rawData, rulesConfig, agsDictionaryVersion } = event.data;
+
+
+    const {errors, parsedAgs} = validateAgsData(rawData,agsDictionaryVersion, rulesConfig);
+
 
     const parsedAgsNormalized = parsedAgs ? Object.fromEntries(
          Object.entries(parsedAgs).map(([label, group]) => [
@@ -14,8 +20,6 @@ import { validateAgsData } from "@groundup/ags";
           },
         ])) : undefined;
   
-
-    // Send the result back to the main thread
     self.postMessage({ parsedAgsNormalized, errors });
   };
   
