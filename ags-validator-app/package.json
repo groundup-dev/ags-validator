@@ -24,6 +24,7 @@
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@reduxjs/toolkit": "^2.3.0",
+    "@tanstack/react-virtual": "^3.10.8",
     "@uiw/codemirror-extensions-classname": "^4.23.2",
     "@uiw/react-codemirror": "^4.23.2",
     "@vercel/analytics": "^1.3.1",
