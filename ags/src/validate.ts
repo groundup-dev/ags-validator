@@ -28,7 +28,6 @@ export const defaultRulesConfig = Object.fromEntries(
 function validateAgsDataRaw(rawAgs: string, config?: RulesConfig): AgsError[] {
   let allErrors: AgsError[] = [];
 
-  console.log("rulesConfig", config);
   const rulesConfig = config || defaultRulesConfig;
 
   Object.entries(rulesForRawString).forEach(([key, value]) => {

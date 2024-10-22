@@ -54,20 +54,31 @@ function createTHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
   return z.string().regex(new RegExp(pattern));
 }
 
-function createSigFigHeadingSchema(heading: HeadingRaw): z.ZodType<string> {
+function checkSignificantFigures(input: string, n: number): boolean {
+  // first handle integers and make sure there are not too many significant figures
+  if (!input.includes(".")) {
+    // count all leading non-zero digits
+    const leadingNonZero = input.match(/^[1-9]+/);
+
+    if (leadingNonZero === null) return true; // if no leading non-zero digits, then it is 0
+
+    return leadingNonZero[0].length <= n;
+  }
+
+  const num = parseFloat(input);
+  const precise = num.toPrecision(n);
+
+  return precise === input;
+}
+
+function createSigFigHeadingSchema(heading: {
+  type: string;
+}): z.ZodType<string> {
   const nSigFig = parseInt(heading.type.replace(/SF/g, ""));
 
-  const regex = new RegExp(
-    `^-?(?:` +
-      `[1-9]\\d{0,${nSigFig - 1}}|` + // case for whole numbers with no decimal
-      `0\\.\\d{0,${nSigFig - 1}}[1-9]|` + // case for numbers with decimal points
-      `[1-9]\\d*\\.\\d{0,${nSigFig - 1}}[1-9]` + // whole numbers with decimal and significant figures
-      `)$`,
-  );
-
-  return z
-    .string()
-    .regex(regex, `Must have exactly ${nSigFig} significant figures`);
+  return z.string().refine((value) => checkSignificantFigures(value, nSigFig), {
+    message: `Must have exactly ${nSigFig} significant figures`,
+  });
 }
 
 function createNSCIHeadingSchema(heading: HeadingRaw): z.ZodType<string> {

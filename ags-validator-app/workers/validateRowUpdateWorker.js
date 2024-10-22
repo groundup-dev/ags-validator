@@ -8,10 +8,6 @@ import {
   self.onmessage = (event) => {
     const {parsedAgsNormalized, rulesConfig, agsDictionaryVersion} = event.data;
 
-    console.log('parsedAgsNormalized', parsedAgsNormalized);
-    console.log('rulesConfig', rulesConfig);
-  
-
     const parsedAgs = Object.fromEntries(
       Object.entries(parsedAgsNormalized).map(([label, group]) => [
         label,
