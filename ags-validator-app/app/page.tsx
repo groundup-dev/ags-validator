@@ -8,7 +8,16 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { HelpCircle } from "lucide-react";
+import {
+  ArrowDownRight,
+  CheckSquare,
+  CornerLeftDown,
+  CornerRightDown,
+  DownloadCloud,
+  Edit,
+  HelpCircle,
+  UploadCloudIcon,
+} from "lucide-react";
 import Validator from "@/components/validator";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Logo from "@/components/logo";
@@ -21,7 +30,7 @@ export default function Page() {
       <div className="flex flex-row my-12 mx-4">
         <div className="text-left mx-4 w-1/2">
           <div className="flex text-left mb-8 flex-wrap gap-x-4 gap-y-4 items-center">
-            <div className="flex-1" />
+            <div />
             <h1 className="text-3xl font-bold flex-0">AGS Validator</h1>
             <div className="flex items-center gap-2 flex-0 sm:flex-1">
               <p className="text-lg">by</p>
@@ -56,7 +65,75 @@ export default function Page() {
             </Dialog>
           </p>
 
-          <div></div>
+          <div className="flex flex-col gap-12">
+            <div className="flex flex-row gap-6 items-center">
+              <Card className="flex flex-row w-2/3">
+                <CardTitle className="text-lg bg-muted w-40 rounded-l-md">
+                  <div className="flex items-center gap-2 m-6">
+                    <UploadCloudIcon className="h-6 w-6" />
+                    Upload
+                  </div>
+                </CardTitle>
+                <CardContent className="items-center m-2">
+                  Upload or paste your AGS data using the tools below
+                </CardContent>
+              </Card>
+
+              <CornerRightDown
+                strokeWidth={1}
+                className="h-16 w-16 text-border"
+              />
+            </div>
+            <div className="flex flex-row gap-6 self-end items-center">
+              <CornerLeftDown
+                strokeWidth={1}
+                className="h-16 w-16 text-border"
+              />
+              <Card className="flex flex-row-reverse w-2/3 min-w-96 self-end">
+                <CardTitle className="text-lg bg-muted w-40 rounded-r-md">
+                  <div className="flex items-center gap-2 m-6">
+                    <CheckSquare className="h-6 w-6" />
+                    Validate
+                  </div>
+                </CardTitle>
+                <CardContent className="items-center m-2">
+                  Validate your data against any AGS4 version, and inspect
+                  issues.
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="flex flex-row gap-6 items-center">
+              <Card className="flex flex-row w-2/3 min-w-96">
+                <CardTitle className="text-lg bg-muted w-40 rounded-l-md">
+                  <div className="flex items-center gap-2 m-6">
+                    <Edit className="h-6 w-6" />
+                    Edit
+                  </div>
+                </CardTitle>
+                <CardContent className="m-2 text-center ">
+                  Edit your data in tables or text views
+                </CardContent>
+              </Card>
+
+              <CornerRightDown
+                strokeWidth={1}
+                className="h-16 w-16 text-border"
+              />
+            </div>
+
+            <Card className="flex flex-row-reverse w-2/3 min-w-96 self-end">
+              <CardTitle className="text-lg bg-muted w-40 rounded-r-md">
+                <div className="flex items-center gap-2 m-6">
+                  <DownloadCloud className="h-6 w-6" />
+                  Export
+                </div>
+              </CardTitle>
+              <CardContent className="m-2 text-center ">
+                Export your data as AGS4
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         <Card className="flex flex-col justify-center items-center text-start mb-4 w-1/2 ">
