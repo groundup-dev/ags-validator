@@ -35,14 +35,13 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
       : filteredErrors;
   }, [sortOptionKey, filteredErrors]);
 
-  // Virtualization setup
   const parentRef = useRef(null);
 
   const rowVirtualizer = useVirtualizer({
-    count: sortedErrors.length, // The number of rows (errors)
-    getScrollElement: () => parentRef.current, // The parent container ref
-    estimateSize: () => 150, // Estimated row size, can adjust based on your design
-    overscan: 5, // Buffer items to render offscreen
+    count: sortedErrors.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 150,
+    overscan: 5,
   });
 
   return (
@@ -94,10 +93,7 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
         />
       </div>
 
-      <div
-        ref={parentRef}
-        className="overflow-auto h-full relative" // Added relative positioning for virtualization
-      >
+      <div ref={parentRef} className="overflow-auto h-full relative">
         {errors.length > 0 ? (
           <div
             style={{
