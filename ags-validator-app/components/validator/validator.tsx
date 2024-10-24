@@ -22,7 +22,7 @@ import { downloadFile } from "@/lib/utils";
 
 import { useAppSelector } from "@/lib/redux/hooks";
 import { GridSelection } from "@glideapps/glide-data-grid";
-import ViewToolbar from "./ViewToolbar/ViewToolbar";
+import ViewToolbar from "./ViewToolbar";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },

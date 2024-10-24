@@ -4,6 +4,7 @@ import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
 import { Redo, Trash2, Undo } from "lucide-react";
 import SelectTable from "../SelectTable";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { Card } from "@/components/ui/card";
 
 interface Props {
   tabsViewValue: string;
@@ -37,7 +38,7 @@ export default function ViewToolbar({
   };
 
   return (
-    <>
+    <div className="flex flex-row gap-4 align-middle items-center w-full">
       {tabsViewValue === "tables" && parsedAgs !== undefined && (
         <SelectTable
           selectedGroup={selectedGroup}
@@ -45,6 +46,20 @@ export default function ViewToolbar({
           groups={Object.keys(parsedAgs)}
         />
       )}
+      {tabsViewValue === "tables" && parsedAgs !== undefined && (
+        <div className="flex  gap-2">
+          <button onClick={handleUndo} disabled={!canUndo}>
+            <Undo
+              className={canUndo ? "w-8 h-8 p-1" : "w-8 h-8 p-1 opacity-50"}
+            />
+          </button>
+          <button onClick={handleRedo} disabled={!canRedo}>
+            <Redo
+              className={canRedo ? "w-8 h-8 p-1" : "w-8 h-8 p-1 opacity-50"}
+            />
+          </button>
+        </div>
+      )}{" "}
       {tabsViewValue === "tables" &&
         parsedAgs !== undefined &&
         selectedRows.length > 0 && (
@@ -70,21 +85,6 @@ export default function ViewToolbar({
             {`Delete ${selectedRows.length} rows`}
           </Button>
         )}
-
-      {tabsViewValue === "tables" && parsedAgs !== undefined && (
-        <>
-          <button onClick={handleUndo} disabled={!canUndo}>
-            <Undo
-              className={canUndo ? "w-4 h-6 mr-1" : "w-4 h-6 mr-1 opacity-50"}
-            />
-          </button>
-          <button onClick={handleRedo} disabled={!canRedo}>
-            <Redo
-              className={canRedo ? "w-4 h-6 mr-1" : "w-4 h-6 mr-1 opacity-50"}
-            />
-          </button>
-        </>
-      )}
-    </>
+    </div>
   );
 }
