@@ -4,7 +4,6 @@ import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
 import { Redo, Trash2, Undo } from "lucide-react";
 import SelectTable from "../SelectTable";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Card } from "@/components/ui/card";
 
 interface Props {
   tabsViewValue: string;

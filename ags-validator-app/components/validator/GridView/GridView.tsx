@@ -281,7 +281,7 @@ const GridView: React.FC<Props> = ({
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [undo, redo, dispatch, canUndo, canRedo]);
+  }, [dispatch, canUndo, canRedo]);
 
   return (
     <div className="w-full h-full">
