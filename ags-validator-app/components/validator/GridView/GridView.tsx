@@ -24,7 +24,9 @@ import {
   addRow,
   applySetRowDataEffect,
   GroupRawNormalized,
+  redo,
   setRowsData,
+  undo,
 } from "@/lib/redux/ags";
 
 // Props for the table component
@@ -55,6 +57,9 @@ const GridView: React.FC<Props> = ({
   const group = useAppSelector(
     (state) => state.ags.parsedAgsNormalized?.[groupName]
   ) as GroupRawNormalized;
+
+  const canUndo = useAppSelector((state) => state.ags.past.length > 0);
+  const canRedo = useAppSelector((state) => state.ags.future.length > 0);
 
   const errors = useAppSelector((state) => state.ags.errors);
 
@@ -254,6 +259,29 @@ const GridView: React.FC<Props> = ({
   const onRowAppended = useCallback(() => {
     dispatch(addRow({ group: group.name }));
   }, [dispatch, group.name]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "z" && (e.metaKey || e.ctrlKey)) {
+        if (e.shiftKey && canRedo) {
+          dispatch(redo());
+          dispatch(applySetRowDataEffect());
+        } else if (canUndo) {
+          dispatch(undo());
+          dispatch(applySetRowDataEffect());
+        }
+      }
+
+      if (canRedo && e.key === "y" && (e.metaKey || e.ctrlKey)) {
+        dispatch(redo());
+        dispatch(applySetRowDataEffect());
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [dispatch, canUndo, canRedo]);
 
   return (
     <div className="w-full h-full">
