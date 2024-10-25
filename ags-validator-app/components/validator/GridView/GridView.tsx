@@ -258,6 +258,7 @@ const GridView: React.FC<Props> = ({
   return (
     <div className="w-full h-full">
       <DataGrid
+        className="rounded-md"
         height={"100%"}
         width={"100%"}
         ref={ref}

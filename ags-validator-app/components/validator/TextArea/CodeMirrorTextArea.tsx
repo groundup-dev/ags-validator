@@ -29,6 +29,9 @@ const themeDemo = EditorView.baseTheme({
     // Add a style for hovered line
     backgroundColor: "#FFF372 !important",
   },
+  "& .cm-scroller": {
+    borderRadius: "6px",
+  },
 });
 
 const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
