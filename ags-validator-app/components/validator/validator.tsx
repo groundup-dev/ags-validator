@@ -138,7 +138,7 @@ export default function Validator() {
               <TabsContent value="tables" className="min-h-0 grow">
                 <div className="p-4 pt-0 h-full flex flex-col gap-4">
                   {parsedAgs !== undefined && (
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 items-end flex-wrap">
                       <SelectTable
                         selectedGroup={selectedGroup}
                         setSelectedGroup={setSelectedGroup}
