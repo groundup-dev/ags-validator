@@ -38,7 +38,7 @@ export default function AutoComplete({
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="grid items-center gap-1.5 mb-4">
+    <div className="grid items-center gap-1.5">
       <Label>{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
