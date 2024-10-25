@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { CircleAlert, CircleX, LoaderCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAppSelector } from "@/lib/redux/hooks";
+import { cn } from "@/lib/utils";
 
 interface ErrorTableProps {
   goToError: (error: AgsError) => void;
@@ -46,54 +47,58 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 justify-between">
-        <div className="flex gap-4">
-          <h2 className="text-xl font-semibold mb-4">Errors</h2>
-
-          <button
-            onClick={() =>
-              setSeverityFilter(severityFilter === "error" ? null : "error")
-            }
-          >
-            <Badge
-              variant="destructive"
-              className={
-                severityFilter === "error"
-                  ? "h-7 gap-1 ring-2 ring-offset-2 ring-destructive"
-                  : "h-7 gap-1 "
+      <div className="flex gap-2 justify-between border-b p-4 items-center">
+        <h3 className="text-xl font-semibold">Errors</h3>
+        <div className="flex gap-4 items-center">
+          {isLoading && <LoaderCircle className="animate-spin w-4 h-4" />}
+          <div className="flex gap-2">
+            <button
+              onClick={() =>
+                setSeverityFilter(severityFilter === "error" ? null : "error")
               }
             >
-              <CircleX size={16} />
-              {errors.filter((error) => error.severity === "error").length}
-            </Badge>
-          </button>
-          <button
-            onClick={() =>
-              setSeverityFilter(severityFilter === "warning" ? null : "warning")
-            }
-          >
-            <Badge
-              variant="warning"
-              className={
-                severityFilter === "warning"
-                  ? "h-7 gap-1 ring-2 ring-offset-2 ring-warning"
-                  : "h-7 gap-1"
+              <Badge
+                variant="destructive"
+                className={cn(
+                  "h-7 m-0 gap-1",
+                  severityFilter === "error"
+                    ? "ring-2 ring-offset-2 ring-destructive"
+                    : null
+                )}
+              >
+                <CircleX size={16} />
+                {errors.filter((error) => error.severity === "error").length}
+              </Badge>
+            </button>
+            <button
+              onClick={() =>
+                setSeverityFilter(
+                  severityFilter === "warning" ? null : "warning"
+                )
               }
             >
-              <CircleAlert size={16} />
-              {errors.filter((error) => error.severity === "warning").length}
-            </Badge>
-          </button>
-          {isLoading && <LoaderCircle className="animate-spin w-6 h-6 gap-1" />}
+              <Badge
+                variant="warning"
+                className={cn(
+                  "h-7 m-0 gap-1",
+                  severityFilter === "warning"
+                    ? "ring-2 ring-offset-2 ring-warning"
+                    : null
+                )}
+              >
+                <CircleAlert size={16} />
+                {errors.filter((error) => error.severity === "warning").length}
+              </Badge>
+            </button>
+          </div>
+          <SortErrors
+            activeSortOptionKey={sortOptionKey}
+            onChange={setSortOptionKey}
+          />
         </div>
-
-        <SortErrors
-          activeSortOptionKey={sortOptionKey}
-          onChange={setSortOptionKey}
-        />
       </div>
 
-      <div ref={parentRef} className="overflow-auto h-full relative">
+      <div ref={parentRef} className="overflow-auto h-full relative p-4">
         {errors.length > 0 ? (
           <div
             style={{
@@ -119,7 +124,7 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
             })}
           </div>
         ) : (
-          <p className="text-muted-foreground">No errors or warnings found</p>
+          <p className="py-8 w-full text-center">No errors or warnings found</p>
         )}
       </div>
     </div>
