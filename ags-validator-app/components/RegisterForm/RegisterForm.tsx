@@ -16,7 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Check, LoaderCircle } from "lucide-react";
 import { useState } from "react";
-import Link from "next/link";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
