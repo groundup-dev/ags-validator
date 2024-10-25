@@ -50,20 +50,20 @@ export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
       <div className="flex flex-col gap-1">
         <div className="flex gap-4">
           <p>
-            <span className="font-medium">Rule: </span>
+            <span className="font-medium text-sm">Rule: </span>
             {error.rule}
           </p>
           <p>
-            <span className="font-medium"> Group: </span>
+            <span className="font-medium text-sm"> Group: </span>
             {error.group ?? "n/a"}
           </p>
           <p>
-            <span className="font-medium"> Heading: </span>
+            <span className="font-medium text-sm"> Heading: </span>
             {error.field ?? "n/a"}
           </p>
         </div>
         <p>
-          <span className="font-medium">Message: </span>
+          <span className="font-medium text-sm">Message: </span>
           {error.message}
         </p>
       </div>
