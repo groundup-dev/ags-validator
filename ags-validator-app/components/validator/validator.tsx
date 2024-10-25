@@ -14,16 +14,15 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Label } from "../ui/label";
 import GridView from "./GridView";
-import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download, Trash2 } from "lucide-react";
+import { Download } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
 
-import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
-import { applySetRowDataEffect, deleteRows } from "@/lib/redux/ags";
-import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { GridSelection } from "@glideapps/glide-data-grid";
+import ViewToolbar from "./ViewToolbar";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -46,8 +45,6 @@ export default function Validator() {
 
   const parsedAgs = useAppSelector((state) => state.ags.parsedAgsNormalized);
   const agsData = useAppSelector((state) => state.ags.rawData);
-
-  const dispatch = useAppDispatch();
 
   const [goToErrorCallback, setGoToErrorCallback] = useState<
     (error: AgsError) => void
@@ -121,38 +118,13 @@ export default function Validator() {
                       </TabsTrigger>
                     </TabsList>
                   </div>
-                  {tabsViewValue === "tables" && parsedAgs !== undefined && (
-                    <SelectTable
-                      selectedGroup={selectedGroup}
-                      setSelectedGroup={setSelectedGroup}
-                      groups={Object.keys(parsedAgs)}
-                    />
-                  )}
-                  {tabsViewValue === "tables" &&
-                    parsedAgs !== undefined &&
-                    selectedRows.length > 0 && (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setSelection({
-                            columns: CompactSelection.empty(),
-                            rows: CompactSelection.empty(),
-                            current: undefined,
-                          });
-                          dispatch(
-                            deleteRows({
-                              group: selectedGroup,
-                              rows: selectedRows,
-                            })
-                          );
-
-                          dispatch(applySetRowDataEffect());
-                        }}
-                      >
-                        <Trash2 className="w-4 h-6 mr-1" />
-                        {`Delete ${selectedRows.length} rows`}
-                      </Button>
-                    )}
+                  <ViewToolbar
+                    tabsViewValue={tabsViewValue}
+                    selectedRows={selectedRows}
+                    setSelectedGroup={setSelectedGroup}
+                    selectedGroup={selectedGroup}
+                    setSelection={setSelection}
+                  />
                 </CardContent>
               </Card>
 

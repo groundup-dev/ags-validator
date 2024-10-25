@@ -6,12 +6,12 @@ export const makeStore = () => {
     reducer: {
       ags: agsSlice.reducer,
     },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: false,
-        immutableCheck: false,
-        actionCreatorCheck: false,
-      }),
+    // middleware: (getDefaultMiddleware) =>
+    //   getDefaultMiddleware({
+    //     serializableCheck: false,
+    //     immutableCheck: false,
+    //     actionCreatorCheck: false,
+    //   }),
   });
 };
 
