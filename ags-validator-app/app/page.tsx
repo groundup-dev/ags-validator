@@ -129,12 +129,12 @@ export default function Page() {
         <div className="w-full lg:w-1/2 flex justify-center">
           <div>
             <Card className="flex flex-col items-center max-w-xl">
-              <CardTitle className="font-bold text-lg bg-muted w-full flex p-3 justify-center items-center rounded-t-md border-b">
+              <CardTitle className="text-lg bg-muted w-full flex p-3 justify-center items-center rounded-t-md border-b">
                 New to GroundUp?
               </CardTitle>
               <CardContent className="p-0">
                 <div className="flex flex-col gap-4 p-6">
-                  <h4 className="w-full align-middle text-lg font-bold ">
+                  <h4 className="w-full align-middle text-lg font-semibold">
                     About us
                   </h4>
                   <p>
@@ -153,7 +153,7 @@ export default function Page() {
                 </div>
                 <Separator />
                 <div className="flex flex-col gap-4 p-6">
-                  <h4 className="w-full align-middle text-lg font-bold">
+                  <h4 className="w-full align-middle text-lg font-semibold">
                     Register for early access
                   </h4>
                   <p>
