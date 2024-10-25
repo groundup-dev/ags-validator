@@ -6,10 +6,11 @@ export default function Page() {
 
       <section className="mt-6">
         <p>
-          This Privacy Notice for GROUNDUP SYSTEMS LTD ("we", "us", or "our"),
-          describes how and why we might access, collect, store, use, and/or
-          share ("process") your personal information when you use our services
-          ("Services"), including when you:
+          This Privacy Notice for GROUNDUP SYSTEMS LTD (&quot;we&quot;,
+          &quot;us&quot;, or &quot;our&quot;), describes how and why we might
+          access, collect, store, use, and/or share (&quot;process&quot;) your
+          personal information when you use our services (&quot;Services&quot;),
+          including when you:
         </p>
         <ul className="list-disc ml-5 mt-2">
           <li>
@@ -229,9 +230,9 @@ export default function Page() {
           under 18 years of age, nor do we knowingly sell such personal
           information. By using the Services, you represent that you are at
           least 18 or that you are the parent or guardian of such a minor and
-          consent to such minor dependent’s use of the Services. If we learn
-          that personal information from users less than 18 years of age has
-          been collected, we will deactivate the account and take reasonable
+          consent to such minor dependent&apos;s use of the Services. If we
+          learn that personal information from users less than 18 years of age
+          has been collected, we will deactivate the account and take reasonable
           measures to promptly delete such data from our records. If you become
           aware of any data we may have collected from children under age 18,
           please contact us at james@groundup.cloud.
@@ -261,8 +262,8 @@ export default function Page() {
           automated decision-making. In certain circumstances, you may also have
           the right to object to the processing of your personal information.
           You can make such a request by contacting us by using the contact
-          details provided in the section "HOW CAN YOU CONTACT US ABOUT THIS
-          NOTICE?" below.
+          details provided in the section &quot;HOW CAN YOU CONTACT US ABOUT
+          THIS NOTICE?&quot; below.
         </p>
       </section>
 
@@ -276,12 +277,12 @@ export default function Page() {
         </p>
         <p>
           We may update this Privacy Notice from time to time. The updated
-          version will be indicated by an updated 'Revised' date at the top of
-          this Privacy Notice. If we make material changes to this Privacy
-          Notice, we may notify you either by prominently posting a notice of
-          such changes or by directly sending you a notification. We encourage
-          you to review this Privacy Notice frequently to be informed of how we
-          are protecting your information.
+          version will be indicated by an updated &apos;Revised&apos; date at
+          the top of this Privacy Notice. If we make material changes to this
+          Privacy Notice, we may notify you either by prominently posting a
+          notice of such changes or by directly sending you a notification. We
+          encourage you to review this Privacy Notice frequently to be informed
+          of how we are protecting your information.
         </p>
       </section>
 
