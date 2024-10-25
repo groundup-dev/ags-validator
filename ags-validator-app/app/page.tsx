@@ -66,12 +66,12 @@ export default function Page() {
           <div className="w-full flex mb-8">
             <div className="flex flex-col gap-8 max-w-2xl">
               <div className="flex items-center gap-4 w-full">
-                <div className="flex-grow flex flex-col lg:flex-row lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
-                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-5">
+                <div className="flex-grow flex flex-col lg:flex-row min-h-24 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-6">
                     <UploadCloudIcon className="h-6 w-6" />
                     Upload
                   </div>
-                  <p className="p-5">
+                  <p className="p-6">
                     Upload or paste your AGS data using the tools below
                   </p>
                 </div>
@@ -86,12 +86,12 @@ export default function Page() {
                   strokeWidth={1}
                   className="h-8 w-8 shrink-[0.25]"
                 />
-                <div className="flex-grow flex flex-col lg:flex-row lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
-                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-5">
+                <div className="flex-grow flex flex-col lg:flex-row min-h-24 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-6">
                     <CheckSquare className="h-6 w-6" />
                     Validate
                   </div>
-                  <p className="p-5">
+                  <p className="p-6">
                     Validate your data against any AGS4 version, and inspect
                     issues
                   </p>
@@ -99,12 +99,12 @@ export default function Page() {
               </div>
 
               <div className="flex items-center gap-4 w-full">
-                <div className="flex-grow flex flex-col lg:flex-row lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
-                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-5">
+                <div className="flex-grow flex flex-col lg:flex-row min-h-24 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-6">
                     <Edit className="h-6 w-6" />
                     Edit
                   </div>
-                  <p className="p-5">Edit your data in tables or text views</p>
+                  <p className="p-6">Edit your data in tables or text views</p>
                 </div>
                 <CornerRightDown
                   strokeWidth={1}
@@ -114,12 +114,12 @@ export default function Page() {
 
               <div className="flex items-center gap-4 w-full">
                 <div className="h-8 w-8 shrink-[0.25]" />
-                <div className="flex-grow flex flex-col lg:flex-row lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
-                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-5">
+                <div className="flex-grow flex flex-col lg:flex-row min-h-24 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                  <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-6">
                     <DownloadCloud className="h-6 w-6" />
                     Export
                   </div>
-                  <p className="p-5"> Export your data as AGS4</p>
+                  <p className="p-6"> Export your data as AGS4</p>
                 </div>
               </div>
             </div>
