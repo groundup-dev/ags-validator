@@ -22,7 +22,7 @@ npm install @groundup-dev/ags
 import {
   validateAgsData,
 
-} from "@groundup/ags";
+} from "@groundup-dev/ags";
 
 const agsData = "" // your ags data as string
 
