@@ -1,7 +1,8 @@
 import React from "react";
 import { AgsError } from "@groundup/ags";
 import { Button } from "@/components/ui/button";
-import { CircleAlert, CircleX, SquareArrowUpLeft } from "lucide-react";
+import { CircleAlert, CircleX } from "lucide-react";
+import { MdOutlineOpenInNew } from "react-icons/md";
 import { capitalize, cn } from "@/lib/utils";
 
 const severityColor: Record<AgsError["severity"], string> = {
@@ -30,39 +31,39 @@ export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
             <CircleAlert size={20} />
           )}
 
-          <p className="font-semibold">
+          <p className="font-medium">
             {capitalize(error.severity)} at line {error.lineNumber}
           </p>
         </div>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           color="red"
           onClick={() => {
             onView();
           }}
         >
-          <SquareArrowUpLeft size={16} className="mr-2" />
+          <MdOutlineOpenInNew size={16} className="mr-2" />
           View
         </Button>
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex gap-4">
           <p>
-            <strong>Rule: </strong>
+            <span className="font-medium">Rule: </span>
             {error.rule}
           </p>
           <p>
-            <strong> Group: </strong>
+            <span className="font-medium"> Group: </span>
             {error.group ?? "n/a"}
           </p>
           <p>
-            <strong> Heading: </strong>
+            <span className="font-medium"> Heading: </span>
             {error.field ?? "n/a"}
           </p>
         </div>
         <p>
-          <strong>Message: </strong>
+          <span className="font-medium">Message: </span>
           {error.message}
         </p>
       </div>
