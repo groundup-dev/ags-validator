@@ -66,7 +66,7 @@ export default function Page() {
           <div className="w-full flex mb-8">
             <div className="flex flex-col gap-8 max-w-2xl">
               <div className="flex items-center gap-4 w-full">
-                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
                   <div className="flex items-center gap-2 font-bold">
                     <UploadCloudIcon className="h-6 w-6" />
                     Upload
@@ -79,7 +79,7 @@ export default function Page() {
 
               <div className="flex items-center gap-4 w-full">
                 <CornerLeftDown strokeWidth={1} className="h-8 w-8 shrink-0" />
-                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
                   <div className="flex items-center gap-2 font-bold">
                     <CheckSquare className="h-6 w-6" />
                     Validate
@@ -93,7 +93,7 @@ export default function Page() {
               </div>
 
               <div className="flex items-center gap-4 w-full">
-                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
                   <div className="flex items-center gap-2 font-bold">
                     <Edit className="h-6 w-6" />
                     Edit
@@ -106,7 +106,7 @@ export default function Page() {
 
               <div className="flex items-center gap-4 w-full">
                 <div className="h-8 w-8 shrink-0" />
-                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
+                <div className="flex-grow flex flex-col lg:flex-row p-6 gap-4 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
                   <div className="flex items-center gap-2 font-bold">
                     <DownloadCloud className="h-6 w-6" />
                     Export
