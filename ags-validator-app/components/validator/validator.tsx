@@ -75,7 +75,7 @@ export default function Validator() {
   }, [parsedAgs, selectedGroup, setSelectedGroup]);
 
   return (
-    <div className="flex justify-center w-full bg-muted rounded-t-xl border-border border shadow-inner">
+    <div className="flex justify-center w-full bg-muted rounded-t-xl border shadow-inner">
       <div className="flex flex-col p-4 max-w-500 w-full gap-4">
         <Card className="p-4">
           <CardTitle className="text-lg">AGS Options</CardTitle>

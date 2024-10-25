@@ -20,13 +20,12 @@ import {
 import Validator from "@/components/validator";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Logo from "@/components/logo";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 
 export default function Page() {
   return (
     <div className="overflow-hidden px-4">
-      <div className="flex flex-col lg:flex-row my-12 max-w-400 w-full mx-auto gap-12 px-8">
+      <div className="flex flex-col lg:flex-row my-12 max-w-400 w-full mx-auto gap-12 px-2 lg:px-8">
         <div className="w-full lg:w-1/2">
           <div className="flex my-8 flex-wrap gap-4 items-center">
             <h1 className="text-3xl font-bold flex-0">AGS Validator</h1>
@@ -40,7 +39,7 @@ export default function Page() {
           </p>
           <p className="text-md mb-16">
             All your AGS data stays on your device and
-            <strong> never leaves your browser</strong>.
+            <span className="font-medium"> never leaves your browser</span>.
             <Dialog>
               <DialogTrigger asChild>
                 <span className="ml-2 cursor-pointer">
@@ -63,8 +62,8 @@ export default function Page() {
             </Dialog>
           </p>
 
-          <div className="w-full flex mb-8">
-            <div className="flex flex-col gap-8 max-w-2xl">
+          <div className="flex mb-8 justify-center lg:justify-start">
+            <div className="flex flex-col gap-8 w-full max-w-2xl">
               <div className="flex items-center gap-4 w-full">
                 <div className="flex-grow flex flex-col lg:flex-row min-h-24 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
                   <div className="flex items-center gap-2 font-bold border-b lg:border-b-0 lg:border-r h-full p-6">
@@ -128,15 +127,15 @@ export default function Page() {
 
         <div className="w-full lg:w-1/2 flex justify-center">
           <div>
-            <Card className="flex flex-col items-center max-w-xl">
-              <CardTitle className="text-lg bg-muted w-full flex p-3 justify-center items-center rounded-t-md border-b">
+            <div className="flex mb-8 flex-col gap-4 p-4 bg-muted rounded-xl border shadow-inner max-w-2xl">
+              <h2 className="font-bold text-lg w-full text-center">
                 New to GroundUp?
-              </CardTitle>
-              <CardContent className="p-0">
-                <div className="flex flex-col gap-4 p-6">
-                  <h4 className="w-full align-middle text-lg font-semibold">
-                    About us
-                  </h4>
+              </h2>
+              <Card className="flex flex-col items-center">
+                <h4 className="p-4 text-lg w-full font-semibold border-b">
+                  About us
+                </h4>
+                <div className="flex flex-col gap-4 p-4">
                   <p>
                     GroundUp is an open source platform that makes geotechnical
                     analysis and data management, easier, quicker, more
@@ -146,24 +145,25 @@ export default function Page() {
                     We are currently working hard on building the public version
                     of GroundUp, which will be available soon.
                   </p>
-                  <p>
+                  <span className="font-medium">
                     GroundUp will always be open-source, and free to get
                     started.
-                  </p>
+                  </span>
                 </div>
-                <Separator />
-                <div className="flex flex-col gap-4 p-6">
-                  <h4 className="w-full align-middle text-lg font-semibold">
-                    Register for early access
-                  </h4>
+              </Card>
+              <Card className="flex flex-col items-center">
+                <h4 className="p-4 text-lg w-full font-semibold border-b">
+                  Register for early access
+                </h4>
+                <div className="flex flex-col gap-4 p-4">
                   <p>
                     Register for early access to GroundUp and be the first to
                     know when it&apos;s available.
                   </p>
                   <RegisterForm />
                 </div>
-              </CardContent>
-            </Card>
+              </Card>
+            </div>
           </div>
         </div>
       </div>

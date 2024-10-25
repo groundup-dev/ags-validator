@@ -59,13 +59,13 @@ export function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <div className="flex flex-row gap-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="flex gap-4 flex-col sm:flex-row">
           <FormField
             control={form.control}
             name="firstName"
             render={({ field }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="sm:w-1/2">
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -79,7 +79,7 @@ export function RegisterForm() {
             control={form.control}
             name="lastName"
             render={({ field }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="sm:w-1/2">
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -104,7 +104,7 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <div className="flex flex-col pt-4">
+        <div className="flex flex-col min-h-16 items-center justify-center">
           {!isLoading && !isSuccess && (
             <Button
               variant="secondary"
