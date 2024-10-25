@@ -12,6 +12,9 @@ const config: Config = {
       maxWidth: {
         400: "100rem",
       },
+      scale: {
+        101: "101%",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
