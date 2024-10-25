@@ -27,7 +27,7 @@ export default function AGSUpload() {
   };
 
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
+    <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label htmlFor="inputFile">Upload AGS4 File</Label>
       <Input
         id="inputFile"
