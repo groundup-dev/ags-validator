@@ -24,14 +24,16 @@ export function getDictForVersion(dictVersion?: AgsDictionaryVersion) {
   return standardDictionaries[dictVersion];
 }
 
+function deepClone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export function combineDicts(dict1: GroupRaw, dict2?: GroupRaw): GroupRaw {
-  // combine dicts by adding rows from dict2 to dict1, overwriting any duplicates
   if (!dict2) {
-    return dict1;
+    return deepClone(dict1);
   }
 
-  // on DICT_GRP and DICT_HDNG
-  const combinedDict = { ...dict1 };
+  const combinedDict = deepClone(dict1); // Deep clone of dict1
 
   dict2.rows.forEach((row) => {
     const existingRow = combinedDict.rows.find(
