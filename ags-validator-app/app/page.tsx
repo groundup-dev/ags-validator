@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { HelpCircle } from "lucide-react";
 import Validator from "@/components/validator";
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Logo from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -100,6 +102,11 @@ export default function Page() {
               </DialogDescription>
             </DialogHeader>
             <RegisterForm />
+            <DialogFooter>
+              <Link className="text-xs" href="/privacy">
+                Privacy Policy
+              </Link>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
