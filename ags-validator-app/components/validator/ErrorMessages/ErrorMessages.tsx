@@ -48,9 +48,9 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 justify-between border-b p-4 items-center">
+      <div className="flex justify-between border-b p-4 gap-4 items-center flex-wrap">
         <h3 className="text-xl font-semibold">Errors</h3>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center flex-wrap">
           {isLoading && <LoaderCircle className="animate-spin w-4 h-4" />}
           <div className="flex gap-2">
             <button
@@ -100,7 +100,7 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
       </div>
 
       <div ref={parentRef} className="h-full p-4 pt-0 overflow-auto">
-        {errors.length > 0 ? (
+        {virtualizedRows.length > 0 ? (
           <div
             className="relative w-full"
             style={{
@@ -110,7 +110,7 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
             <div
               className="absolute top-0 left-0 w-full"
               style={{
-                transform: `translateY(${virtualizedRows[0]?.start ?? 0}px)`,
+                transform: `translateY(${virtualizedRows[0].start}px)`,
               }}
             >
               {virtualizedRows.map((virtualRow) => {

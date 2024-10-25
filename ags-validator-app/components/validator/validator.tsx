@@ -79,7 +79,7 @@ export default function Validator() {
       <div className="flex flex-col p-4 max-w-500 w-full gap-4">
         <Card className="p-4">
           <CardTitle className="text-lg">AGS Options</CardTitle>
-          <CardContent className="flex items-start sm:items-end gap-x-4 py-4 px-0 sm:flex-row flex-col">
+          <CardContent className="flex items-start sm:items-end gap-4 py-4 px-0 sm:flex-row flex-col">
             <AGSUpload />
             <AutoComplete
               options={agsDictOptions}

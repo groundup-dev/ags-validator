@@ -17,8 +17,8 @@ interface ErrorMessageProps {
 
 export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
   return (
-    <div className="flex flex-col p-2 gap-1">
-      <div className="flex gap-2 justify-between items-center">
+    <div className="flex flex-col px-2 py-4 gap-2">
+      <div className="flex gap-4 justify-between items-center">
         <div
           className={cn(
             "flex gap-2 items-center",
@@ -26,9 +26,9 @@ export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
           )}
         >
           {error.severity === "error" ? (
-            <CircleX size={20} />
+            <CircleX className="shrink-0 h-5 w-5" />
           ) : (
-            <CircleAlert size={20} />
+            <CircleAlert className="shrink-0 h-5 w-5" />
           )}
 
           <p className="font-medium">
@@ -48,7 +48,7 @@ export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
         </Button>
       </div>
       <div className="flex flex-col gap-1">
-        <div className="flex gap-4">
+        <div className="flex gap-x-4 flex-wrap">
           <p>
             <span className="font-medium text-sm">Rule: </span>
             {error.rule}
