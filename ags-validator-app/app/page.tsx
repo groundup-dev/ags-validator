@@ -27,17 +27,17 @@ export default function Page() {
     <div className="overflow-hidden px-4">
       <div className="flex flex-col lg:flex-row my-12 max-w-400 w-full mx-auto gap-12 px-2 lg:px-8">
         <div className="w-full lg:w-1/2">
-          <div className="flex my-8 flex-wrap gap-4 items-center">
+          <div className="flex my-8 flex-wrap gap-4 items-center justify-center">
             <h1 className="text-3xl font-bold flex-0">AGS Validator</h1>
-            <div className="flex items-center gap-2 flex-0 sm:flex-1">
+            <div className="flex items-center gap-2 flex-0 lg:flex-1">
               <p className="text-lg">by</p>
               <Logo size="md" />
             </div>
           </div>
-          <p className="text-lg mb-4">
+          <p className="text-lg mb-4 text-center lg:text-start">
             Validate, fix, and edit your AGS data with ease.
           </p>
-          <p className="text-md mb-16">
+          <p className="text-md mb-16 text-center lg:text-start">
             All your AGS data stays on your device and
             <span className="font-medium"> never leaves your browser</span>.
             <Dialog>
