@@ -21,6 +21,7 @@ import Validator from "@/components/validator";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Logo from "@/components/logo";
 import { Card } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -161,6 +162,11 @@ export default function Page() {
                     know when it&apos;s available.
                   </p>
                   <RegisterForm />
+                  <div className="flex justify-end">
+                    <Link className="text-xs" href="/privacy">
+                      Privacy Policy
+                    </Link>
+                  </div>
                 </div>
               </Card>
             </div>

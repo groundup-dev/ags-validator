@@ -1,5 +1,4 @@
 "use client";
-
 import ErrorMessages from "./ErrorMessages";
 import React, {
   Dispatch,
@@ -14,15 +13,15 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BsFileEarmarkText, BsTable } from "react-icons/bs";
 import GridView from "./GridView";
-import SelectTable from "./SelectTable";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
-import { Download, Trash2 } from "lucide-react";
+import { Download } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
-import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
-import { applySetRowDataEffect, deleteRows } from "@/lib/redux/ags";
-import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { GridSelection } from "@glideapps/glide-data-grid";
+import ViewToolbar from "./ViewToolbar";
+import { track } from "@vercel/analytics";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -45,8 +44,6 @@ export default function Validator() {
 
   const parsedAgs = useAppSelector((state) => state.ags.parsedAgsNormalized);
   const agsData = useAppSelector((state) => state.ags.rawData);
-
-  const dispatch = useAppDispatch();
 
   const [goToErrorCallback, setGoToErrorCallback] = useState<
     (error: AgsError) => void
@@ -93,7 +90,10 @@ export default function Validator() {
             <Button
               variant="outline"
               disabled={!agsData}
-              onClick={() => downloadFile(agsData, "export.ags")}
+              onClick={() => {
+                track("clicked export");
+                downloadFile(agsData, "export.ags");
+              }}
             >
               <Download className="w-4 h-6 mr-2" />
               Export
@@ -137,38 +137,12 @@ export default function Validator() {
 
               <TabsContent value="tables" className="min-h-0 grow">
                 <div className="p-4 pt-0 h-full flex flex-col gap-4">
-                  {parsedAgs !== undefined && (
-                    <div className="flex gap-4 items-end flex-wrap">
-                      <SelectTable
-                        selectedGroup={selectedGroup}
-                        setSelectedGroup={setSelectedGroup}
-                        groups={Object.keys(parsedAgs)}
-                      />
-                      {selectedRows.length > 0 && (
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setSelection({
-                              columns: CompactSelection.empty(),
-                              rows: CompactSelection.empty(),
-                              current: undefined,
-                            });
-                            dispatch(
-                              deleteRows({
-                                group: selectedGroup,
-                                rows: selectedRows,
-                              })
-                            );
-
-                            dispatch(applySetRowDataEffect());
-                          }}
-                        >
-                          <Trash2 className="w-4 h-6 mr-2" />
-                          {`Delete ${selectedRows.length} rows`}
-                        </Button>
-                      )}
-                    </div>
-                  )}
+                  <ViewToolbar
+                    selectedRows={selectedRows}
+                    setSelectedGroup={setSelectedGroup}
+                    selectedGroup={selectedGroup}
+                    setSelection={setSelection}
+                  />
                   <GridView
                     groupName={selectedGroup}
                     setGoToErrorCallback={setGoToErrorCallback}
