@@ -23,6 +23,7 @@ import { downloadFile } from "@/lib/utils";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { GridSelection } from "@glideapps/glide-data-grid";
 import ViewToolbar from "./ViewToolbar";
+import { track } from "@vercel/analytics/*";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -91,7 +92,10 @@ export default function Validator() {
             <Button
               variant={"outline"}
               disabled={!agsData}
-              onClick={() => downloadFile(agsData, "export.ags")}
+              onClick={() => {
+                track("clicked export");
+                downloadFile(agsData, "export.ags");
+              }}
             >
               <Download className="w-4 h-6 mr-1" /> Export
             </Button>
