@@ -34,7 +34,7 @@ export default function AGSUpload() {
         type="file"
         accept=".ags" // Adjust accepted file types as needed
         onChange={handleFileChange}
-        className="rounded w-full max-w-sm cursor-pointer"
+        className="rounded w-full max-w-sm cursor-pointer hover:bg-accent"
       />
     </div>
   );
