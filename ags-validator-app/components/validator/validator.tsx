@@ -23,7 +23,7 @@ import { downloadFile } from "@/lib/utils";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { GridSelection } from "@glideapps/glide-data-grid";
 import ViewToolbar from "./ViewToolbar";
-import { track } from "@vercel/analytics/*";
+import { track } from "@vercel/analytics";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },

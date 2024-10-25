@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Logo from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
-import { track } from "@vercel/analytics";
 
 export default function Page() {
   return (
@@ -87,11 +86,7 @@ export default function Page() {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button
-              onClick={() => track("clicked register")}
-              className="rounded-full w-36 shadow-md"
-              variant="secondary"
-            >
+            <Button className="rounded-full w-36 shadow-md" variant="secondary">
               Register
             </Button>
           </DialogTrigger>
