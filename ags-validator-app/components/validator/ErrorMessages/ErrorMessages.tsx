@@ -3,7 +3,6 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import ErrorMessage from "./ErrorMessage";
 import SortErrors, { sortOptions, SortOptionKey } from "./SortErrors";
 import { AgsError } from "@groundup/ags";
-import { Separator } from "@/components/ui/separator";
 import { CircleAlert, CircleX, LoaderCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAppSelector } from "@/lib/redux/hooks";
@@ -44,6 +43,8 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
     estimateSize: () => 150,
     overscan: 5,
   });
+
+  const virtualizedRows = rowVirtualizer.getVirtualItems();
 
   return (
     <div className="flex flex-col h-full">
@@ -98,30 +99,37 @@ export default function ErrorMessages({ goToError }: ErrorTableProps) {
         </div>
       </div>
 
-      <div ref={parentRef} className="overflow-auto h-full relative p-4">
+      <div ref={parentRef} className="h-full p-4 pt-0 overflow-auto">
         {errors.length > 0 ? (
           <div
+            className="relative w-full"
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
-              position: "relative",
             }}
           >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const error = sortedErrors[virtualRow.index];
-
-              return (
-                <div
-                  key={`error-message-${virtualRow.index}`}
-                  className="absolute top-0 left-0 w-full"
-                  style={{
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  {virtualRow.index > 0 && <Separator className="my-2" />}
-                  <ErrorMessage error={error} onView={() => goToError(error)} />
-                </div>
-              );
-            })}
+            <div
+              className="absolute top-0 left-0 w-full"
+              style={{
+                transform: `translateY(${virtualizedRows[0]?.start ?? 0}px)`,
+              }}
+            >
+              {virtualizedRows.map((virtualRow) => {
+                const error = sortedErrors[virtualRow.index];
+                return (
+                  <div
+                    key={`error-message-${virtualRow.index}`}
+                    data-index={virtualRow.index}
+                    ref={rowVirtualizer.measureElement}
+                    className="border-b"
+                  >
+                    <ErrorMessage
+                      error={error}
+                      onView={() => goToError(error)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         ) : (
           <p className="py-8 w-full text-center">No errors or warnings found</p>
