@@ -1,5 +1,4 @@
 "use client";
-
 import ErrorMessages from "./ErrorMessages";
 import React, {
   Dispatch,
@@ -12,14 +11,13 @@ import TextArea from "./TextArea";
 import AGSUpload from "./AGSUpload";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Label } from "../ui/label";
+import { BsFileEarmarkText, BsTable } from "react-icons/bs";
 import GridView from "./GridView";
 import { AgsDictionaryVersion, AgsError } from "@groundup/ags";
 import AutoComplete from "../ui/auto-complete";
 import { Button } from "../ui/button";
 import { Download } from "lucide-react";
 import { downloadFile } from "@/lib/utils";
-
 import { useAppSelector } from "@/lib/redux/hooks";
 import { GridSelection } from "@glideapps/glide-data-grid";
 import ViewToolbar from "./ViewToolbar";
@@ -74,11 +72,11 @@ export default function Validator() {
   }, [parsedAgs, selectedGroup, setSelectedGroup]);
 
   return (
-    <div className="flex justify-center w-full bg-muted rounded-t-xl border-border border shadow-inner">
-      <div className="flex flex-col p-4 max-w-500 w-full">
-        <Card className="mb-2 p-2">
+    <div className="flex justify-center w-full bg-muted rounded-t-xl border shadow-inner">
+      <div className="flex flex-col p-4 max-w-500 w-full gap-4">
+        <Card className="p-4">
           <CardTitle className="text-lg">AGS Options</CardTitle>
-          <CardContent className="p-4 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col">
+          <CardContent className="flex items-start sm:items-end gap-4 py-4 px-0 sm:flex-row flex-col">
             <AGSUpload />
             <AutoComplete
               options={agsDictOptions}
@@ -90,73 +88,74 @@ export default function Validator() {
               placeholder="Select AGS Version"
             />
             <Button
-              variant={"outline"}
+              variant="outline"
               disabled={!agsData}
               onClick={() => {
                 track("clicked export");
                 downloadFile(agsData, "export.ags");
               }}
             >
-              <Download className="w-4 h-6 mr-1" /> Export
+              <Download className="w-4 h-6 mr-2" />
+              Export
             </Button>
           </CardContent>
         </Card>
         <div className="flex gap-4 md:flex-row flex-col">
-          <div className="w-full md:w-3/5 h-[calc(100vh-5rem)]">
+          <Card className="w-full md:w-3/5 h-[calc(100vh-5.5rem)]">
             <Tabs
               value={tabsViewValue}
               onValueChange={(value) => setTabsViewValue(value)}
               className="flex flex-col h-full"
             >
-              <Card className="mb-2">
-                <CardContent className="p-4 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col">
-                  <div className="grid items-center gap-1.5 mb-4">
-                    <Label htmlFor="tabsList">View as</Label>
-                    <TabsList id="tabsList">
-                      <TabsTrigger value="text">Text</TabsTrigger>
-                      <TabsTrigger
-                        disabled={parsedAgs === undefined}
-                        value="tables"
-                      >
-                        Tables
-                      </TabsTrigger>
-                    </TabsList>
-                  </div>
+              <div className="mb-2 p-4 pb-0 flex items-start sm:items-center gap-x-4 sm:flex-row flex-col border-b">
+                <TabsList
+                  id="tabsList"
+                  className="border bg-transparent p-0 rounded-b-none border-b-0"
+                >
+                  <TabsTrigger
+                    value="text"
+                    className="data-[state=active]:bg-accent h-full rounded-l-md rounded-r-none w-24 border-r hover:bg-accent"
+                  >
+                    <BsFileEarmarkText className="mr-2 h-4 w-4" />
+                    Text
+                  </TabsTrigger>
+                  <TabsTrigger
+                    disabled={parsedAgs === undefined}
+                    value="tables"
+                    className="data-[state=active]:bg-accent h-full rounded-r-md rounded-l-none w-24 hover:bg-accent"
+                  >
+                    <BsTable className="mr-2 h-4 w-4" />
+                    Tables
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              <TabsContent value="text" className="min-h-0 grow">
+                <div className="p-4 pt-0 h-full">
+                  <TextArea setGoToErrorCallback={setGoToErrorCallback} />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="tables" className="min-h-0 grow">
+                <div className="p-4 pt-0 h-full flex flex-col gap-4">
                   <ViewToolbar
-                    tabsViewValue={tabsViewValue}
                     selectedRows={selectedRows}
                     setSelectedGroup={setSelectedGroup}
                     selectedGroup={selectedGroup}
                     setSelection={setSelection}
                   />
-                </CardContent>
-              </Card>
-
-              <TabsContent value="text" className="min-h-0 grow">
-                <Card className="h-full">
-                  <CardContent className="p-4 h-full">
-                    <TextArea setGoToErrorCallback={setGoToErrorCallback} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="tables" className="min-h-0 grow">
-                <Card className="h-full">
-                  <CardContent className="p-4 h-full">
-                    <GridView
-                      groupName={selectedGroup}
-                      setGoToErrorCallback={setGoToErrorCallback}
-                      setSelectedRows={setSelectedRows}
-                      selection={selection}
-                      setSelection={setSelection}
-                    />
-                  </CardContent>
-                </Card>
+                  <GridView
+                    groupName={selectedGroup}
+                    setGoToErrorCallback={setGoToErrorCallback}
+                    setSelectedRows={setSelectedRows}
+                    selection={selection}
+                    setSelection={setSelection}
+                  />
+                </div>
               </TabsContent>
             </Tabs>
-          </div>
-          <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-5rem)]">
-            <CardContent className="p-4 h-full">
+          </Card>
+          <Card className="w-full md:w-2/5 h-[50vh] md:h-[calc(100vh-5.5rem)]">
+            <CardContent className="h-full p-0">
               <ErrorMessages goToError={goToError} />
             </CardContent>
           </Card>

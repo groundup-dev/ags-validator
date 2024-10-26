@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { deleteRows, applySetRowDataEffect, undo, redo } from "@/lib/redux/ags";
 import { CompactSelection, GridSelection } from "@glideapps/glide-data-grid";
-import { Redo, Trash2, Undo } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { FaRedo, FaUndo } from "react-icons/fa";
 import SelectTable from "../SelectTable";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 
 interface Props {
-  tabsViewValue: string;
   selectedRows: number[];
   setSelectedGroup: React.Dispatch<React.SetStateAction<string>>;
   selectedGroup: string;
@@ -14,7 +14,6 @@ interface Props {
 }
 
 export default function ViewToolbar({
-  tabsViewValue,
   selectedRows,
   setSelectedGroup,
   selectedGroup,
@@ -25,6 +24,8 @@ export default function ViewToolbar({
 
   const canUndo = useAppSelector((state) => state.ags.past.length > 0);
   const canRedo = useAppSelector((state) => state.ags.future.length > 0);
+
+  if (parsedAgs === undefined) return null;
 
   const handleUndo = () => {
     dispatch(undo());
@@ -37,53 +38,53 @@ export default function ViewToolbar({
   };
 
   return (
-    <div className="flex flex-row gap-4 align-middle items-center w-full">
-      {tabsViewValue === "tables" && parsedAgs !== undefined && (
-        <SelectTable
-          selectedGroup={selectedGroup}
-          setSelectedGroup={setSelectedGroup}
-          groups={Object.keys(parsedAgs)}
-        />
-      )}
-      {tabsViewValue === "tables" && parsedAgs !== undefined && (
-        <div className="flex  gap-2">
-          <button onClick={handleUndo} disabled={!canUndo}>
-            <Undo
-              className={canUndo ? "w-8 h-8 p-1" : "w-8 h-8 p-1 opacity-50"}
-            />
-          </button>
-          <button onClick={handleRedo} disabled={!canRedo}>
-            <Redo
-              className={canRedo ? "w-8 h-8 p-1" : "w-8 h-8 p-1 opacity-50"}
-            />
-          </button>
-        </div>
-      )}{" "}
-      {tabsViewValue === "tables" &&
-        parsedAgs !== undefined &&
-        selectedRows.length > 0 && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              setSelection({
-                columns: CompactSelection.empty(),
-                rows: CompactSelection.empty(),
-                current: undefined,
-              });
-              dispatch(
-                deleteRows({
-                  group: selectedGroup,
-                  rows: selectedRows,
-                })
-              );
+    <div className="flex gap-4 items-end flex-wrap">
+      <SelectTable
+        selectedGroup={selectedGroup}
+        setSelectedGroup={setSelectedGroup}
+        groups={Object.keys(parsedAgs)}
+      />
+      <div className="flex gap-1">
+        <Button
+          variant="outline"
+          className="w-10 p-0"
+          onClick={handleUndo}
+          disabled={!canUndo}
+        >
+          <FaUndo className="w-5 h-5 p-1" />
+        </Button>
+        <Button
+          variant="outline"
+          className="w-10 p-0"
+          onClick={handleRedo}
+          disabled={!canRedo}
+        >
+          <FaRedo className="w-5 h-5 p-1" />
+        </Button>
+      </div>
+      {selectedRows.length > 0 && (
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSelection({
+              columns: CompactSelection.empty(),
+              rows: CompactSelection.empty(),
+              current: undefined,
+            });
+            dispatch(
+              deleteRows({
+                group: selectedGroup,
+                rows: selectedRows,
+              })
+            );
 
-              dispatch(applySetRowDataEffect());
-            }}
-          >
-            <Trash2 className="w-4 h-6 mr-1" />
-            {`Delete ${selectedRows.length} rows`}
-          </Button>
-        )}
+            dispatch(applySetRowDataEffect());
+          }}
+        >
+          <Trash2 className="w-4 h-6 mr-1" />
+          {`Delete ${selectedRows.length} rows`}
+        </Button>
+      )}
     </div>
   );
 }

@@ -47,8 +47,8 @@ export default function SortErrors({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm">
-          <ArrowUpDown className="mr-1" size={16} /> Sort
+        <Button variant="outline" size="sm">
+          <ArrowUpDown className="mr-2" size={16} /> Sort
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">

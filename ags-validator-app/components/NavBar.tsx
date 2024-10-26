@@ -19,8 +19,6 @@ export default function Navbar() {
           </Link>
         </div>
       </div>
-
-      {/* link to github repo */}
     </header>
   );
 }

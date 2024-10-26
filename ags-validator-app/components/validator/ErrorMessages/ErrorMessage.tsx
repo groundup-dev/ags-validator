@@ -1,7 +1,8 @@
 import React from "react";
 import { AgsError } from "@groundup/ags";
 import { Button } from "@/components/ui/button";
-import { CircleAlert, CircleX, SquareArrowUpLeft } from "lucide-react";
+import { CircleAlert, CircleX } from "lucide-react";
+import { MdOutlineOpenInNew } from "react-icons/md";
 import { capitalize, cn } from "@/lib/utils";
 
 const severityColor: Record<AgsError["severity"], string> = {
@@ -16,8 +17,8 @@ interface ErrorMessageProps {
 
 export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
   return (
-    <div className="flex flex-col p-2 gap-1">
-      <div className="flex gap-2 justify-between items-center">
+    <div className="flex flex-col px-2 py-4 gap-2">
+      <div className="flex gap-4 justify-between items-center">
         <div
           className={cn(
             "flex gap-2 items-center",
@@ -25,44 +26,44 @@ export default function ErrorMessage({ error, onView }: ErrorMessageProps) {
           )}
         >
           {error.severity === "error" ? (
-            <CircleX size={20} />
+            <CircleX className="shrink-0 h-5 w-5" />
           ) : (
-            <CircleAlert size={20} />
+            <CircleAlert className="shrink-0 h-5 w-5" />
           )}
 
-          <p className="font-semibold">
+          <p className="font-medium">
             {capitalize(error.severity)} at line {error.lineNumber}
           </p>
         </div>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           color="red"
           onClick={() => {
             onView();
           }}
         >
-          <SquareArrowUpLeft size={16} className="mr-2" />
+          <MdOutlineOpenInNew size={16} className="mr-2" />
           View
         </Button>
       </div>
       <div className="flex flex-col gap-1">
-        <div className="flex gap-4">
+        <div className="flex gap-x-4 flex-wrap">
           <p>
-            <strong>Rule: </strong>
+            <span className="font-medium text-sm">Rule: </span>
             {error.rule}
           </p>
           <p>
-            <strong> Group: </strong>
+            <span className="font-medium text-sm"> Group: </span>
             {error.group ?? "n/a"}
           </p>
           <p>
-            <strong> Heading: </strong>
+            <span className="font-medium text-sm"> Heading: </span>
             {error.field ?? "n/a"}
           </p>
         </div>
         <p>
-          <strong>Message: </strong>
+          <span className="font-medium text-sm">Message: </span>
           {error.message}
         </p>
       </div>
