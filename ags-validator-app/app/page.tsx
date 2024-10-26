@@ -104,7 +104,7 @@ export default function Page() {
                     <Edit className="h-6 w-6" />
                     Edit
                   </div>
-                  <p className="p-6">Edit your data in tables or text views</p>
+                  <p className="p-6">Edit your data in table or text view</p>
                 </div>
                 <CornerRightDown
                   strokeWidth={1}
