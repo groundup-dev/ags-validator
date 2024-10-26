@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "./ui/separator";
 
 export default function Navbar() {
   return (
@@ -27,10 +27,10 @@ export default function Navbar() {
           <Popover>
             <PopoverTrigger className="text-sm">Contact</PopoverTrigger>
             <PopoverContent>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col">
                 <p>We are always happy to chat.</p>
                 <p>Feel free to reach out to us at:</p>
-                <Separator className="w-full" />
+                <Separator className="w-full m-1.5" />
                 <p className="font-bold">james@groundup.cloud</p>
               </div>
             </PopoverContent>
@@ -43,12 +43,18 @@ export default function Navbar() {
               <DropdownMenuLabel>Feedback</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+Brief+description+of+the+bug">
+                <Link
+                  href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+Brief+description+of+the+bug"
+                  target="_blank"
+                >
                   Report an issue
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=enhancement&projects=&template=enhancement.md&title=%5BENHANCEMENT%5D+Brief+description+of+the+enhancement">
+                <Link
+                  target="_blank"
+                  href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=enhancement&projects=&template=enhancement.md&title=%5BENHANCEMENT%5D+Brief+description+of+the+enhancement"
+                >
                   Suggest a change
                 </Link>
               </DropdownMenuItem>
