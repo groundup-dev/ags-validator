@@ -1,0 +1,43 @@
+name: Check AGS Package Version
+
+on:
+  pull_request:
+    paths:
+      - 'ags/**'  # Trigger only if files in the `ags` package have changed
+
+jobs:
+  check_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get current branch version of ags package
+        id: current_version
+        run: |
+          jq -r '.version' ags/package.json > current_version.txt
+          echo "current_version=$(cat current_version.txt)" >> $GITHUB_ENV
+
+      - name: Get main branch version of ags package
+        run: |
+          git fetch origin main
+          git show origin/main:ags/package.json | jq -r '.version' > main_version.txt
+          echo "main_version=$(cat main_version.txt)" >> $GITHUB_ENV
+
+      - name: Check for changes in the ags package
+        id: check_changes
+        run: |
+          if git diff --quiet origin/main -- ags/; then
+            echo "has_changes=false" >> $GITHUB_ENV
+          else
+            echo "has_changes=true" >> $GITHUB_ENV
+          fi
+
+      - name: Fail if version is not updated
+        if: env.has_changes == 'true' && env.current_version == env.main_version
+        run: |
+          echo "Code has changed in the ags package, but the version has not been updated."
+          exit 1
+        env:
+          current_version: ${{ env.current_version }}
+          main_version: ${{ env.main_version }}
