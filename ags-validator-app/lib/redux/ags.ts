@@ -172,6 +172,13 @@ export const agsSlice = createSlice({
   name: "ags",
   initialState,
   reducers: {
+    setDictionaryVersion: (
+      state,
+      action: PayloadAction<AgsDictionaryVersion>
+    ) => {
+      state.agsDictionaryVersion = action.payload;
+    },
+
     setRawData: (state, action: PayloadAction<string>) => {
       state.rawData = action.payload;
     },
@@ -462,6 +469,7 @@ export const {
   undo,
   redo,
   clearHistory,
+  setDictionaryVersion,
 } = agsSlice.actions;
 
 export default agsSlice.reducer;
