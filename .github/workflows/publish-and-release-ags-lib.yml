@@ -33,15 +33,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: contains(github.event.head_commit.message, 'chore(release)')
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v2
-        with:
-          tag_name: "ags-v${{ env.ags_version }}"
-          release_name: "AGS Library v${{ env.ags_version }}"
-          body: |
-            Release of version ${{ env.ags_version }} of the AGS library.
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
