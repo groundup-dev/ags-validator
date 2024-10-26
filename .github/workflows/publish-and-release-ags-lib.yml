@@ -35,7 +35,7 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v2
         with:
           tag_name: "ags-v${{ env.ags_version }}"
           release_name: "AGS Library v${{ env.ags_version }}"
