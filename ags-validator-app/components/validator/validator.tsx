@@ -1,12 +1,6 @@
 "use client";
 import ErrorMessages from "./ErrorMessages";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { SetStateAction, useCallback, useEffect, useState } from "react";
 import TextArea from "./TextArea";
 import AGSUpload from "./AGSUpload";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -22,6 +16,8 @@ import { useAppSelector } from "@/lib/redux/hooks";
 import { GridSelection } from "@glideapps/glide-data-grid";
 import ViewToolbar from "./ViewToolbar";
 import { track } from "@vercel/analytics";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { applySetRowDataEffect, setDictionaryVersion } from "@/lib/redux/ags";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -31,8 +27,11 @@ const agsDictOptions = [
 ];
 
 export default function Validator() {
-  const [agsDictVersion, setAgsDictVersion] =
-    useState<AgsDictionaryVersion>("v4_0_4");
+  const dispatch = useAppDispatch();
+
+  const agsDictVersion = useAppSelector(
+    (state) => state.ags.agsDictionaryVersion
+  );
 
   const [tabsViewValue, setTabsViewValue] = useState("text");
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -81,9 +80,10 @@ export default function Validator() {
             <AutoComplete
               options={agsDictOptions}
               selectedOption={agsDictVersion}
-              setSelectedOption={
-                setAgsDictVersion as Dispatch<SetStateAction<string>>
-              }
+              setSelectedOption={(version: SetStateAction<string>) => {
+                dispatch(setDictionaryVersion(version as AgsDictionaryVersion));
+                dispatch(applySetRowDataEffect());
+              }}
               label="Select AGS Version"
               placeholder="Select AGS Version"
             />
