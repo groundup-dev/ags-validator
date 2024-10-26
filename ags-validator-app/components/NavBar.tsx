@@ -3,6 +3,16 @@ import Logo from "@/components/logo";
 
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export default function Navbar() {
   return (
@@ -13,7 +23,38 @@ export default function Navbar() {
           <h1>AGS Validator</h1>
         </div>
 
-        <div className="items-center flex">
+        <div className="items-center flex gap-2">
+          <Popover>
+            <PopoverTrigger className="text-sm">Contact</PopoverTrigger>
+            <PopoverContent>
+              <div className="flex flex-col gap-1">
+                <p>We are always happy to chat.</p>
+                <p>Feel free to reach out to us at:</p>
+                <Separator className="w-full" />
+                <p className="font-bold">james@groundup.cloud</p>
+              </div>
+            </PopoverContent>
+          </Popover>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="border rounded-md text-sm p-2 hover:bg-accent hover:text-accent-foreground">
+              Feedback
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Feedback</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+Brief+description+of+the+bug">
+                  Report an issue
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=enhancement&projects=&template=enhancement.md&title=%5BENHANCEMENT%5D+Brief+description+of+the+enhancement">
+                  Suggest a change
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link href={"https://github.com/groundup-dev/ags-validator"}>
             <FaGithub className="h-6 w-6" />
           </Link>
