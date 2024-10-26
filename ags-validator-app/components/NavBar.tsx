@@ -25,7 +25,9 @@ export default function Navbar() {
 
         <div className="items-center flex gap-2">
           <Popover>
-            <PopoverTrigger className="text-sm">Contact</PopoverTrigger>
+            <PopoverTrigger className="text-sm hidden sm:block">
+              Contact
+            </PopoverTrigger>
             <PopoverContent>
               <div className="flex flex-col">
                 <p>We are always happy to chat.</p>
@@ -36,7 +38,7 @@ export default function Navbar() {
             </PopoverContent>
           </Popover>
           <DropdownMenu>
-            <DropdownMenuTrigger className="border rounded-md text-sm p-2 hover:bg-accent hover:text-accent-foreground">
+            <DropdownMenuTrigger className=" hidden sm:block border rounded-md text-sm p-2 hover:bg-accent hover:text-accent-foreground">
               Feedback
             </DropdownMenuTrigger>
             <DropdownMenuContent>
