@@ -13,6 +13,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Separator } from "./ui/separator";
+import { ExternalLink } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -23,7 +24,7 @@ export default function Navbar() {
           <h1>AGS Validator</h1>
         </div>
 
-        <div className="items-center flex gap-2">
+        <div className="items-center flex gap-3">
           <Popover>
             <PopoverTrigger className="text-sm hidden sm:block">
               Contact
@@ -31,7 +32,7 @@ export default function Navbar() {
             <PopoverContent>
               <div className="flex flex-col">
                 <p>We are always happy to chat.</p>
-                <p>Feel free to reach out to us at:</p>
+                <p>Feel free to reach out to us at</p>
                 <Separator className="w-full m-1.5" />
                 <p className="font-bold">james@groundup.cloud</p>
               </div>
@@ -49,7 +50,10 @@ export default function Navbar() {
                   href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=bug&projects=&template=bug-report.md&title=%5BBUG%5D+Brief+description+of+the+bug"
                   target="_blank"
                 >
-                  Report an issue
+                  <span className="flex flex-row gap-1">
+                    Report an issue
+                    <ExternalLink className="w-4 h-4" />
+                  </span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -57,7 +61,10 @@ export default function Navbar() {
                   target="_blank"
                   href="https://github.com/groundup-dev/ags-validator/issues/new?assignees=&labels=enhancement&projects=&template=enhancement.md&title=%5BENHANCEMENT%5D+Brief+description+of+the+enhancement"
                 >
-                  Suggest a change
+                  <span className="flex flex-row gap-1">
+                    Suggest a change
+                    <ExternalLink className="w-4 h-4" />
+                  </span>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
