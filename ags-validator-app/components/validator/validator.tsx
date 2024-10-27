@@ -18,6 +18,12 @@ import ViewToolbar from "./ViewToolbar";
 import { track } from "@vercel/analytics";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { applySetRowDataEffect, setDictionaryVersion } from "@/lib/redux/ags";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -68,7 +74,7 @@ export default function Validator() {
         setSelectedGroup(firstKey);
       }
     }
-  }, [parsedAgs, selectedGroup, setSelectedGroup]);
+  }, [parsedAgs, selectedGroup, setSelectedGroup, setTabsViewValue]);
 
   return (
     <div className="flex justify-center w-full bg-muted rounded-t-xl border shadow-inner">
@@ -76,7 +82,7 @@ export default function Validator() {
         <Card className="p-4">
           <CardTitle className="text-lg">AGS Options</CardTitle>
           <CardContent className="flex items-start sm:items-end gap-4 py-4 px-0 sm:flex-row flex-col">
-            <AGSUpload />
+            <AGSUpload setTabsViewValue={setTabsViewValue} />
             <AutoComplete
               options={agsDictOptions}
               selectedOption={agsDictVersion}
@@ -114,19 +120,36 @@ export default function Validator() {
                 >
                   <TabsTrigger
                     value="text"
-                    className="data-[state=active]:bg-accent h-full rounded-l-md rounded-r-none w-24 border-r hover:bg-accent"
+                    className="data-[state=active]:bg-accent h-full rounded-tl-md rounded-r-none rounded-b-none w-24 border-r hover:bg-accent"
                   >
                     <BsFileEarmarkText className="mr-2 h-4 w-4" />
                     Text
                   </TabsTrigger>
-                  <TabsTrigger
-                    disabled={parsedAgs === undefined}
-                    value="tables"
-                    className="data-[state=active]:bg-accent h-full rounded-r-md rounded-l-none w-24 hover:bg-accent"
-                  >
-                    <BsTable className="mr-2 h-4 w-4" />
-                    Tables
-                  </TabsTrigger>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        {/* wrapping in div so can have tooltip on hover when disabled */}
+                        <div className=" h-full">
+                          <TabsTrigger
+                            disabled={parsedAgs === undefined}
+                            value="tables"
+                            className="data-[state=active]:bg-accent h-full rounded-tr-md rounded-l-none rounded-b-none w-24 hover:bg-accent "
+                          >
+                            <BsTable className="mr-2 h-4 w-4" />
+                            Tables
+                          </TabsTrigger>
+                        </div>
+                      </TooltipTrigger>
+
+                      {agsData !== "" && parsedAgs === undefined && (
+                        <TooltipContent>
+                          Current errors must be resolved before viewing as
+                          tables
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
                 </TabsList>
               </div>
               <TabsContent value="text" className="min-h-0 grow">
@@ -143,13 +166,16 @@ export default function Validator() {
                     selectedGroup={selectedGroup}
                     setSelection={setSelection}
                   />
-                  <GridView
-                    groupName={selectedGroup}
-                    setGoToErrorCallback={setGoToErrorCallback}
-                    setSelectedRows={setSelectedRows}
-                    selection={selection}
-                    setSelection={setSelection}
-                  />
+
+                  {parsedAgs && (
+                    <GridView
+                      groupName={selectedGroup}
+                      setGoToErrorCallback={setGoToErrorCallback}
+                      setSelectedRows={setSelectedRows}
+                      selection={selection}
+                      setSelection={setSelection}
+                    />
+                  )}
                 </div>
               </TabsContent>
             </Tabs>

@@ -163,7 +163,7 @@ export default function Page() {
                   </p>
                   <RegisterForm />
                   <div className="flex justify-end">
-                    <Link className="text-xs" href="/privacy">
+                    <Link className="text-xs" href="/privacy" target="_blank">
                       Privacy Policy
                     </Link>
                   </div>
