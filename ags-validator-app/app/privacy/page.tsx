@@ -1,8 +1,10 @@
 export default function Page() {
   return (
-    <div className="flex flex-col gap-10 mx-auto py-10 px-4">
+    <div className="flex flex-col gap-10 mx-auto py-10 px-4 max-w-prose">
       <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
-      <p className="text-sm text-gray-600">Last updated October 25, 2024</p>
+      <p className="text-sm  text-accent-foreground">
+        Last updated October 25, 2024
+      </p>
 
       <section className="mt-6">
         <p>
@@ -17,7 +19,7 @@ export default function Page() {
             Visit our website at{" "}
             <a
               href="https://www.validator.groundup.cloud"
-              className="text-blue-500"
+              className="text-primary"
             >
               www.validator.groundup.cloud
             </a>
@@ -33,7 +35,7 @@ export default function Page() {
           understand your privacy rights and choices. If you do not agree with
           our policies and practices, please do not use our Services. If you
           still have any questions or concerns, please contact us at{" "}
-          <a href="mailto:james@groundup.cloud" className="text-blue-500">
+          <a href="mailto:james@groundup.cloud" className="text-primary">
             james@groundup.cloud
           </a>
           .
@@ -81,7 +83,7 @@ export default function Page() {
           </li>
           <li>
             <strong>How do you exercise your rights?</strong> Contact us at{" "}
-            <a href="mailto:james@groundup.cloud" className="text-blue-500">
+            <a href="mailto:james@groundup.cloud" className="text-primary">
               james@groundup.cloud
             </a>
             .
