@@ -18,6 +18,12 @@ import ViewToolbar from "./ViewToolbar";
 import { track } from "@vercel/analytics";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { applySetRowDataEffect, setDictionaryVersion } from "@/lib/redux/ags";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const agsDictOptions = [
   { value: "v4_0_3", label: "4.0.3" },
@@ -119,14 +125,31 @@ export default function Validator() {
                     <BsFileEarmarkText className="mr-2 h-4 w-4" />
                     Text
                   </TabsTrigger>
-                  <TabsTrigger
-                    disabled={parsedAgs === undefined}
-                    value="tables"
-                    className="data-[state=active]:bg-accent h-full rounded-r-md rounded-l-none w-24 hover:bg-accent"
-                  >
-                    <BsTable className="mr-2 h-4 w-4" />
-                    Tables
-                  </TabsTrigger>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        {/* wrapping in div so can have tooltip on hover when disabled */}
+                        <div>
+                          <TabsTrigger
+                            disabled={parsedAgs === undefined}
+                            value="tables"
+                            className="data-[state=active]:bg-accent h-full rounded-r-md rounded-l-none w-24 hover:bg-accent"
+                          >
+                            <BsTable className="mr-2 h-4 w-4" />
+                            Tables
+                          </TabsTrigger>
+                        </div>
+                      </TooltipTrigger>
+
+                      {agsData !== "" && parsedAgs === undefined && (
+                        <TooltipContent>
+                          Current errors must be resolved before viewing as
+                          tables
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
                 </TabsList>
               </div>
               <TabsContent value="text" className="min-h-0 grow">

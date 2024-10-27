@@ -258,6 +258,7 @@ const GridView: React.FC<Props> = ({
 
   const onRowAppended = useCallback(() => {
     dispatch(addRow({ group: group.name }));
+    dispatch(applySetRowDataEffect());
   }, [dispatch, group.name]);
 
   useEffect(() => {

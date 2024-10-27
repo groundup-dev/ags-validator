@@ -252,12 +252,11 @@ export const agsSlice = createSlice({
         state.future = [];
       }
 
-      const lineNumberLast =
-        Math.max(
-          ...Object.keys(
-            state.parsedAgsNormalized[action.payload.group].rows
-          ).map((lineNumber) => parseInt(lineNumber))
-        ) + 1;
+      const lineNumberLast = Math.max(
+        ...Object.keys(
+          state.parsedAgsNormalized[action.payload.group].rows
+        ).map((lineNumber) => parseInt(lineNumber))
+      );
 
       const newRow = {
         data: Object.fromEntries(headings.map((heading) => [heading, ""])),
