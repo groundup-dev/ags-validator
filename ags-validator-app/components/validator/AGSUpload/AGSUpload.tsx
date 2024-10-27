@@ -7,7 +7,11 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { applySetRawDataEffect, setRawData } from "@/lib/redux/ags";
 import { track } from "@vercel/analytics";
 
-export default function AGSUpload() {
+interface Props {
+  setTabsViewValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function AGSUpload({ setTabsViewValue }: Props) {
   const dispatch = useAppDispatch();
 
   // Handle file input change
@@ -17,6 +21,7 @@ export default function AGSUpload() {
     if (selectedFile) {
       const reader = new FileReader();
       reader.onload = (e) => {
+        setTabsViewValue("text");
         const content = e.target?.result;
 
         // get size of file

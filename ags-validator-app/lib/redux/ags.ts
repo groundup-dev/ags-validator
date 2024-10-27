@@ -181,6 +181,8 @@ export const agsSlice = createSlice({
 
     setRawData: (state, action: PayloadAction<string>) => {
       state.rawData = action.payload;
+      // clear the parsed data when the raw data changes
+      state.parsedAgsNormalized = undefined;
     },
 
     deleteRows: (
