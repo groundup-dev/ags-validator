@@ -17,6 +17,8 @@ import {
         },
       ])
     );
+
+    console.log(parsedAgs.PROJ);
   
     const errors = [
       ...validateAgsDataParsed(parsedAgs, rulesConfig),

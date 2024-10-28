@@ -49,8 +49,6 @@ type AgsState = {
   agsDictionaryVersion: AgsDictionaryVersion;
   past: HistoryAction[];
   future: HistoryAction[];
-  canUndo: boolean;
-  canRedo: boolean;
 };
 
 interface SetRowDataPayload {
@@ -66,8 +64,6 @@ const initialState: AgsState = {
   loading: false,
   agsDictionaryVersion: "v4_0_4",
 
-  canUndo: false,
-  canRedo: false,
   past: [],
   future: [],
   rulesConfig: {
@@ -181,7 +177,8 @@ export const agsSlice = createSlice({
 
     setRawData: (state, action: PayloadAction<string>) => {
       state.rawData = action.payload;
-      // clear the parsed data when the raw data changes
+      // clear the parsed data when the raw data changes,
+      // it will be loading now, and then will get set by the async thunk
       state.parsedAgsNormalized = undefined;
     },
 
