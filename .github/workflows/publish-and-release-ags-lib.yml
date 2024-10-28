@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'ags/**'  # Trigger only if files in the `ags` package have changed
+      - 'ags/**'  
+      - '.github/workflows/publish-and-release-ags-lib.yml'
 
 jobs:
   publish_npm:
