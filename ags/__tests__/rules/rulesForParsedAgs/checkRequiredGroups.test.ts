@@ -96,6 +96,20 @@ describe("AGS Rule 13: Validate PROJ group", () => {
     );
   });
 
+  it("should return an error if PROJ group has no rows", () => {
+    const invalidData = {
+      PROJ: {
+        ...validDataWithProj.PROJ,
+        rows: [],
+      },
+    };
+    const errors = rule13.validate(invalidData);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].message).toContain(
+      "PROJ group must contain exactly one row",
+    );
+  });
+
   it("should return no errors for valid PROJ group", () => {
     const errors = rule13.validate(validDataWithProj);
     expect(errors).toHaveLength(0);

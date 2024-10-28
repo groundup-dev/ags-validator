@@ -172,7 +172,10 @@ export const rule15: AgsValidationStepParsed = {
 
         if (heading.type === "PU") {
           for (const row of group.rows) {
-            if (!uniqueUnits.has(row.data[heading.name])) {
+            if (
+              row.data[heading.name] !== "" &&
+              !uniqueUnits.has(row.data[heading.name])
+            ) {
               errors.push({
                 ...baseError,
                 message: `Unit '${
@@ -214,7 +217,7 @@ export const rule16: AgsValidationStepParsedWithDict = {
     }
 
     const errors: AgsError[] = [];
-    const abbrs = ags.ABBR.rows.map((row) => row.data.ABBR_ABBR);
+    const abbrs = ags.ABBR.rows.map((row) => row.data.ABBR_CODE);
     const uniqueAbbrs = new Set(abbrs);
 
     // get the concatenated character
@@ -226,6 +229,7 @@ export const rule16: AgsValidationStepParsedWithDict = {
         if (heading.type === "PA") {
           for (const row of group.rows) {
             const value = row.data[heading.name];
+            if (value === "") continue; // empty string is allowed
             const abbrs = value.split(TRAN_RCON);
             for (const abbr of abbrs) {
               if (!uniqueAbbrs.has(abbr)) {
