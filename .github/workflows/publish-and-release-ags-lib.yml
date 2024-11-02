@@ -7,33 +7,21 @@ on:
     paths:
       - 'ags/**'  
       - '.github/workflows/publish-and-release-ags-lib.yml'
-
 jobs:
-  publish_npm:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Get version of the ags package
-        id: get_version
-        run: |
-          VERSION=$(jq -r '.version' ags/package.json)
-          echo "ags_version=$VERSION" >> $GITHUB_ENV
-
-      - name: Publish ags package to npm
-        run: npm publish --workspace ags
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish --workspace ags
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-
   
