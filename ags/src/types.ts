@@ -24,8 +24,6 @@ export interface AgsRaw {
   [key: string]: GroupRaw;
 }
 
-type AgsDictionaryGroups = "TYPE" | "UNIT" | "ABBR" | "DICT" | "PROJ" | "TRAN";
-
 export interface AgsDictionary extends AgsRaw {
   TYPE: GroupRaw;
   UNIT: GroupRaw;
