@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className=" flex flex-row justify-between w-full ">
         <div className="max-w-400 w-full flex items-center gap-6 mx-auto">
           <Logo size="sm" />
-          <h1>AGS Validator</h1>
+          <h1>AGS Editor</h1>
         </div>
 
         <div className="items-center flex gap-3">
