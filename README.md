@@ -74,7 +74,7 @@ This repository is home to two typescript projects:
 This is the npm package that performs parsing and validation of AGS4 files. 
 Source code and docs are available [here](https://github.com/groundup-dev/ags-validator/tree/main/ags).  
 
-### Ags Validator Web App
+### Ags Editor Web App
 
 This is the web application that lives [here](https://validator.groundup.cloud).  
 
