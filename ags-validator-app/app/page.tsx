@@ -18,52 +18,53 @@ import {
   UploadCloudIcon,
 } from "lucide-react";
 import Validator from "@/components/validator";
-import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
+
 import Logo from "@/components/logo";
-import { Card } from "@/components/ui/card";
-import Link from "next/link";
 
 export default function Page() {
   return (
     <div className="overflow-hidden px-4">
-      <div className="flex flex-col lg:flex-row my-12 max-w-400 w-full mx-auto gap-12 px-2 lg:px-8">
-        <div className="w-full lg:w-1/2">
+      <div className="flex flex-col  my-12 w-full mx-auto gap-12 px-2 lg:px-8">
+        <div className="w-full ">
           <div className="flex my-8 flex-wrap gap-4 items-center justify-center">
             <h1 className="text-3xl font-bold flex-0">AGS Editor</h1>
-            <div className="flex items-center gap-2 flex-0 lg:flex-1">
+            <div className="flex items-center gap-2 ">
               <p className="text-lg">by</p>
               <Logo size="md" />
+              <p className="text-xl font-semibold">GroundUp</p>
             </div>
           </div>
-          <p className="text-lg mb-4 text-center lg:text-start">
-            Edit and check your AGS data with ease.
-          </p>
-          <p className="text-md mb-16 text-center lg:text-start">
-            All your AGS data stays on your device and
-            <span className="font-medium"> never leaves your browser</span>.
-            <Dialog>
-              <DialogTrigger asChild>
-                <span className="ml-2 cursor-pointer">
-                  <HelpCircle className="h-5 w-5 text-primary inline" />
-                </span>
-              </DialogTrigger>
-              <DialogContent className="p-6 rounded-lg max-w-md mx-auto shadow-lg">
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-bold mb-2">
-                    Data Privacy
-                  </DialogTitle>
-                  <DialogDescription className="text-md">
-                    Your AGS files are processed entirely within your browser.
-                    This means that your data never leaves your device, and you
-                    can use this tool without worrying about any data privacy
-                    and residency requirements.
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-          </p>
+          <div className="w-full max-w-2xl mx-auto">
+            <p className="text-lg mb-4">
+              Edit and check your AGS data with ease.
+            </p>
+            <p className="text-md mb-16">
+              All your AGS data stays on your device and
+              <span className="font-medium"> never leaves your browser</span>.
+              <Dialog>
+                <DialogTrigger asChild>
+                  <span className="ml-2 cursor-pointer">
+                    <HelpCircle className="h-5 w-5 text-primary inline" />
+                  </span>
+                </DialogTrigger>
+                <DialogContent className="p-6 rounded-lg max-w-md mx-auto shadow-lg">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold mb-2">
+                      Data Privacy
+                    </DialogTitle>
+                    <DialogDescription className="text-md">
+                      Your AGS files are processed entirely within your browser.
+                      This means that your data never leaves your device, and
+                      you can use this tool without worrying about any data
+                      privacy and residency requirements.
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </p>
+          </div>
 
-          <div className="flex mb-8 justify-center lg:justify-start">
+          <div className="flex mb-8 justify-center ">
             <div className="flex flex-col gap-8 w-full max-w-2xl">
               <div className="flex items-center gap-4 w-full">
                 <div className="flex-grow flex flex-col lg:flex-row min-h-24 lg:items-center border rounded-lg h-full bg-accent hover:scale-101 hover:shadow-sm transition-all">
@@ -122,53 +123,6 @@ export default function Page() {
                   <p className="p-6"> Export your data as AGS4</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full lg:w-1/2 flex justify-center">
-          <div>
-            <div className="flex mb-8 flex-col gap-4 p-4 bg-muted rounded-xl border shadow-inner max-w-2xl">
-              <h2 className="font-bold text-lg w-full text-center">
-                New to GroundUp?
-              </h2>
-              <Card className="flex flex-col items-center">
-                <h4 className="p-4 text-lg w-full font-semibold border-b">
-                  About us
-                </h4>
-                <div className="flex flex-col gap-4 p-4">
-                  <p>
-                    GroundUp is an open source platform that makes geotechnical
-                    analysis and data management, easier, quicker, more
-                    transparent, and more collaborative.
-                  </p>
-                  <p>
-                    We are currently working hard on building the public version
-                    of GroundUp, which will be available soon.
-                  </p>
-                  <span className="font-medium">
-                    GroundUp will always be open-source, and free to get
-                    started.
-                  </span>
-                </div>
-              </Card>
-              <Card className="flex flex-col items-center">
-                <h4 className="p-4 text-lg w-full font-semibold border-b">
-                  Register for early access
-                </h4>
-                <div className="flex flex-col gap-4 p-4">
-                  <p>
-                    Register for early access to GroundUp and be the first to
-                    know when it&apos;s available.
-                  </p>
-                  <RegisterForm />
-                  <div className="flex justify-end">
-                    <Link className="text-xs" href="/privacy" target="_blank">
-                      Privacy Policy
-                    </Link>
-                  </div>
-                </div>
-              </Card>
             </div>
           </div>
         </div>

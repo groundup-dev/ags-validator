@@ -20,7 +20,6 @@ export default function Logo({ size }: Props) {
         className={cn("w-auto", sizeClassNames[size].logo)}
         alt="GroundUp logo"
       />
-      <p className={cn("font-semibold", sizeClassNames[size].text)}>GroundUp</p>
     </div>
   );
 }
