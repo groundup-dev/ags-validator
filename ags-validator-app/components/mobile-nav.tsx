@@ -25,15 +25,15 @@ export function MobileNav() {
           variant="ghost"
           className="md:hidden"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-4 w-4" />
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-[300px] sm:w-[400px]">
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
-        <nav className="flex flex-col gap-4 mt-6">
-          <div className="flex flex-col gap-2 items-center">
+        <nav className="flex flex-col gap-4 mt-4">
+          <div className="flex flex-col gap-4">
             <p className="text-sm text-muted-foreground">
               Visit our website to learn more about GroundUp.
             </p>
@@ -91,7 +91,7 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
               className="flex flex-row items-center gap-2"
             >
-              <FaGithub className="h-5 w-5" />
+              <FaGithub className="h-4 w-4" />
               Get the code
             </Link>
           </Button>

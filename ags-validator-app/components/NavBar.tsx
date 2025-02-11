@@ -25,32 +25,26 @@ export default function Navbar() {
     <header className="sticky top-0 z-10 border-b bg-background">
       <div className="flex justify-between w-full h-14 px-4 items-center container mx-auto">
         <Logo size="md" />
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="https://www.groundup.cloud">
-            <Button asChild size="sm">
-              <div className="flex flex-row gap-2">
-                <ExternalLink className="w-4 h-4" />
-                GroundUp
-              </div>
-            </Button>
-          </Link>
-
+        <div className="hidden md:flex gap-2">
           <Popover>
-            <PopoverTrigger className="text-sm ">Contact</PopoverTrigger>
+            <Button asChild variant="ghost" size="sm">
+              <PopoverTrigger>Contact</PopoverTrigger>
+            </Button>
             <PopoverContent>
               <div className="flex flex-col">
                 <p>We are always happy to chat.</p>
                 <p>Feel free to reach out to us at</p>
-                <Separator className="w-full m-1.5" />
+                <Separator className="w-full my-3" />
                 <p className="font-semibold">hello@groundup.cloud</p>
               </div>
             </PopoverContent>
           </Popover>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm ">
-              Feedback
-            </DropdownMenuTrigger>
+            <Button asChild variant="ghost" size="sm">
+              <DropdownMenuTrigger>Feedback</DropdownMenuTrigger>
+            </Button>
+
             <DropdownMenuContent>
               <DropdownMenuLabel>Feedback</DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -76,14 +70,24 @@ export default function Navbar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <Link href={"https://github.com/groundup-dev/ags-validator"}>
-            <FaGithub className="h-5 w-5" />
-          </Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <MobileNav />
+          <div className="items-center gap-2 hidden md:flex">
+            <Button asChild size="sm">
+              <Link href="https://www.groundup.cloud">
+                <ExternalLink className="w-4 h-4 mr-2" />
+                GroundUp
+              </Link>
+            </Button>
+            <Button asChild size="sm" variant="outline">
+              <Link href="https://github.com/groundup-dev/ags-validator">
+                <FaGithub className="h-4 w-4 mr-2" />
+                GitHub
+              </Link>
+            </Button>
+          </div>
           <ThemeSwitcher />
         </div>
       </div>
