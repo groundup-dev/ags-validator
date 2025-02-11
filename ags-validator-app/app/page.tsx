@@ -21,7 +21,7 @@ import {
 import Validator from "@/components/validator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Logo from "@/components/logo";
+import { Logo } from "@/components/logo";
 
 export default function Page() {
   return (
@@ -61,8 +61,7 @@ export default function Page() {
             <h1 className="text-3xl font-bold flex-0">AGS Editor</h1>
             <div className="flex items-center gap-2 ">
               <p className="text-lg">by</p>
-              <Logo size="md" />
-              <p className="text-xl font-semibold">GroundUp</p>
+              <Logo size="sm" />
             </div>
           </div>
           <div className="w-full max-w-2xl mx-auto">

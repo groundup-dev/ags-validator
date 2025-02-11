@@ -12,8 +12,8 @@ import React from "react";
 import Navbar from "@/components/NavBar";
 
 export const metadata: Metadata = {
-  title: "AGS4 Validator",
-  description: "AGS4 Validator by GroundUp",
+  title: "GroundUp | AGS4 Editor",
+  description: "AGS4 Editor by GroundUp",
 };
 
 export default function RootLayout({

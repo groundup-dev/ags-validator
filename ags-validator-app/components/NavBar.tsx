@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Logo from "@/components/logo";
+import { Logo } from "@/components/logo";
 
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
@@ -22,13 +22,9 @@ import { Button } from "./ui/button";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 h-14 z-10 flex items-center border-b px-4 md:px-6 bg-background">
-      <div className="flex flex-row justify-between w-full items-center">
-        <div className="flex items-center gap-4">
-          <Logo size="sm" />
-          <h1 className="text-lg font-semibold">AGS Editor</h1>
-        </div>
-
+    <header className="sticky top-0 z-10 border-b bg-background">
+      <div className="flex justify-between w-full h-14 px-4 items-center container mx-auto">
+        <Logo size="md" />
         <div className="hidden md:flex items-center gap-6">
           <Link href="https://www.groundup.cloud">
             <Button asChild size="sm">
