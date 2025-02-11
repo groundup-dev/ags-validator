@@ -1,16 +1,9 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import DataGrid, {
   GridCell,
   GridCellKind,
   GridColumn,
   Item,
-  Theme,
   GridSelection,
   DataEditorProps,
   EditableGridCell,
@@ -28,6 +21,7 @@ import {
   setRowsData,
   undo,
 } from "@/lib/redux/ags";
+import { useGridTheme } from "@/hooks/useGridTheme";
 
 // Props for the table component
 interface Props {
@@ -40,12 +34,6 @@ interface Props {
   setGoToErrorCallback: (callback: (error: AgsError) => void) => void;
   setSelectedRows: (rows: number[]) => void;
 }
-
-const getCSSVariable = (variableName: string) => {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(variableName)
-    .trim();
-};
 
 const GridView: React.FC<Props> = ({
   setGoToErrorCallback,
@@ -66,6 +54,8 @@ const GridView: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const ref = useRef<DataEditorRef | null>(null);
+
+  const { theme: customTheme } = useGridTheme();
 
   const onPaste = useCallback(
     (target: Item, values: readonly (readonly string[])[]): boolean => {
@@ -103,14 +93,7 @@ const GridView: React.FC<Props> = ({
     }
   }, [selection, setSelectedRows]);
 
-  const customTheme: Partial<Theme> = useMemo(
-    () => ({
-      accentColor: getCSSVariable("--secondary"),
-      accentFg: getCSSVariable("--secondary-foreground"),
-      accentLight: getCSSVariable("--muted"),
-    }),
-    []
-  );
+  console.log("theme", customTheme);
 
   const scrollToError = useCallback(
     (error: AgsError) => {

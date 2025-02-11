@@ -36,8 +36,8 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
           <Analytics />
+          <div id="portal" className="fixed top-0 left-0 " />
         </ThemeProvider>
-        <div id="portal" className="fixed top-0 left-0 " />
       </body>
     </html>
   );

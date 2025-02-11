@@ -14,17 +14,48 @@ import {
   CornerRightDown,
   DownloadCloud,
   Edit,
+  ExternalLink,
   HelpCircle,
   UploadCloudIcon,
 } from "lucide-react";
 import Validator from "@/components/validator";
-
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import Logo from "@/components/logo";
 
 export default function Page() {
   return (
-    <div className="overflow-hidden px-4">
-      <div className="flex flex-col  my-12 w-full mx-auto gap-12 px-2 lg:px-8">
+    <div className="overflow-hidden ">
+      <section
+        id="cta"
+        className="border-y bg-muted/50 py-12  px-10 w-full flex flex-col items-center"
+      >
+        <div className="px-5 container lg:grid lg:grid-cols-2 place-items-center">
+          <div className="lg:col-start-1">
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Register for{" "}
+              <span className="bg-gradient-to-b from-primary/60 dark:bg-foreground/80 to-primary dark:to-primary text-transparent bg-clip-text">
+                early access
+              </span>
+            </h2>
+            <p className="text-muted-foreground text-lg mt-4 mb-8 lg:mb-0">
+              We&apos;re currently in closed beta, so join the waitlist to get
+              early access, and help shape GroundUp.
+            </p>
+          </div>
+          <div className="lg:col-start-2 lg:mt-0 mt-12">
+            <Button asChild size="lg">
+              <Link
+                href="https://groundup.cloud"
+                className="flex items-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" /> Explore GroundUp
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+      <div className="flex flex-col  my-12 w-full mx-auto gap-12 px-2 ">
         <div className="w-full ">
           <div className="flex my-8 flex-wrap gap-4 items-center justify-center">
             <h1 className="text-3xl font-bold flex-0">AGS Editor</h1>
@@ -128,13 +159,6 @@ export default function Page() {
         </div>
       </div>
       <div className="relative">
-        <div
-          className="absolute w-[120%] h-[120%] top-1/2 left-1/2 -z-10"
-          style={{
-            transform: "translate(-50%, -50%)",
-            background: "radial-gradient(var(--primary) 0%, transparent 70%)",
-          }}
-        />
         <Validator />
       </div>
     </div>
