@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-
+import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -12,8 +12,8 @@ import React from "react";
 import Navbar from "@/components/NavBar";
 
 export const metadata: Metadata = {
-  title: "AGS4 Validator",
-  description: "AGS4 Validator by GroundUp",
+  title: "GroundUp | AGS4 Editor",
+  description: "AGS4 Editor by GroundUp",
 };
 
 export default function RootLayout({
@@ -23,13 +23,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head />
       <body
         className={`${inter.variable} antialiased bg-background text-foreground`}
       >
-        <Navbar />
-        <main>{children}</main>
-        <Analytics />
-        <div id="portal" className="fixed top-0 left-0 " />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main>{children}</main>
+          <Analytics />
+          <div id="portal" className="fixed top-0 left-0 " />
+        </ThemeProvider>
       </body>
     </html>
   );
