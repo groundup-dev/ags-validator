@@ -37,14 +37,15 @@ export function MobileNav() {
             <p className="text-sm text-muted-foreground">
               Visit our website to learn more about GroundUp.
             </p>
-            <Link href="https://www.groundup.cloud">
-              <Button asChild size="sm">
-                <div className="flex flex-row gap-2">
-                  <ExternalLink className="w-4 h-4" />
-                  GroundUp
-                </div>
-              </Button>
-            </Link>
+            <Button asChild size="sm">
+              <Link
+                href="https://www.groundup.cloud"
+                className="flex flex-row gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                GroundUp
+              </Link>
+            </Button>
           </div>
           <Separator className="my-2" />
 

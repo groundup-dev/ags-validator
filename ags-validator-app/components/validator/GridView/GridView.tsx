@@ -93,8 +93,6 @@ const GridView: React.FC<Props> = ({
     }
   }, [selection, setSelectedRows]);
 
-  console.log("theme", customTheme);
-
   const scrollToError = useCallback(
     (error: AgsError) => {
       if (group.name !== error.group) {
@@ -203,8 +201,6 @@ const GridView: React.FC<Props> = ({
     dispatch(applySetRowDataEffect());
   };
 
-  const onCellEdited = () => {};
-
   const getData = useCallback(
     ([colNum, rowNum]: Item): GridCell => {
       const lineNumber = group.lineNumber + 4 + rowNum;
@@ -290,7 +286,6 @@ const GridView: React.FC<Props> = ({
         columns={columns}
         getCellContent={getData}
         getCellsForSelection={true}
-        onCellEdited={onCellEdited}
         rows={Object.keys(group.rows).length}
         onPaste={onPaste}
         maxColumnAutoWidth={200}

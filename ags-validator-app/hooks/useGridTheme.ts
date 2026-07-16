@@ -40,13 +40,6 @@ export const useGridTheme = () => {
             ? `hsla(${formattedH}, ${formattedS}, ${formattedL}, ${opacity})`
             : `hsl(${formattedH}, ${formattedS}, ${formattedL})`;
 
-        console.log(`Getting CSS var ${variableName}:`, {
-          rawValue: value,
-          opacity,
-          result,
-          components: { h: formattedH, s: formattedS, l: formattedL },
-        });
-
         return result;
       }
 

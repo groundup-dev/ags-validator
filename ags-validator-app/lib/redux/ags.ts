@@ -49,8 +49,6 @@ type AgsState = {
   agsDictionaryVersion: AgsDictionaryVersion;
   past: HistoryAction[];
   future: HistoryAction[];
-  canUndo: boolean;
-  canRedo: boolean;
 };
 
 interface SetRowDataPayload {
@@ -66,8 +64,6 @@ const initialState: AgsState = {
   loading: false,
   agsDictionaryVersion: "v4_0_4",
 
-  canUndo: false,
-  canRedo: false,
   past: [],
   future: [],
   rulesConfig: {
@@ -127,6 +123,7 @@ export const applySetRowDataEffect = createAsyncThunk<
   return new Promise<{ rawData: string; errors: AgsError[] }>((resolve) => {
     worker.onmessage = (event) => {
       const { rawData, errors } = event.data;
+      worker.terminate();
       resolve({ rawData, errors });
     };
 
@@ -156,7 +153,7 @@ export const applySetRawDataEffect = createAsyncThunk<
   }>((resolve) => {
     worker.onmessage = (event) => {
       const { parsedAgsNormalized, errors } = event.data;
-
+      worker.terminate();
       resolve({ parsedAgsNormalized, errors });
     };
 

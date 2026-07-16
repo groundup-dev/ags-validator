@@ -15,8 +15,6 @@ export type RulesConfig = {
   [key in RuleName]: boolean;
 };
 
-// happy to overwrite ts here
-
 export const defaultRulesConfig = Object.fromEntries(
   [
     ...Object.keys(rulesForParsedAgs),
