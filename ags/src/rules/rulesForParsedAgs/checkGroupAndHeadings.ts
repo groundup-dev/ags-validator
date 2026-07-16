@@ -52,7 +52,7 @@ export const rule19: AgsValidationStepParsed = {
 // Rule 19a A HEADING name shall not be more than 9 characters long and shall consist of uppercase letters,
 // numbers or the underscore character only.
 export const rule19a: AgsValidationStepParsed = {
-  rule: 19,
+  rule: "19a",
   description:
     "A HEADING name shall not be more than 9 characters long and shall consist of uppercase letters, numbers or the underscore character only.",
   validate: function (ags: AgsRaw): AgsError[] {
