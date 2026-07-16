@@ -16,11 +16,10 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
   setGoToErrorCallback,
 }) => {
   const { theme } = useTheme();
+  const isDark = theme === "dark";
   const agsData = useAppSelector((state) => state.ags.rawData);
   const errors = useAppSelector((state) => state.ags.errors);
   const dispatch = useAppDispatch();
-
-  const isDark = theme === "dark";
 
   const errorLines = errors?.map((error) => error.lineNumber);
 
@@ -61,9 +60,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
     [errorLines]
   );
 
-  const themeDemo = useMemo(
-    () =>
-      EditorView.baseTheme({
+  const themeDemo = EditorView.baseTheme({
         "&": {
           backgroundColor: "transparent",
         },
@@ -124,9 +121,7 @@ const CodeMirrorTextArea: React.FC<CodeMirrorTextAreaProps> = ({
         ".cm-string": { color: "hsl(var(--success))" },
         ".cm-number": { color: "hsl(var(--warning))" },
         ".cm-comment": { color: "hsl(var(--muted-foreground))" },
-      }),
-    []
-  );
+      });
 
   return (
     <div className="h-full w-full flex flex-col overflow-auto">
